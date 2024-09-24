@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@langchain/openai": "^0.3.0",
     "html-to-text": "^9.0.5",
+    "langchain": "^0.3.2",
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

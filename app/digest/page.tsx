@@ -1,26 +1,22 @@
-import React from "react";
-import { convert } from "html-to-text";
+import Quiz from "../components/quiz";
+import { generateQuizData } from "./functions";
 
-const page = async () => {
-    const response = await fetch('https://en.wikipedia.org/wiki/Toronto_Blue_Jays');
-    const data = await response.text();
+type PageProps = {
+    params: { slug: string };
+    searchParams?: { [key: string]: string | string[] | undefined };
+}
 
-    //const stripped = strip(data);
-    const converted = convert(data, {
-        selectors: [
-            { selector: 'main', options: { baseUrl: 'https://example.com' } },
-            { selector: 'a', format: 'skip' },
-            { selector: 'img', format: 'skip' },
-            { selector: 'input', format: 'skip' },
-            { selector: 'form', format: 'skip' },
-            { selector: 'iframe', format: 'skip' },
-        ]
-    });
+const page = async (props: PageProps) => {
+    const { params, searchParams } = props;
+
+    const quizValue = await generateQuizData(searchParams && searchParams["url"]);
+
+    console.log(searchParams);
+    console.log(quizValue);
 
 
-    return <div>{converted}</div>
-
+    return <div><Quiz quizData={quizValue} /></div>
 }
 
 
-export default page
+export default page;
