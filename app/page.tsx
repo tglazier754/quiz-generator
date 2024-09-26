@@ -14,7 +14,7 @@ const page = async (props: PageProps) => {
 
     //get the user's url input, redirect them to the digest page
 
-    return <main><UrlInput /></main>
+    return <div className="parent-container"><UrlInput /></div>
 }
 
 

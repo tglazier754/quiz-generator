@@ -1,4 +1,4 @@
-import Quiz from "../components/quiz";
+import Quiz from "../components/quiz/quiz";
 import { generateQuizData } from "./functions";
 
 type PageProps = {
@@ -9,13 +9,16 @@ type PageProps = {
 const page = async (props: PageProps) => {
     const { params, searchParams } = props;
 
+    //TODO: make this type safe
     const quizValue = await generateQuizData(searchParams && searchParams["url"]);
 
     console.log(searchParams);
     console.log(quizValue);
 
 
-    return <div><Quiz quizData={quizValue} /></div>
+    return <div className="parent-container">
+        {quizValue ? <Quiz quizData={quizValue} /> : <p>No quiz data</p>}
+    </div>
 }
 
 

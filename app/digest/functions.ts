@@ -97,7 +97,40 @@ export async function generateQuizData(url?: any) {
         console.log("formattedResult")
         console.log(formattedResult);
 
+
+
+
         return formattedResult;
     }
 
 }
+
+
+////***************   TEST DATA 
+
+/*
+
+const formattedResult = {
+            questions: [
+                'What is the primary purpose of a page in the context of App Router?',
+                'The `searchParams` object contains values that can be known ahead of time.',
+                'The `params` object in the `Page` function contains information from the ______ segment down to that page.',
+                'What is the significance of the `searchParams` object in the context of a page?',
+                'In which version was the `page` feature introduced?',
+                'The `searchParams` returns a URLSearchParams instance.',
+                'Provide an example of how the `params` object might look for the URL `/shop/1/2`.',
+                'Which of the following is NOT a valid way to define a route in the App Router?'
+            ],
+            answers: [
+                'To serve as UI that is unique to a route',
+                'False',
+                'root',
+                'The `searchParams` object allows the page to access query parameters from the current URL, which can change dynamically at request time.',
+                'v13.0.0',
+                'False',
+                "The `params` object might look like `{ category: '1', item: '2' }` for the URL `/shop/1/2`.",
+                '`/app/shop/page.js` - This does not follow the parameterized route structure.'
+            ]
+        }
+        
+*/

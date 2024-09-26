@@ -1,5 +1,5 @@
 "use client";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Card, CardBody, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import "./urlInput.scss";
@@ -17,15 +17,19 @@ export const UrlInput = () => {
     }
 
     const handleSubmit = () => {
-        //TODO: ensure that the url is valid before proceeding
+        //TODO: validate url before proceeding
         router.push(`/digest?url=${input}`);
     }
 
     return (
-        <div className="url-input-container">
-            <Input type="text" value={input} onChange={handleChange} />
-            <Button onClick={handleSubmit}>Generate</Button>
-        </div>
+        <Card>
+            <CardBody>
+                <Stack>
+                    <Input type="text" value={input} onChange={handleChange} />
+                    <Button size="md" onClick={handleSubmit}>Generate</Button>
+                </Stack>
+            </CardBody>
+        </Card>
     )
 }
 
