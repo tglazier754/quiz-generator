@@ -1,6 +1,8 @@
 "use client";
+import { Button, Input } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import "./urlInput.scss";
 
 
 export const UrlInput = () => {
@@ -15,13 +17,14 @@ export const UrlInput = () => {
     }
 
     const handleSubmit = () => {
+        //TODO: ensure that the url is valid before proceeding
         router.push(`/digest?url=${input}`);
     }
 
     return (
         <div className="url-input-container">
-            <input type="text" value={input} onChange={handleChange} />
-            <button onClick={handleSubmit}>Generate</button>
+            <Input type="text" value={input} onChange={handleChange} />
+            <Button onClick={handleSubmit}>Generate</Button>
         </div>
     )
 }
