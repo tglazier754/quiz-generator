@@ -1,9 +1,5 @@
-
-
-
-import { Center, ChakraProvider, extendTheme, Spinner } from '@chakra-ui/react'
+import { extendTheme } from '@chakra-ui/react'
 import { theme as chakraTheme } from "@chakra-ui/theme";
-import { StyleFunctionProps } from '@chakra-ui/theme-tools'
 
 export const theme = extendTheme(
     {
@@ -12,7 +8,7 @@ export const theme = extendTheme(
             brand: chakraTheme.colors.blue
         },
         styles: {
-            global: (props: StyleFunctionProps) => ({
+            global: () => ({
                 body: {
                     color: 'default',
                     background: '#F7FAFC',

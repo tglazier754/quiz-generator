@@ -5,14 +5,14 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "ES6",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "Node16",
-    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
@@ -25,7 +25,8 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "resolveJsonModule": true
   },
   "include": [
     "next-env.d.ts",

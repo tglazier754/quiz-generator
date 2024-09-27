@@ -8,7 +8,7 @@ type PageProps = {
 }
 
 const page = async (props: PageProps) => {
-    const { params, searchParams } = props;
+    const { searchParams } = props;
 
     //TODO: make this type safe
     const digestedWebsiteData = await generateQuizData(searchParams && searchParams["url"]);

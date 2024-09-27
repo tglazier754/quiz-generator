@@ -1,12 +1,8 @@
-import React from "react";
 import { convert } from "html-to-text";
 
-import { NextResponse } from "next/server";
 
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { ChatOpenAI } from "@langchain/openai";
 
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { basicQuizPrompt, formatConversion, websiteSummaryPrompt } from "../utils/prompts";
 import { StringOutputParser, JsonOutputParser } from "@langchain/core/output_parsers";
@@ -15,10 +11,9 @@ import {
     RunnableSequence,
     RunnablePassthrough,
 } from "@langchain/core/runnables";
-import { formatDocumentsAsString } from "langchain/util/document";
 
 
-export async function generateQuizData(url?: any) {
+export async function generateQuizData(url?: string | string[] | undefined) {
 
     //TODO: ensure the provided path is a valid url
 
@@ -45,10 +40,6 @@ export async function generateQuizData(url?: any) {
             temperature: 0
         });
 
-        const splitter = new RecursiveCharacterTextSplitter({
-            chunkSize: 400,
-            chunkOverlap: 1
-        });
 
         console.log(typeof converted);
         console.log("----***----");

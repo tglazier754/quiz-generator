@@ -10,7 +10,7 @@ export const Quiz = (props: { quizData: { questions: string[], answers: string[]
     return (
         <div className="quiz-container">
             <div className="quiz-card-container">
-                {questions.map((question: string, index: number) => <QuizCard index={index + 1} question={question} answer={answers[index]} />)}
+                {questions.map((question: string, index: number) => <QuizCard key={"quiz-card-" + index} index={index + 1} question={question} answer={answers[index]} />)}
             </div>
         </div>
     )
