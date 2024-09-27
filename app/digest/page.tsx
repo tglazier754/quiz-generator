@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Stack } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading, Stack } from "@chakra-ui/react";
 import Quiz from "../components/quiz/quiz";
 import { generateQuizData } from "./functions";
 
@@ -23,7 +23,7 @@ const page = async (props: PageProps) => {
         <Stack>
             {summary ?
                 <Card>
-                    <CardHeader>Summary</CardHeader>
+                    <CardHeader><Heading size="md">Summary</Heading></CardHeader>
                     <CardBody>{summary}</CardBody>
                 </Card>
                 : <p>No summary data</p>}
