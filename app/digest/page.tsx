@@ -1,3 +1,4 @@
+import { Card, CardBody, CardHeader, Stack } from "@chakra-ui/react";
 import Quiz from "../components/quiz/quiz";
 import { generateQuizData } from "./functions";
 
@@ -10,14 +11,26 @@ const page = async (props: PageProps) => {
     const { params, searchParams } = props;
 
     //TODO: make this type safe
-    const quizValue = await generateQuizData(searchParams && searchParams["url"]);
+    const digestedWebsiteData = await generateQuizData(searchParams && searchParams["url"]);
 
-    console.log(searchParams);
-    console.log(quizValue);
+    const { summary, quiz } = { ...digestedWebsiteData };
+
+    console.log(summary);
+    console.log(quiz);
 
 
     return <div className="parent-container">
-        {quizValue ? <Quiz quizData={quizValue} /> : <p>No quiz data</p>}
+        <Stack>
+            {summary ?
+                <Card>
+                    <CardHeader>Summary</CardHeader>
+                    <CardBody>{summary}</CardBody>
+                </Card>
+                : <p>No summary data</p>}
+            {quiz ?
+                <Quiz quizData={quiz} />
+                : <p>No quiz data</p>}
+        </Stack>
     </div>
 }
 
