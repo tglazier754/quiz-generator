@@ -4,7 +4,7 @@ import { convert } from "html-to-text";
 import { ChatOpenAI } from "@langchain/openai";
 
 import { PromptTemplate } from "@langchain/core/prompts";
-import { basicQuizPrompt, formatConversion, websiteSummaryPrompt } from "../utils/prompts";
+import { basicQuizPrompt, formatConversion, websiteSummaryPrompt } from "../../utils/prompts";
 import { StringOutputParser, JsonOutputParser } from "@langchain/core/output_parsers";
 
 import {

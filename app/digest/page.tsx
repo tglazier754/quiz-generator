@@ -1,5 +1,5 @@
 import { Card, CardBody, CardHeader, Heading, Stack } from "@chakra-ui/react";
-import Quiz from "../components/quiz/quiz";
+import Quiz from "../../components/quiz/quiz";
 import { generateQuizData } from "./functions";
 
 type PageProps = {

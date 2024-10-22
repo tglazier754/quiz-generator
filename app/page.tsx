@@ -1,6 +1,6 @@
 
 import React from "react";
-import UrlInput from "./components/userInput/urlInput";
+import UrlInput from "../components/userInput/urlInput";
 
 
 type PageProps = {
