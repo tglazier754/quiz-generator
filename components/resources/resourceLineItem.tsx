@@ -23,13 +23,13 @@ export const ResourceLineItem = (props: ResourceLineItemProps) => {
     }
 
     useEffect(() => {
-        if (resource.image_url) {
-            if (typeof resource.image_url === "string") {
-                setImageUrl(resource.image_url);
+        if (resource.url) {
+            if (typeof resource.url === "string") {
+                setImageUrl(resource.url);
             }
-            else if (typeof resource.image_url === "object") {
-                //the image_url is a file, we need the base64
-                convertImageToDataUrl(resource.image_url as File).then((url) => { setImageUrl(url as string) });
+            else if (typeof resource.url === "object") {
+                //the url is a file, we need the base64
+                convertImageToDataUrl(resource.url as File).then((url) => { setImageUrl(url as string) });
             }
         }
     }, [resource]);
