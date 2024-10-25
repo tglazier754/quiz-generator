@@ -3,7 +3,7 @@
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, testImageDataURl, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
 import { convertImageToDataUrl, extractImageText } from "@/utils/images/client";
-import { Button, HStack, Image, Input, Select, Square, Stack, StackItem, Text, Textarea } from "@chakra-ui/react";
+import { Button, HStack, Image, Input, Select, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { ChangeEvent, useRef, useState } from "react";
 
 export const LibraryResourceUploader = () => {
@@ -21,7 +21,7 @@ export const LibraryResourceUploader = () => {
     const imageSelectorRef = useRef<HTMLInputElement>(null);
     const [selectedType, setSelectedType] = useState(RESOURCE_TYPE_TEXT);
 
-    const [isEditing, setIsEditing] = useState(false);
+    //const [isEditing, setIsEditing] = useState(false);
 
     const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedType(event.target.value);
@@ -76,7 +76,7 @@ export const LibraryResourceUploader = () => {
             const result = await fetch("/api/resources", {
                 method: "POST", body: formData
             });
-            const data = await result.json();
+            await result.json();
             setUploadSuccess(true);
 
             setSelectedImage(null);
@@ -104,7 +104,7 @@ export const LibraryResourceUploader = () => {
                     <HStack >
                         <div className="w-1/3">
                             <Square>
-                                <Image src={testImageDataURl} />
+                                <Image src={testImageDataURl} alt="Uploaded Image" />
                             </Square>
                         </div>
                         <div className="flex-1">
@@ -127,7 +127,7 @@ export const LibraryResourceUploader = () => {
                 <HStack >
                     <div className="w-1/3">
                         <Select placeholder="Resource Type" value={selectedType} onChange={handleTypeChange}>
-                            {USER_RESOURCE_TYPES.map((resourceType) => { return <option value={resourceType}>{resourceType.replace("_", " ").toLowerCase()}</option> })}
+                            {USER_RESOURCE_TYPES.map((resourceType) => { return <option key={resourceType} value={resourceType}>{resourceType.replace("_", " ").toLowerCase()}</option> })}
                         </Select>
                     </div>
                     <div className="flex-1">

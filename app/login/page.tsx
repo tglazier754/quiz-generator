@@ -6,7 +6,7 @@ export default function Login() {
 
     async function handleSignInWithGoogle() {
         const supabase = createClient();
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 queryParams: {

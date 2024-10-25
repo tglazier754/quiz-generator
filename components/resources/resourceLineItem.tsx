@@ -19,7 +19,7 @@ export const ResourceLineItem = (props: ResourceLineItemProps) => {
     const handleSelect = () => {
         const selected = isSelected;
         setIsSelected(!selected);
-        onSelectHandler && onSelectHandler(resource.id || "", !selected);
+        if (onSelectHandler) onSelectHandler(resource.id || "", !selected);
     }
 
     useEffect(() => {
@@ -39,7 +39,7 @@ export const ResourceLineItem = (props: ResourceLineItemProps) => {
         <>
             <Checkbox checked={isSelected} onChange={handleSelect} />
             <div className="image-container">
-                <Image src={imageUrl} />
+                <Image src={imageUrl} alt="Resource Thumbnail" />
             </div>
             <Text>{resource.name}</Text>
             <Text>{resource.description}</Text>

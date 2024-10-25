@@ -6,7 +6,6 @@ type PageProps = {
     params: { slug: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }
-
 const page = async (props: PageProps) => {
     const { searchParams } = props;
 

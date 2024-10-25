@@ -1,6 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -28,5 +26,5 @@ export async function GET(req: NextRequest) {
         //get user data from database
     }
 
-    return NextResponse.redirect(new URL("/image_processor", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
 }

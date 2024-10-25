@@ -18,20 +18,14 @@ export const ResourceList = (props: ResourceListProps) => {
 
     //on edit, send the list of selected id's
     const selectionHandler = (selectedId: string, state: boolean) => {
-        console.log(selectedId);
-        console.log(state);
         if (state) {
             selectedResources.current[selectedId] = state;
         }
         else {
             delete selectedResources.current[selectedId];
         }
-        console.log(selectedResources.current);
     }
 
-    const addResourceHandler = () => {
-
-    }
 
     const generateHandler = async () => {
         const resourceIdParamArray = Object.keys(selectedResources.current).map((key) => [URL_PARAM_RESOURCE_ID, key]);

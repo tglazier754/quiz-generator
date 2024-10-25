@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import {
     Session,
     SupabaseClient,
@@ -49,7 +49,7 @@ export default function SupabaseProvider({
 }
 
 export const useSupabase = () => {
-    let context = useContext(Context);
+    const context = useContext(Context);
 
     if (context === undefined) {
         throw new Error("useSupabase must be used inside SupabaseProvider");

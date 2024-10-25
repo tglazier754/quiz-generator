@@ -1,10 +1,8 @@
-import ResourceLineItem from "@/components/resources/resourceLineItem";
 import ResourceList from "@/components/resources/resourceList";
-import { Resource } from "@/types/resourceTypes";
 import { Heading } from "@chakra-ui/react"
 
 
-export const page = async () => {
+export default async function page() {
 
     //GET the resources list
     const resources = await fetch("http://localhost:3000/api/resources")
@@ -21,5 +19,3 @@ export const page = async () => {
         </>
     )
 }
-
-export default page;

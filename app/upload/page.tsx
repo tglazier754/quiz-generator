@@ -1,7 +1,7 @@
 import LibraryResourceUploader from "../../components/image_processor/LibraryResourceUploader";
 
 
-export const page = async () => {
+export default async function page() {
 
     return (
         <div className="centered-container">
@@ -10,5 +10,3 @@ export const page = async () => {
     )
 
 }
-
-export default page;
