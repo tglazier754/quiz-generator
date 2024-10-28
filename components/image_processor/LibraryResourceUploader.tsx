@@ -144,7 +144,7 @@ export const LibraryResourceUploader = () => {
                 </HStack>
 
                 {isProcessing && <p>Processing...</p>}
-                <Textarea value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
+                <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
                 {processingError && <Text>{processingError}</Text>}
                 <div>
                     <Button onClick={handleResourceUpload} disabled={isUploading}>Add Resource</Button>

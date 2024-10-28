@@ -6,7 +6,6 @@ import ResourceLineItem from "./resourceLineItem";
 import { IHash } from "@/types/globalTypes";
 import { Button, Flex } from "@chakra-ui/react";
 import { useRef } from "react";
-import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
 import Link from "next/link";
 
 type ResourceListProps = {
@@ -27,23 +26,13 @@ export const ResourceList = (props: ResourceListProps) => {
     }
 
 
-    const generateHandler = async () => {
-        const resourceIdParamArray = Object.keys(selectedResources.current).map((key) => [URL_PARAM_RESOURCE_ID, key]);
-
-        const resourceIdSearchParams = new URLSearchParams(resourceIdParamArray);
-        const quizFetch = await fetch("/api/quiz?" + resourceIdSearchParams.toString(), { method: "POST" });
-        const quizData = await quizFetch.json();
-        console.log(quizData);
-        //TODO: put the returned quizData into a useContext container to be displayed
-    }
-
     return (
-        <div className="user-resources-container">
+        <div className="user-resources-container h-full">
 
-            <Flex flexDirection="column" className="max-h-full">
+            <Flex flexDirection="column" className="max-h-full flex-nowrap h-full">
 
-                <div>
-                    <div className="resources-list overflow-y-scroll">
+                <div className="h-[90%] ">
+                    <div className="resources-list mr-2">
                         {resources.map((resource: Resource) => {
                             return (
                                 <div key={`resource-preview-${resource.id}`} className="resource-preview">
@@ -51,8 +40,9 @@ export const ResourceList = (props: ResourceListProps) => {
                                 </div>
                             )
                         })}
-                    </div></div>
-                <div className="button-container">
+                    </div>
+                </div>
+                <div className="button-container h-[9%]">
                     <div className="add-resource-button">
                         <Link href="/image_processor"><Button>Add</Button></Link>
                     </div>
@@ -64,15 +54,3 @@ export const ResourceList = (props: ResourceListProps) => {
 }
 
 export default ResourceList;
-
-/*
-<div className="button-container">
-
-                <div className="add-resource-button">
-                    <Link href="/image_processor"><Button>Add</Button></Link>
-                </div>
-                <div className="generate-button">
-                    <Button onClick={generateHandler}>Generate</Button>
-                </div>
-            </div>
-*/

@@ -1,9 +1,10 @@
 
 import React from "react";
-import UrlInput from "../components/userInput/urlInput";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import ResourceList from "@/components/resources/resourceList";
 import { getResources } from "@/utils/resources/server";
+import LibraryResourceUploader from "@/components/image_processor/LibraryResourceUploader";
+import ResourceActionsPanel from "@/components/resources/actions/resourceActionsPanel";
 
 
 type PageProps = {
@@ -25,7 +26,12 @@ const page = async (props: PageProps) => {
                     <ResourceList resources={data} />
                 </div>
                 <div>
-                    <Text>Right</Text>
+                    <div className="h-1/6">
+                        <ResourceActionsPanel />
+                    </div>
+                    <div className="h-5/6">
+                        <LibraryResourceUploader />
+                    </div>
                 </div>
             </Flex>
 
