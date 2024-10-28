@@ -15,23 +15,13 @@
     }
 }
 
-.user-resources-container {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-
-    & .button-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        gap: 1rem;
-    }
-}
 
 .resources-list {
-    flex-grow: 1;
 
     display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
     justify-content: flex-start;
     gap: 1rem;
 

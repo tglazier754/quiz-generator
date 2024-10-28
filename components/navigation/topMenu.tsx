@@ -5,7 +5,7 @@ export const TopMenu = async () => {
 
 
     return (
-        <div className="w-screen top-0 h-12 p-0 bg-white">
+        <div className="w-screen top-0 h-12 p-0 bg-white border-b border-solid">
 
             <Flex alignItems="center" className="min-h-12 pr-4 pl-4">
                 <Circle bg="red" color="white">

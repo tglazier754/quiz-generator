@@ -1,6 +1,9 @@
 
 import React from "react";
 import UrlInput from "../components/userInput/urlInput";
+import { Flex, Text } from "@chakra-ui/react";
+import ResourceList from "@/components/resources/resourceList";
+import { getResources } from "@/utils/resources/server";
 
 
 type PageProps = {
@@ -12,11 +15,22 @@ const page = async (props: PageProps) => {
     const { searchParams } = props;
     console.log(searchParams);
 
-    //get the user's url input, redirect them to the digest page
+    const resources = await getResources();
+    const data = JSON.parse(resources || "");
 
-    //TODO: Allow the user to provide text instead of a url
+    return (
+        <div className="w-full h-full overflow-hidden p-4">
+            <Flex className="h-full">
+                <div className="w-1/3 border-solid">
+                    <ResourceList resources={data} />
+                </div>
+                <div>
+                    <Text>Right</Text>
+                </div>
+            </Flex>
 
-    return <div className="centered-container"><UrlInput /></div>
+        </div>
+    )
 }
 
 

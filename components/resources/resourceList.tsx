@@ -4,7 +4,7 @@ import { Resource } from "@/types/resourceTypes";
 import "./resources.scss";
 import ResourceLineItem from "./resourceLineItem";
 import { IHash } from "@/types/globalTypes";
-import { Button } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { useRef } from "react";
 import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
 import Link from "next/link";
@@ -40,7 +40,33 @@ export const ResourceList = (props: ResourceListProps) => {
     return (
         <div className="user-resources-container">
 
-            <div className="button-container">
+            <Flex flexDirection="column" className="max-h-full">
+
+                <div>
+                    <div className="resources-list overflow-y-scroll">
+                        {resources.map((resource: Resource) => {
+                            return (
+                                <div key={`resource-preview-${resource.id}`} className="resource-preview">
+                                    <ResourceLineItem resource={resource} onSelectHandler={selectionHandler} />
+                                </div>
+                            )
+                        })}
+                    </div></div>
+                <div className="button-container">
+                    <div className="add-resource-button">
+                        <Link href="/image_processor"><Button>Add</Button></Link>
+                    </div>
+                </div>
+            </Flex>
+        </div>
+    )
+
+}
+
+export default ResourceList;
+
+/*
+<div className="button-container">
 
                 <div className="add-resource-button">
                     <Link href="/image_processor"><Button>Add</Button></Link>
@@ -49,20 +75,4 @@ export const ResourceList = (props: ResourceListProps) => {
                     <Button onClick={generateHandler}>Generate</Button>
                 </div>
             </div>
-
-            <div className="resources-list">
-                {resources.map((resource: Resource) => {
-                    return (
-                        <div key={`resource-preview-${resource.id}`} className="resource-preview">
-                            <ResourceLineItem resource={resource} onSelectHandler={selectionHandler} />
-                        </div>
-                    )
-                })}
-
-            </div>
-        </div>
-    )
-
-}
-
-export default ResourceList;
+*/
