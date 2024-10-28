@@ -3,17 +3,17 @@ import { Resource } from "@/types/resourceTypes";
 
 import "./resources.scss";
 import ResourceLineItem from "./resourceLineItem";
-import { IHash } from "@/types/globalTypes";
 import { Button, Flex } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useContext } from "react";
 import Link from "next/link";
+import { ResourcesContext } from "@/context/resources/provider";
 
 type ResourceListProps = {
     resources: Resource[];
 }
 export const ResourceList = (props: ResourceListProps) => {
     const { resources } = props;
-    const selectedResources: IHash = useRef({});
+    const { selectedResources } = useContext(ResourcesContext);
 
     //on edit, send the list of selected id's
     const selectionHandler = (selectedId: string, state: boolean) => {
@@ -23,6 +23,8 @@ export const ResourceList = (props: ResourceListProps) => {
         else {
             delete selectedResources.current[selectedId];
         }
+
+        console.log(selectedResources.current);
     }
 
 
