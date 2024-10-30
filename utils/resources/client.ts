@@ -1,13 +1,24 @@
-import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
+import { RESOURCE_TYPE_LESSON_PLAN, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_SUMMARY, URL_PARAM_RESOURCE_ID } from "@/types/constants";
 
 
-export const generateResource = async (inputIdList: string[]) => {
+export const generateResource = async (type: string, inputIdList: string[]) => {
     const resourceIdParamArray = inputIdList.map((key) => [URL_PARAM_RESOURCE_ID, key]);
+    console.log(type);
 
     const resourceIdSearchParams = new URLSearchParams(resourceIdParamArray);
-    const quizFetch = await fetch("/api/quiz?" + resourceIdSearchParams.toString(), { method: "POST" });
-    const quizData = await quizFetch.json();
-    console.log(quizData);
-    return quizData;
-    //TODO: put the returned quizData into a useContext container to be displayed
+    if (type === RESOURCE_TYPE_QUIZ) {
+        //TODO: Put this into a server action
+        const quizFetch = await fetch("/api/quiz?" + resourceIdSearchParams.toString(), { method: "POST" });
+        const quizData = await quizFetch.json();
+        console.log(quizData);
+        return quizData;
+    }
+    if (type === RESOURCE_TYPE_LESSON_PLAN) {
+        const lessonPlanData = await fetch("/api/lesson_plans?" + resourceIdSearchParams.toString(), { method: "POST" });
+        console.log(await lessonPlanData.json());
+        return lessonPlanData;
+    }
+    if (type === RESOURCE_TYPE_SUMMARY) {
+
+    }
 }

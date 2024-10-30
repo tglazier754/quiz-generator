@@ -2,7 +2,7 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
 import ResourceList from "@/components/resources/resourceList";
-import { getResources } from "@/utils/resources/server";
+import { getAllResources } from "@/utils/resources/server";
 import LibraryResourceUploader from "@/components/image_processor/LibraryResourceUploader";
 import ResourceActionsPanel from "@/components/resources/actions/resourceActionsPanel";
 import ResourceContextProvider from "@/context/resources/provider";
@@ -17,7 +17,7 @@ const page = async (props: PageProps) => {
     const { searchParams } = props;
     console.log(searchParams);
 
-    const resources = await getResources();
+    const resources = await getAllResources();
     const data = JSON.parse(resources || "");
 
     return (

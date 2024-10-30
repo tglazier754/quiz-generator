@@ -1,4 +1,9 @@
 
+
+export type QuizQuestion = {
+    question: string;
+    answer: string;
+}
 export type Resource = {
     id?: string;
     url?: File | string | null;
@@ -8,4 +13,5 @@ export type Resource = {
     created_at?: Date;
     last_modified?: Date;
     type: string;
+    questions?: QuizQuestion[];
 };

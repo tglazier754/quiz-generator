@@ -1,7 +1,7 @@
-import { generateQuizDataFromText } from "@/utils/quiz/server";
+import { RESOURCE_TYPE_LESSON_PLAN, TABLE_RESOURCES, URL_PARAM_RESOURCE_ID } from "@/types/constants";
+import { generateLessonPlanFromText } from "@/utils/lesson_plans/server";
+import { getCombinedContentFromSpecificResources } from "@/utils/resources/server";
 import { createClient } from "@/utils/supabase/server";
-import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
-import { getCombinedContentFromSpecificResources, saveQuizToDatabase } from "@/utils/resources/server";
 
 
 //TODO: Move this functionality into its own function
@@ -20,25 +20,25 @@ export async function POST(request: Request) {
         const idList = searchParams.getAll(URL_PARAM_RESOURCE_ID);
 
         try {
+
             const content = await getCombinedContentFromSpecificResources(idList);
 
-            //call quiz generator OpenAI using the resources data
+            const generatedLessonPlanData = await generateLessonPlanFromText(content);
 
-            const generatedQuizData = await generateQuizDataFromText(content);
-            const generatedQuizObject = JSON.parse(generatedQuizData);
-            const postedQuizData = await saveQuizToDatabase(generatedQuizObject);
+            const generatedLessonPlanObject = JSON.parse(generatedLessonPlanData);
+            //create a resource entry in the database
+            const { data: lessonPlanEntry } = await supabaseConnection.from(TABLE_RESOURCES).insert({ name: generatedLessonPlanObject.name, description: generatedLessonPlanObject.description, type: RESOURCE_TYPE_LESSON_PLAN, value: generatedLessonPlanObject.lesson_plan }).select();
 
-            if (postedQuizData) {
-                return new Response(JSON.stringify(postedQuizData));
-            }
-            else {
-                return new Response("Unable to generate quiz");
-            }
+            return new Response(JSON.stringify(lessonPlanEntry));
+
         }
         catch (error) {
             console.log(error);
-            return new Response("Unable to generate quiz");
         }
+
+
+
+
     }
 
 

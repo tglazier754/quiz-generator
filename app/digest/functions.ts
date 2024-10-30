@@ -4,13 +4,14 @@ import { convert } from "html-to-text";
 import { ChatOpenAI } from "@langchain/openai";
 
 import { PromptTemplate } from "@langchain/core/prompts";
-import { basicQuizPrompt, formatConversion, websiteSummaryPrompt } from "../../utils/prompts";
+import { websiteSummaryPrompt } from "../../utils/prompts";
 import { StringOutputParser, JsonOutputParser } from "@langchain/core/output_parsers";
 
 import {
     RunnableSequence,
     RunnablePassthrough,
 } from "@langchain/core/runnables";
+import { basicQuizPrompt, formatConversion } from "@/utils/quiz/prompts";
 
 
 export async function generateQuizData(url?: string | string[] | undefined) {
