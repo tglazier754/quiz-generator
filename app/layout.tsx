@@ -34,7 +34,7 @@ export default function RootLayout({
           <header>
             <TopMenu />
           </header>
-          <main className="w-screen h-[calc(100vh-3rem)] top-12 absolute">
+          <main className="w-screen h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] absolute overflow-scroll">
             {children}
           </main>
 

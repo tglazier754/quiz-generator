@@ -2,6 +2,7 @@
 const nextConfig = {
     experimental: {
         serverComponentsExternalPackages: ['tesseract.js'],
+        optimizePackageImports: ["@chakra-ui/react"]
     },
     images: {
         remotePatterns: [

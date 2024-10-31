@@ -11,7 +11,7 @@ import { ResourcesContext } from "@/context/resources/provider";
 type ResourceListProps = {
     resources: Resource[];
 }
-export const ResourceList = (props: ResourceListProps) => {
+export const ResourceListOld = (props: ResourceListProps) => {
     const { resources } = props;
     const { selectedResources } = useContext(ResourcesContext);
 
@@ -30,7 +30,6 @@ export const ResourceList = (props: ResourceListProps) => {
 
     return (
         <div className="user-resources-container h-full">
-
             <Flex flexDirection="column" className="max-h-full flex-nowrap h-full">
 
                 <div className="h-[90%] ">
@@ -55,4 +54,4 @@ export const ResourceList = (props: ResourceListProps) => {
 
 }
 
-export default ResourceList;
+export default ResourceListOld;

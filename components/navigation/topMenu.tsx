@@ -1,11 +1,11 @@
-import { Circle, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Circle, Flex, Spacer } from "@chakra-ui/react";
 import UserMenu from "./userMenu";
 
 export const TopMenu = async () => {
 
 
     return (
-        <div className="w-screen top-0 h-12 p-0 bg-white border-b border-solid">
+        <Box className="w-screen  h-12 p-0 ">
 
             <Flex alignItems="center" className="min-h-12 pr-4 pl-4">
                 <Circle bg="red" color="white">
@@ -16,7 +16,7 @@ export const TopMenu = async () => {
                     <UserMenu />
                 </div>
             </Flex>
-        </div>
+        </Box>
     )
 };
 

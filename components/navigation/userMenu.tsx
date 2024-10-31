@@ -1,7 +1,8 @@
 "use client";
-import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+
 import { createClient } from "@/utils/supabase/client";
+import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from "../ui/menu";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 export const UserMenu = () => {
 
@@ -12,17 +13,12 @@ export const UserMenu = () => {
     }
 
     return (
-        <Menu>
-            <MenuButton
-                as={IconButton}
-                icon={<HamburgerIcon />}
-            />
-            <MenuList>
-                <MenuItem onClick={logoutAction}>
-                    Log Out
-                </MenuItem>
-            </MenuList>
-        </Menu>
+        <MenuRoot>
+            <MenuTrigger><GiHamburgerMenu /></MenuTrigger>
+            <MenuContent>
+                <MenuItem value="Log Out" onClick={logoutAction} />
+            </MenuContent>
+        </MenuRoot>
     )
 
 }
