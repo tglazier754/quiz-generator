@@ -6,6 +6,7 @@ import { createContext, ReactElement, useRef, useState } from "react";
 
 export type ResourceContext = {
     selectedResources: IHash;
+    setSelectedResources: (hash: IHash) => void;
     activeResource?: Resource | null;
     setActiveResource: (resource: Resource | null) => void;
     isGenerating: boolean;
@@ -20,13 +21,13 @@ type ResourceContextProviderProps = {
 
 export const ResourceContextProvider = ({ children }: ResourceContextProviderProps) => {
 
-    const selectedResources: IHash = useRef({});
+    const [selectedResources, setSelectedResources] = useState<IHash>({});
     const [activeResource, setActiveResource] = useState<Resource | null>(null);
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
 
     return (
-        <ResourcesContext.Provider value={{ selectedResources, activeResource, setActiveResource, isGenerating, setIsGenerating }}>
+        <ResourcesContext.Provider value={{ selectedResources, setSelectedResources, activeResource, setActiveResource, isGenerating, setIsGenerating }}>
             {children}
         </ResourcesContext.Provider>
     );

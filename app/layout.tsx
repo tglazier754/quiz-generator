@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import TopMenu from "@/components/navigation/topMenu";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,8 +35,10 @@ export default function RootLayout({
           <header>
             <TopMenu />
           </header>
-          <main className="w-screen h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] absolute overflow-scroll">
+          <main className="max-w-screen w-screen h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] absolute overflow-y-scroll">
             {children}
+
+            <Toaster />
           </main>
 
         </Providers>

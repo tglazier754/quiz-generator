@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
   },
+  corePlugins: {
+    preflight: false,
+  },
   plugins: [],
 };
 export default config;

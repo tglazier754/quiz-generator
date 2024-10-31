@@ -1,9 +1,12 @@
 "use client";
 
 import { Resource } from "@/types/resourceTypes";
-import { Card, Heading, Text } from "@chakra-ui/react";
+import { AspectRatio, Card, Heading, Image, Text } from "@chakra-ui/react";
 
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { TbTrash } from "react-icons/tb";
+import { PiPencil } from "react-icons/pi";
 
 type ResourceCardProps = {
     resource: Resource;
@@ -16,16 +19,34 @@ export const ResourceCard = (props: ResourceCardProps) => {
     const [isSelected, setIsSelected] = useState(false);
 
     const handleSelection = () => {
-        setIsSelected(!isSelected);
-        onSelectHandler(resource.id || "", isSelected);
+        const selected = isSelected;
+        setIsSelected(!selected);
+        if (onSelectHandler) onSelectHandler(resource.id || "", !selected);
+    }
+
+    const handleEditButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (event.stopPropagation) event.stopPropagation();
+        console.log("Edit");
     }
 
     return (
-        <Card.Root maxW="sm" onClick={handleSelection} >
-            <Card.Body>
-                <Heading size="md">{resource.name}Test</Heading>
-                <Text>{resource.description}</Text>
+        <Card.Root colorPalette={isSelected ? "blue" : "current"} h="100%" variant={isSelected ? "outline" : "subtle"} maxW="sm" onClick={handleSelection} >
+            <AspectRatio ratio={16 / 9}>
+                {resource.url ? <Image src={resource.url as string} alt={resource.name} /> : <></>}
+            </AspectRatio>
+
+            <Card.Body gap="1rem">
+                <Card.Title lineHeight="1.2rem">{resource.name}</Card.Title>
+                <Card.Description textOverflow="ellipsis" wordWrap="break-word" overflow="hidden" maxH="8em" lineHeight="1rem" >
+                    {resource.description}
+                </Card.Description>
             </Card.Body>
+            <Card.Footer >
+                <Button colorPalette="red" variant="ghost" onClick={handleEditButton} >
+                    <TbTrash />
+                </Button>
+                <Button variant="outline" onClick={handleEditButton}><PiPencil /></Button>
+            </Card.Footer>
         </Card.Root>
     )
 }

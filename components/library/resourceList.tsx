@@ -1,6 +1,6 @@
 "use client";
 import { Resource } from "@/types/resourceTypes";
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, Center, SimpleGrid, Spinner } from "@chakra-ui/react";
 import ResourceCard from "./resourceCard";
 import { ResourcesContext } from "@/context/resources/provider";
 import { useContext } from "react";
@@ -10,22 +10,22 @@ type ResourceListProps = {
 }
 export const ResourceList = (props: ResourceListProps) => {
     const { resources } = props;
-    const { selectedResources } = useContext(ResourcesContext);
+    const { isGenerating, selectedResources, setSelectedResources } = useContext(ResourcesContext);
 
     //on edit, send the list of selected id's
     const selectionHandler = (selectedId: string, state: boolean) => {
+        const selectedResourcesTemp = JSON.parse(JSON.stringify(selectedResources));
         if (state) {
-            selectedResources.current[selectedId] = state;
+            selectedResourcesTemp[selectedId] = state;
         }
         else {
-            delete selectedResources.current[selectedId];
+            delete selectedResourcesTemp[selectedId];
         }
-
-        console.log(selectedResources.current);
+        setSelectedResources(selectedResourcesTemp);
     }
     return (
-        <div className="max-w-full w-full h-full max-h-full">
-            <SimpleGrid minChildWidth="10rem" className="max-w-full w-full " >
+        <Box className="max-w-full w-full h-full max-h-full p-4">
+            <SimpleGrid minChildWidth="14rem" gap="2rem" className="max-w-full w-full " >
                 {resources.map((resource: Resource) => {
                     return (
                         <div key={`resource-preview-${resource.id}`} className="resource-preview">
@@ -34,7 +34,12 @@ export const ResourceList = (props: ResourceListProps) => {
                     )
                 })}
             </SimpleGrid>
-        </div>
+            {isGenerating ? <Box zIndex={100000000} pos="absolute" inset="0" bg="bg/80">
+                <Center h="full">
+                    <Spinner color="teal.500" />
+                </Center>
+            </Box> : null}
+        </Box>
     )
 }
 

@@ -2,10 +2,11 @@
 import ResourceActionsPanel from "@/components/library/resourceActions";
 import ResourceList from "@/components/library/resourceList";
 import { getAllResources } from "@/utils/resources/server";
-import { Box, Heading } from "@chakra-ui/react"
+import { Box, Heading, HStack } from "@chakra-ui/react"
 
+import ResourceContextProvider from "@/context/resources/provider";
 
-export default async function page() {
+const page = async () => {
 
     const resources = await getAllResources();
     const data = JSON.parse(resources || "");
@@ -13,14 +14,23 @@ export default async function page() {
     //TODO: create a context Provider wrapper here instead of putting components directly in this tree
 
     return (
-        <div>
-            <Box className="w-screen  h-12 p-0">
-                <ResourceActionsPanel />
-            </Box>
-            <Heading>Library</Heading>
+        <ResourceContextProvider>
+            <>
+                <HStack className="w-[calc(100vw-1rem)] p-9 h-12 fixed mb-4 t-0 z-10" bg="black" justify="space-between">
 
-            <ResourceList resources={data} />
+                    <Heading fontSize="xl">Library</Heading>
+                    <ResourceActionsPanel />
+                </HStack>
+                <Box className="p-4">
 
-        </div>
+                    <Box className="mt-12">
+                        <ResourceList resources={data} />
+                    </Box>
+
+                </Box>
+            </>
+        </ResourceContextProvider >
     )
 }
+
+export default page;
