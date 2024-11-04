@@ -6,11 +6,11 @@ import { generateResource } from "@/utils/resources/client";
 import { Box, Button, createListCollection, DialogHeader, Flex, } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaWandMagicSparkles } from "react-icons/fa6";
-import { BiPlus } from "react-icons/bi";
 import { TbTrash } from "react-icons/tb";
 import { DialogBody, DialogContent, DialogFooter, DialogRoot, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { toaster } from "../ui/toaster";
+import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
 
 export const ResourceActionsPanel = () => {
     const { selectedResources, isGenerating, setIsGenerating, setActiveResource } = useContext(ResourcesContext);
@@ -19,6 +19,7 @@ export const ResourceActionsPanel = () => {
     const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false);
 
     const MACHINE_GENERATED_TYPES_LIST_DATA = createListCollection({ items: MACHINE_GENERATED_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
+
 
 
     const generateResourceHandler = async () => {
@@ -98,8 +99,11 @@ export const ResourceActionsPanel = () => {
                     </DialogRoot>
                 </Box>
                 <Box>
-                    <Button variant="outline" disabled={isGenerating} ><BiPlus /></Button>
+
                 </Box>
+
+                <LibraryResourceUploader />
+
             </Flex >
         </Box >
     )

@@ -3,10 +3,11 @@
 import { Resource } from "@/types/resourceTypes";
 import { AspectRatio, Card, Heading, Image, Text } from "@chakra-ui/react";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { TbTrash } from "react-icons/tb";
 import { PiPencil } from "react-icons/pi";
+import { ResourcesContext } from "@/context/resources/provider";
 
 type ResourceCardProps = {
     resource: Resource;
@@ -17,6 +18,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
     const { resource, onSelectHandler } = props;
 
     const [isSelected, setIsSelected] = useState(false);
+    const { setActiveResource, setIsDrawerOpen } = useContext(ResourcesContext);
 
     const handleSelection = () => {
         const selected = isSelected;
@@ -27,6 +29,8 @@ export const ResourceCard = (props: ResourceCardProps) => {
     const handleEditButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (event.stopPropagation) event.stopPropagation();
         console.log("Edit");
+        setActiveResource(resource);
+        setIsDrawerOpen(true);
     }
 
     return (

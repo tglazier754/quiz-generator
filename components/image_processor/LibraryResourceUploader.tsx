@@ -3,34 +3,50 @@
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, testImageDataURl, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
 import { convertImageToDataUrl, extractImageText } from "@/utils/images/client";
-import { Button, HStack, Image, Input, Select, Square, Stack, Text, Textarea } from "@chakra-ui/react";
-import { ChangeEvent, useRef, useState } from "react";
+import { Box, Button, createListCollection, HStack, Image, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
+import { FileUploadList, FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
+import { HiUpload } from "react-icons/hi";
+import { BiPlus } from "react-icons/bi";
+import { ResourcesContext } from "@/context/resources/provider";
+import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 
 export const LibraryResourceUploader = () => {
 
+
+    const { activeResource, setActiveResource, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
+
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [url, setUrl] = useState("");
-    const [valueText, setValueText] = useState<string>("");
+    const [name, setName] = useState(activeResource && activeResource.name || "");
+    const [description, setDescription] = useState(activeResource && activeResource.description || "");
+    const [url, setUrl] = useState(activeResource && activeResource.url as string || "");
+    const [valueText, setValueText] = useState<string>(activeResource && activeResource.value || "");
     const [isProcessing, setIsProcessing] = useState(false);
     const [processingError, setProcessingError] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadingError, setUploadingError] = useState<string | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const imageSelectorRef = useRef<HTMLInputElement>(null);
-    const [selectedType, setSelectedType] = useState(RESOURCE_TYPE_TEXT);
+    const [selectedResourceType, setSelectedResourceType] = useState<string[]>([RESOURCE_TYPE_TEXT]);
 
-    //const [isEditing, setIsEditing] = useState(false);
+    const USER_GENERATED_TYPES_LIST_DATA = createListCollection({ items: USER_RESOURCE_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
-    const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedType(event.target.value);
-    }
+
+    useEffect(() => {
+        setName(activeResource && activeResource.name || "");
+        setDescription(activeResource && activeResource.description || "");
+        setUrl(activeResource && activeResource.url as string || "");
+        setValueText(activeResource && activeResource.value || "");
+    }, [activeResource]);
 
     const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
 
+        console.log(event);
+
         if (event.target.files && event.target.files.length) {
             setSelectedImage(event.target.files[0]);
+            handleImageProcess();
         }
     }
 
@@ -54,14 +70,14 @@ export const LibraryResourceUploader = () => {
         setValueText(inputValue);
     }
 
-    const handleResourceUpload = async () => {
+    const handleCreateResourceUpload = async () => {
         setUploadSuccess(false);
         setIsUploading(true);
         const resource: Resource = {
             name,
             description,
             value: valueText,
-            type: selectedType,
+            type: selectedResourceType[0],
             url: null,
         }
         if (selectedImage) {
@@ -92,68 +108,120 @@ export const LibraryResourceUploader = () => {
         finally {
             setIsUploading(false);
         }
+    }
 
-
+    const handleUpdateResourceUpload = () => {
+        console.log("update resource");
     }
 
     return (
-        <div>
-            <Stack>
+        <DrawerRoot size="md" open={isDrawerOpen} onOpenChange={(e) => setIsDrawerOpen(e.open)}>
+            <DrawerBackdrop />
+            <DrawerTrigger asChild>
+                <Button variant="outline" disabled={isGenerating} onClick={() => setActiveResource(null)} >
+                    <BiPlus />
+                </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+                <DrawerCloseTrigger />
+                <DrawerHeader>
+                    <DrawerTitle>Add or Update Resource</DrawerTitle>
+                </DrawerHeader>
+                <DrawerBody>
+                    <Box>
+                        <Stack>
 
-                <div className="description-data">
-                    <HStack >
-                        <div className="w-1/3">
-                            <Square>
-                                <Image src={testImageDataURl} alt="Uploaded Image" />
-                            </Square>
-                        </div>
-                        <div className="flex-1">
-                            <Stack>
-                                <div>
-                                    <Input placeholder="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
-                                </div>
-                                <div>
-                                    <Input placeholder="Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
-                                </div>
-                                <div>
-                                    <Text>Tags will go here</Text>
-                                </div>
-                            </Stack>
-                        </div>
-                    </HStack>
-                </div>
+                            <Box className="description-data">
+                                <HStack >
+                                    <Box className="w-1/3">
+                                        <Square>
+                                            <Image src={testImageDataURl} alt="Uploaded Image" />
+                                        </Square>
+                                    </Box>
+                                    <Box className="flex-1">
+                                        <Stack>
+                                            <Box>
+                                                <Input variant="flushed" placeholder="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
+                                            </Box>
+                                            <Box>
+                                                <Input variant="flushed" placeholder="Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
+                                            </Box>
+                                            <Box>
+                                                <Text>Tags will go here</Text>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                </HStack>
+                            </Box>
 
 
-                <HStack >
-                    <div className="w-1/3">
-                        <Select placeholder="Resource Type" value={selectedType} onChange={handleTypeChange}>
-                            {USER_RESOURCE_TYPES.map((resourceType) => { return <option key={resourceType} value={resourceType}>{resourceType.replace("_", " ").toLowerCase()}</option> })}
-                        </Select>
-                    </div>
-                    <div className="flex-1">
-                        <div className={`${selectedType !== RESOURCE_TYPE_IMAGE ? "hidden" : ""}`}>
-                            <Input id="image-selector" type="file" ref={imageSelectorRef} onChange={handleImageSelection} />
+                            <HStack alignItems="flex-end">
+                                <Box className="w-1/3">
 
-                            {selectedImage && <Button id="image-uploader" onClick={handleImageProcess}>Process</Button>}
-                        </div>
 
-                        <div className={`${selectedType !== RESOURCE_TYPE_WEBSITE ? "hidden" : ""}`}>
-                            <Input type="text" placeholder="URL" value={url} onChange={(e) => { setUrl(e.target.value) }} />
-                        </div>
-                    </div>
-                </HStack>
+                                    {activeResource ?
+                                        <Input variant="flushed" disabled value={activeResource && activeResource.type || ""} />
+                                        :
+                                        <SelectRoot variant="outline" collection={USER_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
+                                            <SelectLabel>Select resource type</SelectLabel>
+                                            <SelectTrigger>
+                                                <SelectValueText placeholder="Select Content Type" />
+                                            </SelectTrigger>
+                                            <SelectContent zIndex={100000}>
+                                                {USER_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
+                                                    <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
+                                                        {resource_type.label}
+                                                    </SelectItem>
+                                                )
+                                                )}
+                                            </SelectContent>
+                                        </SelectRoot>
+                                    }
 
-                {isProcessing && <p>Processing...</p>}
-                <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
-                {processingError && <Text>{processingError}</Text>}
-                <div>
-                    <Button onClick={handleResourceUpload} disabled={isUploading}>Add Resource</Button>
-                    {isUploading && <p>Uploading...</p>}
-                    {uploadingError && <Text>{uploadingError}</Text>}
-                    {uploadSuccess && <Text>Uploaded Successfully</Text>}
-                </div>
-            </Stack>
-        </div>
+
+                                </Box>
+                                <Box className="flex-1">
+                                    <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_IMAGE ? "hidden" : ""}`}>
+                                        {/*<Input id="image-selector" type="file" ref={imageSelectorRef} onChange={handleImageSelection} />*/}
+
+                                        <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} ref={imageSelectorRef} onChange={handleImageSelection}>
+                                            <FileUploadTrigger asChild>
+                                                <Button variant="outline" size="sm" >
+                                                    <HiUpload />Upload file
+                                                </Button>
+                                            </FileUploadTrigger>
+                                            <FileUploadList />
+                                        </FileUploadRoot>
+
+                                        {/*selectedImage && <Button id="image-uploader" onClick={handleImageProcess}>Process</Button>*/}
+                                    </Box>
+
+                                    <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_WEBSITE ? "hidden" : ""}`}>
+                                        <Input type="text" placeholder="URL" value={url} onChange={(e) => { setUrl(e.target.value) }} />
+                                    </Box>
+                                </Box>
+                            </HStack>
+
+                            {isProcessing && <p>Processing...</p>}
+                            <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
+                            {processingError && <Text>{processingError}</Text>}
+                            <Box>
+
+                                {isUploading && <p>Uploading...</p>}
+                                {uploadingError && <Text>{uploadingError}</Text>}
+                                {uploadSuccess && <Text>Uploaded Successfully</Text>}
+                            </Box>
+                        </Stack>
+                    </Box>
+
+                </DrawerBody>
+                <DrawerFooter>
+                    <Box>
+                        <Button onClick={activeResource ? handleUpdateResourceUpload : handleCreateResourceUpload} disabled={isUploading}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
+                    </Box>
+                </DrawerFooter>
+            </DrawerContent>
+        </DrawerRoot>
     )
 
 

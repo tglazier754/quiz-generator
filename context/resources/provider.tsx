@@ -11,6 +11,8 @@ export type ResourceContext = {
     setActiveResource: (resource: Resource | null) => void;
     isGenerating: boolean;
     setIsGenerating: (value: boolean) => void;
+    isDrawerOpen: boolean;
+    setIsDrawerOpen: (value: boolean) => void;
 }
 
 export const ResourcesContext = createContext<ResourceContext>({} as ResourceContext);
@@ -24,10 +26,11 @@ export const ResourceContextProvider = ({ children }: ResourceContextProviderPro
     const [selectedResources, setSelectedResources] = useState<IHash>({});
     const [activeResource, setActiveResource] = useState<Resource | null>(null);
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
+    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
 
     return (
-        <ResourcesContext.Provider value={{ selectedResources, setSelectedResources, activeResource, setActiveResource, isGenerating, setIsGenerating }}>
+        <ResourcesContext.Provider value={{ selectedResources, setSelectedResources, activeResource, setActiveResource, isGenerating, setIsGenerating, isDrawerOpen, setIsDrawerOpen }}>
             {children}
         </ResourcesContext.Provider>
     );
