@@ -1,5 +1,5 @@
 
 
-export interface IHash {
-    [id: string]: any;
+export interface IHash<type> {
+    [id: string]: type;
 }

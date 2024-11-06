@@ -1,21 +1,49 @@
 "use client";
 
 import { QuizQuestion } from "@/types/resourceTypes";
-import { Card } from "@chakra-ui/react";
+import { Card, Editable, EditableValueChangeDetails } from "@chakra-ui/react";
+import { useState } from "react";
 
 type QuizCardProps = {
     question: QuizQuestion;
+    changeHandler: (updatedQuestion: QuizQuestion) => void;
 }
 
 export const QuizCard = (props: QuizCardProps) => {
-    const { question } = props;
+    const { question, changeHandler } = props;
+
+    const [questionText, setQuestionText] = useState(question.question);
+    const [answerText, setAnswerText] = useState(question.answer);
+
+    const handleQuestionTextChange = (e: EditableValueChangeDetails) => {
+        setQuestionText(e.value);
+        changeHandler({ ...question, question: e.value, answer: answerText });
+    }
+    const handleAnswerTextChange = (e: EditableValueChangeDetails) => {
+        setAnswerText(e.value);
+        changeHandler({ ...question, question: questionText, answer: e.value });
+    }
 
     return (
         <Card.Root>
             <Card.Body>
-                <Card.Title lineHeight="1.2rem">{question.question}</Card.Title>
-                <Card.Description textOverflow="ellipsis" wordWrap="break-word" overflow="hidden" maxH="8em" lineHeight="1rem" >
-                    {question.answer}
+                <Card.Title >
+                    <Editable.Root
+                        selectOnFocus={false}
+                        value={questionText}
+                        onValueChange={handleQuestionTextChange}>
+                        <Editable.Preview />
+                        <Editable.Textarea />
+                    </Editable.Root>
+                </Card.Title>
+                <Card.Description  >
+                    <Editable.Root
+                        selectOnFocus={false}
+                        value={answerText}
+                        onValueChange={handleAnswerTextChange}>
+                        <Editable.Preview />
+                        <Editable.Textarea />
+                    </Editable.Root>
                 </Card.Description>
 
             </Card.Body>

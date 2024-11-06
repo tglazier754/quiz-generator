@@ -251,7 +251,7 @@ export const LibraryResourceUploader = () => {
                             {isProcessing && <p>Processing...</p>}
 
                             {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
-                                <Quiz questions={activeResource?.quiz_questions} /> :
+                                <Quiz questions={activeResource?.quiz_questions || []} /> :
                                 <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
                             }
 
