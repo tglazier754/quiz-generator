@@ -4,14 +4,20 @@ import { Box, Center, SimpleGrid, Spinner } from "@chakra-ui/react";
 import ResourceCard from "./resourceCard";
 import { ResourcesContext } from "@/context/resources/provider";
 import { useContext } from "react";
+import { ResourceHash } from "@/types/globalTypes";
 
 type ResourceListProps = {
-    resources: Resource[];
+    resources: ResourceHash;
 }
 export const ResourceList = (props: ResourceListProps) => {
     const { resources } = props;
-    const { isGenerating, selectedResources, setSelectedResources } = useContext(ResourcesContext);
 
+
+
+    const { resourceMap, setResourceMap, isGenerating, selectedResources, setSelectedResources } = useContext(ResourcesContext);
+
+    setResourceMap(resources);
+    console.log(resources);
     //on edit, send the list of selected id's
     const selectionHandler = (selectedId: string, state: boolean) => {
         const selectedResourcesTemp = JSON.parse(JSON.stringify(selectedResources));
@@ -26,7 +32,7 @@ export const ResourceList = (props: ResourceListProps) => {
     return (
         <Box className="max-w-full w-full h-full max-h-full p-4">
             <SimpleGrid minChildWidth="14rem" gap="2rem" className="max-w-full w-full " >
-                {resources.map((resource: Resource) => {
+                {Object.values(resourceMap).map((resource: Resource) => {
                     return (
                         <div key={`resource-preview-${resource.id}`} className="resource-preview">
                             <ResourceCard resource={resource} onSelectHandler={selectionHandler} />

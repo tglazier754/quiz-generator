@@ -26,5 +26,5 @@ export async function GET(req: NextRequest) {
         //get user data from database
     }
 
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/library", req.url));
 }

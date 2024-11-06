@@ -4,6 +4,7 @@
 
 //table names
 export const TABLE_RESOURCES = "resources";
+export const TABLE_USER_RESOURCES = "user_resources";
 export const TABLE_QUIZ_QUESTIONS = "quiz_questions";
 
 //page sizes

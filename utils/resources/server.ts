@@ -1,5 +1,5 @@
 "use server";
-import { RESOURCE_ORIGIN_USER, RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES } from "@/types/constants";
+import { RESOURCE_ORIGIN_USER, RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES, TABLE_USER_RESOURCES } from "@/types/constants";
 import { createClient } from "../supabase/server";
 import { Resource } from "@/types/resourceTypes";
 import { SupabaseClient } from "@supabase/supabase-js";
@@ -18,7 +18,8 @@ export const getAllResources = async () => {
         //const totalOffset = pageOffset * pageSize;
 
         //TODO: make sure we use the totalOffset
-        const { data } = await supabaseConnection.from(TABLE_RESOURCES).select().eq("origin", RESOURCE_ORIGIN_USER);
+        const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*)`).eq("origin", RESOURCE_ORIGIN_USER);
+        console.log(data);
         return JSON.stringify(data);
     }
 }
@@ -63,7 +64,24 @@ export const getCombinedContentFromSpecificResources = async (resourceIdList: st
 }
 
 export const postNewResource = async (supabaseInstance: SupabaseClient, resource: Resource) => {
-    const { data } = await supabaseInstance?.from(TABLE_RESOURCES).insert(resource).select();
+    //TODO:Handle errors here
+    const { data: userData, error: userError } = await supabaseInstance.auth.getUser();
+    if (!userError) {
+        console.log(resource);
+        //create the post in the database
+        const { data: resourceData, error: resourceError } = await supabaseInstance?.from(TABLE_RESOURCES).insert(resource).select();
+        //get the post's id and add an entry for this user in the user resources table if it succeeded
+        if (!resourceError) {
+            //TODO: handle errors here
+            await supabaseInstance?.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: resourceData[0]?.id }).select();
+        }
+        return resourceData;
+    }
+    return JSON.stringify({ error: "User not logged in" });
+}
+
+export const putExistingResource = async (supabaseInstance: SupabaseClient, resource: Resource) => {
+    const { data } = await supabaseInstance?.from(TABLE_RESOURCES).update(resource).eq('id', resource.id).select();
     return data;
 }
 

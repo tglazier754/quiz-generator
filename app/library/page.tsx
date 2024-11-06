@@ -5,13 +5,21 @@ import { getAllResources } from "@/utils/resources/server";
 import { Box, Heading, HStack } from "@chakra-ui/react"
 
 import ResourceContextProvider from "@/context/resources/provider";
+import { ResourceHash } from "@/types/globalTypes";
+import { Resource } from "@/types/resourceTypes";
 
 const page = async () => {
 
     const resources = await getAllResources();
     const data = JSON.parse(resources || "");
 
-    //TODO: create a context Provider wrapper here instead of putting components directly in this tree
+    const resourceHashMap: ResourceHash = {};
+    data.forEach((resource: Resource) => {
+        if (typeof resource.id === 'string') {
+            resourceHashMap[resource.id as string] = resource;
+            console.log(resource);
+        }
+    });
 
     return (
         <ResourceContextProvider>
@@ -24,7 +32,7 @@ const page = async () => {
                 <Box className="p-4">
 
                     <Box className="mt-12">
-                        <ResourceList resources={data} />
+                        <ResourceList resources={resourceHashMap} />
                     </Box>
 
                 </Box>

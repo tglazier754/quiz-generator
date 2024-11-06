@@ -1,10 +1,12 @@
 "use client";
 
-import { IHash } from "@/types/globalTypes";
+import { IHash, ResourceHash } from "@/types/globalTypes";
 import { Resource } from "@/types/resourceTypes";
 import { createContext, ReactElement, useRef, useState } from "react";
 
 export type ResourceContext = {
+    resourceMap: ResourceHash;
+    setResourceMap: (resourceList: ResourceHash) => void;
     selectedResources: IHash;
     setSelectedResources: (hash: IHash) => void;
     activeResource?: Resource | null;
@@ -23,6 +25,7 @@ type ResourceContextProviderProps = {
 
 export const ResourceContextProvider = ({ children }: ResourceContextProviderProps) => {
 
+    const [resourceMap, setResourceMap] = useState<ResourceHash>({});
     const [selectedResources, setSelectedResources] = useState<IHash>({});
     const [activeResource, setActiveResource] = useState<Resource | null>(null);
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -30,7 +33,7 @@ export const ResourceContextProvider = ({ children }: ResourceContextProviderPro
 
 
     return (
-        <ResourcesContext.Provider value={{ selectedResources, setSelectedResources, activeResource, setActiveResource, isGenerating, setIsGenerating, isDrawerOpen, setIsDrawerOpen }}>
+        <ResourcesContext.Provider value={{ resourceMap, setResourceMap, selectedResources, setSelectedResources, activeResource, setActiveResource, isGenerating, setIsGenerating, isDrawerOpen, setIsDrawerOpen }}>
             {children}
         </ResourcesContext.Provider>
     );

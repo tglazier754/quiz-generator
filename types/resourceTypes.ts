@@ -10,8 +10,8 @@ export type Resource = {
     value: string;
     name: string;
     description: string;
-    created_at?: Date;
-    last_modified?: Date;
-    type: string;
+    created_at?: string;//date
+    last_modified?: string;//date
+    type?: string;
     questions?: QuizQuestion[];
 };

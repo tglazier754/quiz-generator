@@ -15,7 +15,7 @@ import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFo
 export const LibraryResourceUploader = () => {
 
 
-    const { activeResource, setActiveResource, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
+    const { resourceMap, setResourceMap, activeResource, setActiveResource, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [name, setName] = useState(activeResource && activeResource.name || "");
@@ -92,8 +92,9 @@ export const LibraryResourceUploader = () => {
             const result = await fetch("/api/resources", {
                 method: "POST", body: formData
             });
-            await result.json();
+            const addedResource = await result.json();
             setUploadSuccess(true);
+            resourceMap[addedResource.id] = addedResource;
 
             setSelectedImage(null);
             if (imageSelectorRef.current) {
@@ -110,15 +111,60 @@ export const LibraryResourceUploader = () => {
         }
     }
 
-    const handleUpdateResourceUpload = () => {
+    const handleUpdateResourceUpload = async () => {
         console.log("update resource");
+        setUploadSuccess(false);
+        setIsUploading(true);
+        const dateData = new Date();
+        //2024-10-23 16:47:18.337551+00
+        const resource: Resource = {
+            ...activeResource,
+            name,
+            description,
+            value: valueText,
+            last_modified: dateData.toISOString()
+        }
+
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(resource));
+
+        try {
+            const result = await fetch("/api/resources", {
+                method: "PUT", body: formData,
+            });
+            const updatedResult = await result.json();
+            setUploadSuccess(true);
+
+            console.log(updatedResult);
+            resourceMap[updatedResult.id] = updatedResult;
+
+            setSelectedImage(null);
+            if (imageSelectorRef.current) {
+                imageSelectorRef.current.files = null;
+                imageSelectorRef.current.value = "";
+            }
+        }
+        catch (error) {
+            console.log(error);
+            setUploadingError(error as string);
+        }
+        finally {
+            setIsUploading(false);
+        }
+    }
+
+    const resetView = () => {
+        setActiveResource(null);
+        setIsProcessing(false);
+        setIsUploading(false);
+        setUploadSuccess(false);
     }
 
     return (
         <DrawerRoot size="md" open={isDrawerOpen} onOpenChange={(e) => setIsDrawerOpen(e.open)}>
             <DrawerBackdrop />
             <DrawerTrigger asChild>
-                <Button variant="outline" disabled={isGenerating} onClick={() => setActiveResource(null)} >
+                <Button variant="outline" disabled={isGenerating} onClick={() => resetView()} >
                     <BiPlus />
                 </Button>
             </DrawerTrigger>
@@ -130,7 +176,6 @@ export const LibraryResourceUploader = () => {
                 <DrawerBody>
                     <Box>
                         <Stack>
-
                             <Box className="description-data">
                                 <HStack >
                                     <Box className="w-1/3">
