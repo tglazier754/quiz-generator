@@ -92,17 +92,17 @@ export const saveQuizToDatabase = async (quizData: Resource) => {
         await supabaseConnection?.auth.getUser();
 
 
-        if (quizData && quizData.questions && quizData.questions.length) {
+        if (quizData && quizData.quiz_questions && quizData.quiz_questions.length) {
             const { data: postedResource } = await supabaseConnection.from(TABLE_RESOURCES).insert({ name: quizData.name, description: quizData.description, type: RESOURCE_TYPE_QUIZ }).select();
 
             //populate the questions table with all of the questions data using that new id
             const id = postedResource && postedResource[0] || "";
             if (postedResource && postedResource[0]) {
-                const preppedQuizQuestions = quizData.questions.map((question: { question: string, answer: string }) => { return { resource_id: id, ...question } })
+                const preppedQuizQuestions = quizData.quiz_questions.map((question: { question: string, answer: string }) => { return { resource_id: id, ...question } })
 
                 await supabaseConnection.from(TABLE_QUIZ_QUESTIONS).insert(preppedQuizQuestions).select();
 
-                const retData = { ...postedResource[0], questions: quizData.questions };
+                const retData = { ...postedResource[0], questions: quizData.quiz_questions };
 
                 resolve(retData);
 

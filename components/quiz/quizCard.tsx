@@ -1,35 +1,26 @@
 "use client";
 
-import { Button, Card, CardBody, CardHeader, Heading, Stack } from "@chakra-ui/react";
-import { useState } from "react";
+import { QuizQuestion } from "@/types/resourceTypes";
+import { Card } from "@chakra-ui/react";
 
-export const QuizCard = (props: { index: number, question: string, answer: string }) => {
-    const { index, question, answer } = props;
+type QuizCardProps = {
+    question: QuizQuestion;
+}
 
-    const [showAnswer, setShowAnswer] = useState(false);
-    const toggleShowAnswer = () => {
-        setShowAnswer(!showAnswer);
-    }
+export const QuizCard = (props: QuizCardProps) => {
+    const { question } = props;
 
     return (
-        <Card className="quiz-card">
-            <CardHeader>
-                <Heading size="md">Question {index}</Heading>
-            </CardHeader>
-            <CardBody>
-                <Stack>
-                    <div className="question">
-                        <p>{question}</p>
-                    </div>
+        <Card.Root>
+            <Card.Body>
+                <Card.Title lineHeight="1.2rem">{question.question}</Card.Title>
+                <Card.Description textOverflow="ellipsis" wordWrap="break-word" overflow="hidden" maxH="8em" lineHeight="1rem" >
+                    {question.answer}
+                </Card.Description>
 
-                    <div className="answer-container">
-                        <Button onClick={toggleShowAnswer}>{showAnswer ? "Hide" : "Show"}</Button>
-                        {showAnswer ? <p >{answer}</p> : null}
-                    </div>
-                </Stack>
-            </CardBody>
+            </Card.Body>
 
-        </Card>
+        </Card.Root>
     )
 }
 

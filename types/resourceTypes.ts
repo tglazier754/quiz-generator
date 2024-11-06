@@ -1,6 +1,9 @@
 
 
 export type QuizQuestion = {
+    id?: string;
+    resource_id?: string;
+    created_at: string;
     question: string;
     answer: string;
 }
@@ -13,5 +16,10 @@ export type Resource = {
     created_at?: string;//date
     last_modified?: string;//date
     type?: string;
-    questions?: QuizQuestion[];
+    quiz_questions?: QuizQuestion[];
 };
+
+
+export interface ResourceHash {
+    [id: string]: Resource;
+}

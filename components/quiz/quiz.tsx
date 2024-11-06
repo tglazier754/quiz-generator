@@ -2,15 +2,22 @@
 
 import QuizCard from "./quizCard";
 import "./quiz.scss";
+import { QuizQuestion } from "@/types/resourceTypes";
 
-export const Quiz = (props: { quizData: { questions: string[], answers: string[] } }) => {
+type QuizProps = {
+    questions: QuizQuestion[];
+}
 
-    const { questions, answers } = props.quizData;
+export const Quiz = (props: QuizProps) => {
+
+    const { questions } = props;
 
     return (
         <div className="quiz-container">
             <div className="quiz-card-container">
-                {questions.map((question: string, index: number) => <QuizCard key={"quiz-card-" + index} index={index + 1} question={question} answer={answers[index]} />)}
+                {questions.map((question: QuizQuestion, index) =>
+                    <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} />
+                )}
             </div>
         </div>
     )

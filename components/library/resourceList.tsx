@@ -4,7 +4,7 @@ import { Box, Center, SimpleGrid, Spinner } from "@chakra-ui/react";
 import ResourceCard from "./resourceCard";
 import { ResourcesContext } from "@/context/resources/provider";
 import { useContext } from "react";
-import { ResourceHash } from "@/types/globalTypes";
+import { ResourceHash } from "@/types/resourceTypes";
 
 type ResourceListProps = {
     resources: ResourceHash;

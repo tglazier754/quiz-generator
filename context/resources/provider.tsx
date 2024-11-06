@@ -1,7 +1,7 @@
 "use client";
 
-import { IHash, ResourceHash } from "@/types/globalTypes";
-import { Resource } from "@/types/resourceTypes";
+import { IHash } from "@/types/globalTypes";
+import { Resource, ResourceHash } from "@/types/resourceTypes";
 import { createContext, ReactElement, useRef, useState } from "react";
 
 export type ResourceContext = {

@@ -1,6 +1,6 @@
 "use client"
 
-import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, testImageDataURl, USER_RESOURCE_TYPES } from "@/types/constants";
+import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, testImageDataURl, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
 import { convertImageToDataUrl, extractImageText } from "@/utils/images/client";
 import { Box, Button, createListCollection, HStack, Image, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
@@ -11,6 +11,7 @@ import { HiUpload } from "react-icons/hi";
 import { BiPlus } from "react-icons/bi";
 import { ResourcesContext } from "@/context/resources/provider";
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
+import Quiz from "../quiz/quiz";
 
 export const LibraryResourceUploader = () => {
 
@@ -248,7 +249,12 @@ export const LibraryResourceUploader = () => {
                             </HStack>
 
                             {isProcessing && <p>Processing...</p>}
-                            <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
+
+                            {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
+                                <Quiz questions={activeResource?.quiz_questions} /> :
+                                <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
+                            }
+
                             {processingError && <Text>{processingError}</Text>}
                             <Box>
 
