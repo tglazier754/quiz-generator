@@ -1,9 +1,7 @@
 import { NumberInput as ChakraNumberInput } from "@chakra-ui/react"
 import { forwardRef } from "react"
 
-export interface NumberInputProps extends ChakraNumberInput.RootProps {}
-
-export const NumberInputRoot = forwardRef<HTMLDivElement, NumberInputProps>(
+export const NumberInputRoot = forwardRef<HTMLDivElement, ChakraNumberInput.RootProps>(
   function NumberInput(props, ref) {
     const { children, ...rest } = props
     return (

@@ -7,8 +7,8 @@ import { createContext, ReactElement, useRef, useState } from "react";
 export type ResourceContext = {
     resourceMap: ResourceHash;
     setResourceMap: (resourceList: ResourceHash) => void;
-    selectedResources: IHash;
-    setSelectedResources: (hash: IHash) => void;
+    selectedResources: IHash<Resource>;
+    setSelectedResources: (hash: IHash<Resource>) => void;
     activeResource?: Resource | null;
     setActiveResource: (resource: Resource | null) => void;
     isGenerating: boolean;
@@ -26,7 +26,7 @@ type ResourceContextProviderProps = {
 export const ResourceContextProvider = ({ children }: ResourceContextProviderProps) => {
 
     const [resourceMap, setResourceMap] = useState<ResourceHash>({});
-    const [selectedResources, setSelectedResources] = useState<IHash>({});
+    const [selectedResources, setSelectedResources] = useState<IHash<Resource>>({});
     const [activeResource, setActiveResource] = useState<Resource | null>(null);
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);

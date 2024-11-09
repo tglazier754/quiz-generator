@@ -30,8 +30,8 @@ export default function Login() {
             <div>
                 <Text> Quiz Generator </Text>
                 <div style={{ display: "flex", flexDirection: "column", gap: 3 }} className="p-6">
-                    <Text variant="body1">Sign in or Sign up using Google to Continue.</Text>
-                    <Button variant="outlined" onClick={handleSignInWithGoogle}>Authenticate with Google</Button>
+                    <Text>Sign in or Sign up using Google to Continue.</Text>
+                    <Button variant="outline" onClick={handleSignInWithGoogle}>Authenticate with Google</Button>
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Resource } from "@/types/resourceTypes";
-import { AspectRatio, Card, Heading, Image, Text } from "@chakra-ui/react";
+import { AspectRatio, Card, Image } from "@chakra-ui/react";
 
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
@@ -28,7 +28,6 @@ export const ResourceCard = (props: ResourceCardProps) => {
 
     const handleEditButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (event.stopPropagation) event.stopPropagation();
-        console.log("Edit");
         setActiveResource(resource);
         setIsDrawerOpen(true);
     }

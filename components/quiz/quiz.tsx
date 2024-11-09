@@ -3,7 +3,6 @@
 import QuizCard from "./quizCard";
 import "./quiz.scss";
 import { QuizQuestion } from "@/types/resourceTypes";
-import { IHash } from "@/types/globalTypes";
 
 type QuizProps = {
     questions: QuizQuestion[];
