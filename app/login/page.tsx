@@ -13,7 +13,7 @@ export default function Login() {
                     access_type: '',
                     prompt: 'consent',
                 },
-                redirectTo: 'http://localhost:3000/api/auth/callback'
+                redirectTo: 'http://quiz-generator-beta.vercel.app/api/auth/callback'
             },
         })
     }
