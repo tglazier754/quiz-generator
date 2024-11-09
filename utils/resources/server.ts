@@ -19,7 +19,7 @@ export const getAllResources = async () => {
 
         //TODO: make sure we use the totalOffset
         const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*)`).eq("origin", RESOURCE_ORIGIN_USER);
-        console.log(data);
+        //console.log(data);
         return JSON.stringify(data);
     }
 }
@@ -40,7 +40,7 @@ export const getSpecificResources = async (resourceIdList: string[]): Promise<Re
             //const totalOffset = pageOffset * pageSize;
 
             //TODO: make sure we use the totalOffset
-            const { data, error } = await supabaseConnection.from('resources').select().in('id', resourceIdList);
+            const { data, error } = await supabaseConnection.from('resources').select(`*, quiz_questions(*)`).in('id', resourceIdList);
             if (data) resolve(data);
             if (error) reject(error);
 
@@ -67,13 +67,13 @@ export const postNewResource = async (supabaseInstance: SupabaseClient, resource
     //TODO:Handle errors here
     const { data: userData, error: userError } = await supabaseInstance.auth.getUser();
     if (!userError) {
-        console.log(resource);
+        //console.log(resource);
         //create the post in the database
-        const { data: resourceData, error: resourceError } = await supabaseInstance?.from(TABLE_RESOURCES).insert(resource).select();
+        const { data: resourceData, error: resourceError } = await supabaseInstance?.from(TABLE_RESOURCES).insert(resource).select(`*, quiz_questions(*)`);
         //get the post's id and add an entry for this user in the user resources table if it succeeded
         if (!resourceError) {
             //TODO: handle errors here
-            await supabaseInstance?.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: resourceData[0]?.id }).select();
+            await supabaseInstance?.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: resourceData[0]?.id }).select(`*, quiz_questions(*)`);
         }
         return resourceData;
     }
@@ -81,7 +81,7 @@ export const postNewResource = async (supabaseInstance: SupabaseClient, resource
 }
 
 export const putExistingResource = async (supabaseInstance: SupabaseClient, resource: Resource) => {
-    const { data } = await supabaseInstance?.from(TABLE_RESOURCES).update(resource).eq('id', resource.id).select();
+    const { data } = await supabaseInstance?.from(TABLE_RESOURCES).update(resource).eq('id', resource.id).select(`*, quiz_questions(*)`);
     return data;
 }
 

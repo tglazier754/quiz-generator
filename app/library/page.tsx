@@ -16,7 +16,7 @@ const page = async () => {
     data.forEach((resource: Resource) => {
         if (typeof resource.id === 'string') {
             resourceHashMap[resource.id as string] = resource;
-            console.log(resource);
+            //console.log(resource);
         }
     });
 

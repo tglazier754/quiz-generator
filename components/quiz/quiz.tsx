@@ -7,20 +7,16 @@ import { IHash } from "@/types/globalTypes";
 
 type QuizProps = {
     questions: QuizQuestion[];
+    questionUpdateHandler: (updatedQuestion: QuizQuestion) => void;
 }
 
 export const Quiz = (props: QuizProps) => {
 
-    const { questions } = props;
+    const { questions, questionUpdateHandler } = props;
 
-    const changes: IHash<QuizQuestion> = {};
 
     const handleChange = (updatedQuestion: QuizQuestion) => {
-        //TODO: remove the item from the changes list if there is no delta
-        if (updatedQuestion && updatedQuestion.id) {
-            changes[updatedQuestion.id] = updatedQuestion;
-        }
-        console.log(changes);
+        questionUpdateHandler(updatedQuestion);
     }
 
 

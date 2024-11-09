@@ -1,7 +1,7 @@
 "use client"
 
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, testImageDataURl, USER_RESOURCE_TYPES } from "@/types/constants";
-import { Resource } from "@/types/resourceTypes";
+import { QuizQuestion, Resource } from "@/types/resourceTypes";
 import { convertImageToDataUrl, extractImageText } from "@/utils/images/client";
 import { Box, Button, createListCollection, HStack, Image, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
@@ -12,12 +12,12 @@ import { BiPlus } from "react-icons/bi";
 import { ResourcesContext } from "@/context/resources/provider";
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import Quiz from "../quiz/quiz";
+import { IHash } from "@/types/globalTypes";
 
 export const LibraryResourceUploader = () => {
 
 
-    const { resourceMap, setResourceMap, activeResource, setActiveResource, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
-
+    const { resourceMap, activeResource, setActiveResource, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [name, setName] = useState(activeResource && activeResource.name || "");
     const [description, setDescription] = useState(activeResource && activeResource.description || "");
@@ -30,6 +30,9 @@ export const LibraryResourceUploader = () => {
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const imageSelectorRef = useRef<HTMLInputElement>(null);
     const [selectedResourceType, setSelectedResourceType] = useState<string[]>([RESOURCE_TYPE_TEXT]);
+
+    //Make this a ref
+    const quizQuestionChanges: IHash<QuizQuestion> = {};
 
     const USER_GENERATED_TYPES_LIST_DATA = createListCollection({ items: USER_RESOURCE_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
@@ -114,10 +117,21 @@ export const LibraryResourceUploader = () => {
 
     const handleUpdateResourceUpload = async () => {
         console.log("update resource");
+        //TODO: Update quiz questions first so that they are included in the return value
+
+
         setUploadSuccess(false);
         setIsUploading(true);
         const dateData = new Date();
-        //2024-10-23 16:47:18.337551+00
+
+        const questionUpdatePromises = Object.values(quizQuestionChanges).map((question: QuizQuestion) => {
+            return sendQuizQuestionUpdate(question);
+        })
+
+        const questionUpdateResult = await Promise.all(questionUpdatePromises);
+        console.log(questionUpdateResult);
+
+
         const resource: Resource = {
             ...activeResource,
             name,
@@ -125,9 +139,10 @@ export const LibraryResourceUploader = () => {
             value: valueText,
             last_modified: dateData.toISOString()
         }
-
+        delete resource.quiz_questions;
         const formData = new FormData();
         formData.append("data", JSON.stringify(resource));
+        console.log(resource);
 
         try {
             const result = await fetch("/api/resources", {
@@ -154,11 +169,27 @@ export const LibraryResourceUploader = () => {
         }
     }
 
+    const sendQuizQuestionUpdate = (quizQuestion: QuizQuestion) => {
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(quizQuestion));
+        return fetch("/api/quiz_questions", {
+            method: "PUT", body: formData
+        })
+    }
+
     const resetView = () => {
         setActiveResource(null);
         setIsProcessing(false);
         setIsUploading(false);
         setUploadSuccess(false);
+    }
+
+    const handleQuizQuestionChange = (updatedQuestion: QuizQuestion) => {
+        //TODO: remove the item from the changes list if there is no delta
+        if (updatedQuestion && updatedQuestion.id) {
+            quizQuestionChanges[updatedQuestion.id] = updatedQuestion;
+        }
+        console.log(quizQuestionChanges);
     }
 
     return (
@@ -251,7 +282,7 @@ export const LibraryResourceUploader = () => {
                             {isProcessing && <p>Processing...</p>}
 
                             {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
-                                <Quiz questions={activeResource?.quiz_questions || []} /> :
+                                <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={handleQuizQuestionChange} /> :
                                 <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
                             }
 
