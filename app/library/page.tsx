@@ -10,15 +10,7 @@ import { Resource, ResourceHash } from "@/types/resourceTypes";
 const page = async () => {
 
     const resources = await getAllResources();
-    const data = JSON.parse(resources || "");
-
-    const resourceHashMap: ResourceHash = {};
-    data.forEach((resource: Resource) => {
-        if (typeof resource.id === 'string') {
-            resourceHashMap[resource.id as string] = resource;
-            //console.log(resource);
-        }
-    });
+    const data = JSON.parse(resources);
 
     return (
         <ResourceContextProvider>
@@ -31,7 +23,7 @@ const page = async () => {
                 <Box className="p-4">
 
                     <Box className="mt-12">
-                        <ResourceList resources={resourceHashMap} />
+                        <ResourceList resources={data} />
                     </Box>
 
                 </Box>

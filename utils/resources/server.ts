@@ -3,11 +3,13 @@ import { RESOURCE_ORIGIN_USER, RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTIONS, TABLE_R
 import { createClient } from "../supabase/server";
 import { Resource } from "@/types/resourceTypes";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { convertObjectArrayToHashMap } from "../global";
 
 
 export const getAllResources = async () => {
     const supabaseConnection = createClient();
     const { data: userData } = await supabaseConnection?.auth.getUser();
+    console.log(userData);
 
     //TODO: Proper checks for logged in user
     if (userData) {
@@ -19,9 +21,12 @@ export const getAllResources = async () => {
 
         //TODO: make sure we use the totalOffset
         const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*)`).eq("origin", RESOURCE_ORIGIN_USER);
-        //console.log(data);
-        return JSON.stringify(data);
+        if (data) {
+            return JSON.stringify(convertObjectArrayToHashMap(data));
+        }
+        return (JSON.stringify({}));
     }
+    return (JSON.stringify({}));
 }
 
 export const getSpecificResources = async (resourceIdList: string[]): Promise<Resource[]> => {

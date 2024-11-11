@@ -17,7 +17,6 @@ export const ResourceList = (props: ResourceListProps) => {
     const { selectedResources, selectionHandler } = useSelectResources();
 
     setResourceMap(resources);
-    console.log(resources);
     //on edit, send the list of selected id's
 
     return (
