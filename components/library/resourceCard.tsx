@@ -1,28 +1,28 @@
 "use client";
 
 import { Resource } from "@/types/resourceTypes";
-import { AspectRatio, Card, Image } from "@chakra-ui/react";
+import { AspectRatio, Card, Circle, Float, Icon, Image, Show, Square } from "@chakra-ui/react";
 
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { TbTrash } from "react-icons/tb";
 import { PiPencil } from "react-icons/pi";
 import { ResourcesContext } from "@/context/resources/provider";
+import { Avatar } from "../ui/avatar";
+import { GiCheckMark } from "react-icons/gi";
 
 type ResourceCardProps = {
     resource: Resource;
+    selected: boolean;
     onSelectHandler: (id: string, updatedState: boolean) => void;
 }
 
 export const ResourceCard = (props: ResourceCardProps) => {
-    const { resource, onSelectHandler } = props;
+    const { resource, selected, onSelectHandler } = props;
 
-    const [isSelected, setIsSelected] = useState(false);
     const { setActiveResource, setIsDrawerOpen } = useContext(ResourcesContext);
 
     const handleSelection = () => {
-        const selected = isSelected;
-        setIsSelected(!selected);
         if (onSelectHandler) onSelectHandler(resource.id || "", !selected);
     }
 
@@ -33,10 +33,28 @@ export const ResourceCard = (props: ResourceCardProps) => {
     }
 
     return (
-        <Card.Root colorPalette={isSelected ? "blue" : "current"} h="100%" variant={isSelected ? "outline" : "subtle"} maxW="sm" onClick={handleSelection} >
+        <Card.Root h="100%" variant={selected ? "outline" : "subtle"} maxW="sm" onClick={handleSelection} >
+
             <AspectRatio ratio={16 / 9}>
                 {resource.url ? <Image src={resource.url as string} alt={resource.name} /> : <></>}
             </AspectRatio>
+
+            <Show when={selected}>
+                <Float placement="top-end" offsetX="1" offsetY="1">
+                    <Square
+                        bg="green.500"
+                        size="1.5rem"
+                        outline="0.2em solid"
+                        outlineColor="bg"
+                        borderRadius={2}
+                    >
+                        <Icon>
+                            <GiCheckMark />
+                        </Icon>
+                    </Square>
+
+                </Float>
+            </Show>
 
             <Card.Body gap="1rem">
                 <Card.Title lineHeight="1.2rem">{resource.name}</Card.Title>
