@@ -12,7 +12,7 @@ export const getAllResources = async () => {
     console.log(userData);
 
     //TODO: Proper checks for logged in user
-    if (userData) {
+    if (userData && userData.user) {
         //offset, count, type v2 - tags
 
         //const pageOffset = parseInt(searchParams.get(URL_PARAM_OFFSET) as string) || DEFAULT_SELECT_PAGE_OFFSET;
@@ -20,7 +20,8 @@ export const getAllResources = async () => {
         //const totalOffset = pageOffset * pageSize;
 
         //TODO: make sure we use the totalOffset
-        const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*)`).eq("origin", RESOURCE_ORIGIN_USER).eq("archived", false);
+        const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*), user_resources!inner(user_id)`).eq("user_resources.user_id", userData.user.id);
+        console.log(data);
         if (data) {
             return JSON.stringify(convertObjectArrayToHashMap(data));
         }
