@@ -11,6 +11,8 @@ import { ResourcesContext } from "@/context/resources/provider";
 import { Avatar } from "../ui/avatar";
 import { GiCheckMark } from "react-icons/gi";
 import ResourceCardImage from "./resourceCardImage";
+import { archiveExistingResource } from "@/utils/resources/server";
+import { archiveSingleResource } from "@/utils/resources/client";
 
 type ResourceCardProps = {
     resource: Resource;
@@ -31,6 +33,12 @@ export const ResourceCard = (props: ResourceCardProps) => {
         if (event.stopPropagation) event.stopPropagation();
         setActiveResource(resource);
         setIsDrawerOpen(true);
+    }
+
+    const handleArchiveButton = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (event.stopPropagation) event.stopPropagation();
+        await archiveSingleResource(resource.id!);
+        //TODO: remove this item from the resource list
     }
 
     return (
@@ -64,7 +72,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
                 </Card.Description>
             </Card.Body>
             <Card.Footer >
-                <Button colorPalette="red" variant="ghost" onClick={handleEditButton} >
+                <Button colorPalette="red" variant="ghost" onClick={handleArchiveButton} >
                     <TbTrash />
                 </Button>
                 <Button variant="outline" onClick={handleEditButton}><PiPencil /></Button>

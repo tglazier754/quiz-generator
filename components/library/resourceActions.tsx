@@ -2,7 +2,7 @@
 
 import { ResourcesContext } from "@/context/resources/provider";
 import { MACHINE_GENERATED_TYPES } from "@/types/constants";
-import { generateResource } from "@/utils/resources/client";
+import { archiveMultipleResources, generateResource } from "@/utils/resources/client";
 import { Box, Button, createListCollection, DialogHeader, Flex, } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaWandMagicSparkles } from "react-icons/fa6";
@@ -49,7 +49,12 @@ export const ResourceActionsPanel = () => {
     }
 
     const deleteResourcesHandler = async () => {
-        console.log("DELETE");
+        const selectedResourceIdList = Object.keys(selectedResources);
+        //TODO: Put a dialog in front of this
+        if (selectedResourceIdList.length) {
+            const archivedResources = await archiveMultipleResources(selectedResourceIdList);
+            //TODO: remove the archived from the list
+        }
     }
     return (
         <Box>

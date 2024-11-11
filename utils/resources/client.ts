@@ -22,3 +22,15 @@ export const generateResource = async (type: string, inputIdList: string[]) => {
 
     }
 }
+
+
+export const archiveSingleResource = async (resourceId: string) => {
+    return fetch("/api/resources/archive/" + resourceId, { method: "PUT" });
+}
+
+export const archiveMultipleResources = async (resourceIdList: string[]) => {
+    const promiseArr = resourceIdList.map((id) => {
+        return archiveSingleResource(id);
+    });
+    return Promise.all(promiseArr);
+}

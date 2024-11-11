@@ -20,7 +20,7 @@ export const getAllResources = async () => {
         //const totalOffset = pageOffset * pageSize;
 
         //TODO: make sure we use the totalOffset
-        const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*)`).eq("origin", RESOURCE_ORIGIN_USER);
+        const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*)`).eq("origin", RESOURCE_ORIGIN_USER).eq("archived", false);
         if (data) {
             return JSON.stringify(convertObjectArrayToHashMap(data));
         }
@@ -87,6 +87,14 @@ export const postNewResource = async (supabaseInstance: SupabaseClient, resource
 
 export const putExistingResource = async (supabaseInstance: SupabaseClient, resource: Resource) => {
     const { data } = await supabaseInstance?.from(TABLE_RESOURCES).update(resource).eq('id', resource.id).select(`*, quiz_questions(*)`);
+    return data;
+}
+
+export const archiveExistingResource = async (supabaseInstance: SupabaseClient, resourceId: string) => {
+    console.log(resourceId);
+    const { data, error } = await supabaseInstance?.from(TABLE_RESOURCES).update({ archived: true }).eq('id', resourceId).select('*');
+    console.log(data);
+    console.log(error);
     return data;
 }
 
