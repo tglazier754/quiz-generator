@@ -10,6 +10,7 @@ import { PiPencil } from "react-icons/pi";
 import { ResourcesContext } from "@/context/resources/provider";
 import { Avatar } from "../ui/avatar";
 import { GiCheckMark } from "react-icons/gi";
+import ResourceCardImage from "./resourceCardImage";
 
 type ResourceCardProps = {
     resource: Resource;
@@ -36,7 +37,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
         <Card.Root h="100%" variant={selected ? "outline" : "subtle"} maxW="sm" onClick={handleSelection} >
 
             <AspectRatio ratio={16 / 9}>
-                {resource.url ? <Image src={resource.url as string} alt={resource.name} /> : <></>}
+                <ResourceCardImage src={resource.url} type={resource.type} name={resource.name} />
             </AspectRatio>
 
             <Show when={selected}>

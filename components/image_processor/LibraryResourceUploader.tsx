@@ -13,6 +13,7 @@ import { ResourcesContext } from "@/context/resources/provider";
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import Quiz from "../quiz/quiz";
 import { IHash } from "@/types/globalTypes";
+import ResourceCardImage from "../library/resourceCardImage";
 
 export const LibraryResourceUploader = () => {
 
@@ -212,7 +213,8 @@ export const LibraryResourceUploader = () => {
                                 <HStack >
                                     <Box className="w-1/3">
                                         <Square>
-                                            <Image src={testImageDataURl} alt="Uploaded Image" />
+
+                                            <ResourceCardImage src={url} name={name} type={activeResource && activeResource.type || selectedResourceType[0]} />
                                         </Square>
                                     </Box>
                                     <Box className="flex-1">
