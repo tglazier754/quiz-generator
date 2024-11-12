@@ -5,7 +5,7 @@ import ResourceCard from "./resourceCard";
 import { ResourcesContext } from "@/context/resources/provider";
 import { useContext } from "react";
 import { ResourceHash } from "@/types/resourceTypes";
-import { useSelectResources } from "./hooks/useSelectResources";
+import { useSelectResources } from "@/hooks/useSelectResources";
 
 type ResourceListProps = {
     resources: ResourceHash;

@@ -1,26 +1,21 @@
 "use client"
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { createClient } from "@/utils/supabase/client";
-import { Box, Button, Fieldset, Flex, Heading, Input, Separator, Stack, StackSeparator, Text } from "@chakra-ui/react";
+import { useUserAuthentication } from "@/hooks/useUserAuthentication";
+import { Box, Button, Fieldset, Flex, Heading, Input, Separator, Stack } from "@chakra-ui/react";
+import { createRef } from "react";
 
 export default function Login() {
 
-    async function handleSignInWithGoogle() {
-        const supabase = createClient();
-        await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                queryParams: {
-                    access_type: '',
-                    prompt: 'consent',
-                },
-                redirectTo: 'http://localhost:3000/api/auth/callback'
-            },
-        })
-    }
-    //redirectTo: 'http://quiz-generator-beta.vercel.app/api/auth/callback'
+    const emailRef = createRef<HTMLInputElement>();
+    const passwordRef = createRef<HTMLInputElement>();
 
+    const { signIn } = useUserAuthentication(emailRef, passwordRef);
+    //TODO: Make the email/password flow
+    const signInWithEmail = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        signIn("EMAIL");
+    }
     return (
         <Flex
             direction="column"
@@ -50,10 +45,10 @@ export default function Login() {
                                 </Stack>
                                 <Fieldset.Content>
                                     <Field label="email">
-                                        <Input type="email" />
+                                        <Input ref={emailRef} type="email" />
                                     </Field>
                                     <Field label="password" invalid>
-                                        <PasswordInput />
+                                        <PasswordInput ref={passwordRef} />
                                     </Field>
                                 </Fieldset.Content>
                                 <Fieldset.ErrorText>
@@ -64,17 +59,18 @@ export default function Login() {
                                     type="submit"
                                     variant="solid"
                                     width="full"
+                                    onClick={signInWithEmail}
                                 >
                                     Login
                                 </Button>
                             </Fieldset.Root>
                             <Separator />
-                            <Button variant="outline" onClick={handleSignInWithGoogle}>Authenticate with Google</Button>
+                            <Button variant="outline" onClick={() => signIn("GOOGLE")}>Authenticate with Google</Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
 
-        </Flex>
+        </Flex >
     );
 }
