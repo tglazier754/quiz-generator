@@ -29,7 +29,7 @@ const page = async (props: PageProps) => {
                         <div className="h-1/6">
                         </div>
                         <div className="h-5/6">
-                            <LibraryResourceUploader />
+
                         </div>
                     </div>
                 </Flex>
