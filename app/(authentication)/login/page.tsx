@@ -1,6 +1,6 @@
 "use client"
 import { createClient } from "@/utils/supabase/client";
-import { Button, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 
 export default function Login() {
 
@@ -20,13 +20,12 @@ export default function Login() {
     //redirectTo: 'http://quiz-generator-beta.vercel.app/api/auth/callback'
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: "100vh"
-            }}>
+        <Flex
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            width="100wh"
+            height="100vh">
             <div>
                 <Text> Quiz Generator </Text>
                 <div style={{ display: "flex", flexDirection: "column", gap: 3 }} className="p-6">
@@ -35,6 +34,6 @@ export default function Login() {
                 </div>
             </div>
 
-        </div>
+        </Flex>
     );
 }

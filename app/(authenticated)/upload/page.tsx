@@ -1,4 +1,4 @@
-import LibraryResourceUploader from "../../components/image_processor/LibraryResourceUploader";
+import LibraryResourceUploader from "../../../components/image_processor/LibraryResourceUploader";
 
 
 export default async function page() {
