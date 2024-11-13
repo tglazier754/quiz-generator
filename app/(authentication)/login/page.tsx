@@ -2,7 +2,7 @@
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useUserAuthentication } from "@/hooks/useUserAuthentication";
-import { Box, Button, Fieldset, Flex, Heading, Input, Separator, Stack } from "@chakra-ui/react";
+import { Box, Button, Fieldset, Flex, Heading, Input, Link, Separator, Stack } from "@chakra-ui/react";
 import { createRef } from "react";
 
 export default function Login() {
@@ -10,12 +10,13 @@ export default function Login() {
     const emailRef = createRef<HTMLInputElement>();
     const passwordRef = createRef<HTMLInputElement>();
 
-    const { signIn } = useUserAuthentication(emailRef, passwordRef);
-    //TODO: Make the email/password flow
-    const signInWithEmail = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const { signInWithEmail, signInWithGoogle, error, errorMessage } = useUserAuthentication(emailRef, passwordRef);
+
+    const handleLoginButton = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        signIn("EMAIL");
+        await signInWithEmail();
     }
+
     return (
         <Flex
             direction="column"
@@ -28,7 +29,7 @@ export default function Login() {
                 mb="2"
                 justifyContent="center"
                 alignItems="center">
-                <Heading> Quiz Generator </Heading>
+                <Heading size="3xl"> Quiz Generator </Heading>
                 <Box colorPalette={"grey"} backgroundColor="gray.900">
                     <form>
                         <Stack
@@ -36,38 +37,44 @@ export default function Login() {
                             gap={4}
                             p="1rem"
                         >
-                            <Fieldset.Root size="lg" invalid>
+                            <Fieldset.Root size="lg" invalid={error}>
                                 <Stack>
                                     <Fieldset.Legend>Log In</Fieldset.Legend>
                                     <Fieldset.HelperText>
-                                        Enter your email and password to login
+                                        Enter your email and password to log in
                                     </Fieldset.HelperText>
                                 </Stack>
                                 <Fieldset.Content>
                                     <Field label="email">
                                         <Input ref={emailRef} type="email" />
                                     </Field>
-                                    <Field label="password" invalid>
+                                    <Field label="password">
                                         <PasswordInput ref={passwordRef} />
                                     </Field>
                                 </Fieldset.Content>
                                 <Fieldset.ErrorText>
-                                    Wrong email or password.
+                                    {errorMessage}
                                 </Fieldset.ErrorText>
                                 <Button
                                     borderRadius={0}
                                     type="submit"
                                     variant="solid"
                                     width="full"
-                                    onClick={signInWithEmail}
+                                    onClick={handleLoginButton}
                                 >
-                                    Login
+                                    Log in
                                 </Button>
                             </Fieldset.Root>
                             <Separator />
-                            <Button variant="outline" onClick={() => signIn("GOOGLE")}>Authenticate with Google</Button>
+                            <Button variant="outline" onClick={signInWithGoogle}>Authenticate with Google</Button>
                         </Stack>
                     </form>
+                </Box>
+                <Box>
+                    Not a member?{" "}
+                    <Link color="gray.500" href="/signup">
+                        Sign Up
+                    </Link>
                 </Box>
             </Stack>
 
