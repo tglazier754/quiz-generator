@@ -2,7 +2,7 @@
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useUserAuthentication } from "@/hooks/useUserAuthentication";
-import { Box, Button, Fieldset, Flex, Heading, Input, Link, Separator, Stack } from "@chakra-ui/react";
+import { Box, Button, Fieldset, Heading, Input, Link, Stack } from "@chakra-ui/react";
 import { createRef } from "react";
 
 export default function SignUpForm() {

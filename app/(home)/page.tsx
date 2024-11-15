@@ -2,7 +2,6 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
 import { getAllResources } from "@/utils/resources/server";
-import LibraryResourceUploader from "@/components/image_processor/LibraryResourceUploader";
 import ResourceContextProvider from "@/context/resources/provider";
 
 

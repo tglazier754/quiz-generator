@@ -1,17 +1,15 @@
 "use client";
 
 import { Resource } from "@/types/resourceTypes";
-import { AspectRatio, Card, Circle, Float, Icon, Image, Show, Square } from "@chakra-ui/react";
+import { AspectRatio, Card, Float, Icon, Show, Square } from "@chakra-ui/react";
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Button } from "../ui/button";
 import { TbTrash } from "react-icons/tb";
 import { PiPencil } from "react-icons/pi";
 import { ResourcesContext } from "@/context/resources/provider";
-import { Avatar } from "../ui/avatar";
 import { GiCheckMark } from "react-icons/gi";
 import ResourceCardImage from "./resourceCardImage";
-import { archiveExistingResource } from "@/utils/resources/server";
 import { archiveSingleResource } from "@/utils/resources/client";
 
 type ResourceCardProps = {

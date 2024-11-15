@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const supabase = createClient();
 
     if (code) {
-        const exchangedToken = await supabase.auth.exchangeCodeForSession(code);
+        await supabase.auth.exchangeCodeForSession(code);
     }
 
     const { data: userAuthData, error: userAuthError } = await supabase.auth.getUser();
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
     if (userAuthData) {
         //get user data from database
-        const { data: profile, error: profileError } = await supabase.from(TABLE_USERS).select().eq("id", userAuthData.user.id);
+        const { data: profile } = await supabase.from(TABLE_USERS).select().eq("id", userAuthData.user.id);
         const currentProfile = profile && profile[0];
 
         if (currentProfile && currentProfile.complete) {

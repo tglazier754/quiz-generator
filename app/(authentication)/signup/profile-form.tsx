@@ -1,8 +1,7 @@
 "use client"
 import { Field } from "@/components/ui/field";
-import { PasswordInput } from "@/components/ui/password-input";
 import { useUserProfileForm } from "@/hooks/useUserProfileForm";
-import { Box, Button, Fieldset, Flex, Heading, Input, Link, Separator, Stack } from "@chakra-ui/react";
+import { Box, Button, Fieldset, Heading, Input, Stack } from "@chakra-ui/react";
 import { createRef } from "react";
 
 export default function ProfileForm() {
@@ -37,7 +36,7 @@ export default function ProfileForm() {
                             <Stack>
                                 <Fieldset.Legend>Profile</Fieldset.Legend>
                                 <Fieldset.HelperText>
-                                    Before getting started, let's get to know you.
+                                    Before getting started, let&#39;s get to know you.
                                 </Fieldset.HelperText>
                             </Stack>
                             <Fieldset.Content>

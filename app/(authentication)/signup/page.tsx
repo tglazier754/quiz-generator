@@ -1,8 +1,5 @@
-import { Field } from "@/components/ui/field";
-import { PasswordInput } from "@/components/ui/password-input";
-import { useUserAuthentication } from "@/hooks/useUserAuthentication";
-import { Box, Button, Fieldset, Flex, Heading, Input, Link, Separator, Stack } from "@chakra-ui/react";
-import { createRef } from "react";
+
+import { Flex } from "@chakra-ui/react";
 import SignupWrapper from "./signup-wrapper";
 import { createClient } from "@/utils/supabase/server";
 import { TABLE_USERS } from "@/types/constants";
@@ -15,7 +12,7 @@ export default async function SignUp() {
     const supabase = createClient();
 
     //check for user data
-    const { data, error } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
     const { user } = data;
 
     console.log(data);
@@ -23,7 +20,7 @@ export default async function SignUp() {
     if (user) {
         //pull the user's info from the db
 
-        const { data: profile, error: profileError } = await supabase.from(TABLE_USERS).select().eq("id", data.user.id);
+        const { data: profile } = await supabase.from(TABLE_USERS).select().eq("id", data.user.id);
         const currentProfile = profile && profile[0];
 
         if (currentProfile && currentProfile.complete) {

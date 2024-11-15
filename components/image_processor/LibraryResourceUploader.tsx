@@ -1,9 +1,9 @@
 "use client"
 
-import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, testImageDataURl, USER_RESOURCE_TYPES } from "@/types/constants";
+import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
 import { QuizQuestion, Resource } from "@/types/resourceTypes";
 import { convertImageToDataUrl, extractImageText } from "@/utils/images/client";
-import { Box, Button, createListCollection, HStack, Image, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { FileUploadList, FileUploadRoot, FileUploadTrigger } from "../ui/file-button";

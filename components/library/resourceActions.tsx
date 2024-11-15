@@ -52,7 +52,7 @@ export const ResourceActionsPanel = () => {
         const selectedResourceIdList = Object.keys(selectedResources);
         //TODO: Put a dialog in front of this
         if (selectedResourceIdList.length) {
-            const archivedResources = await archiveMultipleResources(selectedResourceIdList);
+            await archiveMultipleResources(selectedResourceIdList);
             //TODO: remove the archived from the list
         }
     }
