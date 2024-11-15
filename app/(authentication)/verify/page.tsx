@@ -1,7 +1,9 @@
-import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react";
 
 
 export default function Verify() {
+
+    //TODO: Add a check to see if this account previously existed or not and change the message accordingly
 
     return (
         <Flex
@@ -24,7 +26,11 @@ export default function Verify() {
                         p="1rem"
                     >
                         <Text>A verification link has been sent to the provided email.</Text>
-                        <Text>Please close this page and follow the link.</Text>
+                        <Text>If this account already exists, please {" "}
+                            <Link color="gray.500" href="/login">
+                                log in.
+                            </Link>
+                        </Text>
                     </Stack>
 
                 </Box>

@@ -1,6 +1,6 @@
 
 import { createClient } from "@/utils/supabase/client";
-import { AuthTokenResponsePassword } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import { RefObject, useState } from "react";
 
 export type SignInError = {
@@ -11,6 +11,7 @@ export type SignInError = {
 type useUserAuthenticationReturnType = {
     signInWithEmail: () => void;
     signInWithGoogle: () => Promise<void>;
+    signUpWithEmail: () => void;
     error: boolean;
     errorMessage: string;
 }
@@ -20,8 +21,11 @@ export function useUserAuthentication<useUserAuthenticationReturnType>(emailRef:
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const router = useRouter();
 
     async function handleSignInWithEmail() {
+        setErrorMessage("");
+        setError(false);
         const email = emailRef.current?.value;
         const password = passwordRef.current?.value;
         const supabase = createClient();
@@ -33,10 +37,17 @@ export function useUserAuthentication<useUserAuthenticationReturnType>(emailRef:
             setError(true);
             setErrorMessage(error.message);
         }
+        else {
+            //TODO: Check the user data and either redirect to the library or to the info gathering
+            router.push("/library");
+        }
     }
 
 
-    async function handleUserSignUpWithEmail() {
+    async function handleSignUpWithEmail() {
+
+        setErrorMessage("");
+        setError(false);
         const email = emailRef.current?.value;
         const password = passwordRef.current?.value;
         const supabase = createClient();
@@ -51,11 +62,17 @@ export function useUserAuthentication<useUserAuthenticationReturnType>(emailRef:
             setError(true);
             setErrorMessage(error.message);
         }
+        else {
+            router.push("/verify");
+        }
     }
 
     //redirectTo: 'http://quiz-generator-beta.vercel.app/api/auth/callback'
 
     async function handleSignInWithGoogle() {
+
+        setErrorMessage("");
+        setError(false);
         const supabase = createClient();
         await supabase.auth.signInWithOAuth({
             provider: 'google',
@@ -70,6 +87,6 @@ export function useUserAuthentication<useUserAuthenticationReturnType>(emailRef:
     }
 
 
-    return { signInWithGoogle: handleSignInWithGoogle, signInWithEmail: handleSignInWithEmail, error, errorMessage }
+    return { signInWithGoogle: handleSignInWithGoogle, signInWithEmail: handleSignInWithEmail, signUpWithEmail: handleSignUpWithEmail, error, errorMessage }
 
 }

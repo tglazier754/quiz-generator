@@ -1,6 +1,6 @@
 "use client";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Center, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Box, Center, Heading, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import ResourceCard from "./resourceCard";
 import { ResourcesContext } from "@/context/resources/provider";
 import { useContext } from "react";
@@ -21,6 +21,15 @@ export const ResourceList = (props: ResourceListProps) => {
 
     return (
         <Box className="max-w-full w-full h-full max-h-full p-4">
+            {!Object.keys(resources).length ?
+                <Stack
+                    flexDir="column"
+                    mb="2"
+                    justifyContent="center"
+                    alignItems="center">
+                    <Heading size="2xl">No resources to display.</Heading>
+                </Stack> : ""}
+
             <SimpleGrid minChildWidth="14rem" gap="2rem" className="max-w-full w-full " >
                 {Object.values(resourceMap).map((resource: Resource) => {
                     return (
