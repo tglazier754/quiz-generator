@@ -15,10 +15,15 @@ import Quiz from "../quiz/quiz";
 import { IHash } from "@/types/globalTypes";
 import ResourceCardImage from "../library/resourceCardImage";
 
-export const LibraryResourceUploader = () => {
+type LibraryResourceUploaderProps = {
+    activeResource?: Resource | null;
+}
 
+export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => {
 
-    const { resourceMap, activeResource, setActiveResource, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
+    const { activeResource } = props;
+
+    const { resourceMap, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [name, setName] = useState(activeResource && activeResource.name || "");
     const [description, setDescription] = useState(activeResource && activeResource.description || "");
@@ -178,13 +183,6 @@ export const LibraryResourceUploader = () => {
         })
     }
 
-    const resetView = () => {
-        setActiveResource(null);
-        setIsProcessing(false);
-        setIsUploading(false);
-        setUploadSuccess(false);
-    }
-
     const handleQuizQuestionChange = (updatedQuestion: QuizQuestion) => {
         //TODO: remove the item from the changes list if there is no delta
         if (updatedQuestion && updatedQuestion.id) {
@@ -194,118 +192,102 @@ export const LibraryResourceUploader = () => {
     }
 
     return (
-        <DrawerRoot size="md" open={isDrawerOpen} onOpenChange={(e) => setIsDrawerOpen(e.open)}>
-            <DrawerBackdrop />
-            <DrawerTrigger asChild>
-                <Button variant="outline" disabled={isGenerating} onClick={() => resetView()} >
-                    <BiPlus />
-                </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-                <DrawerCloseTrigger />
-                <DrawerHeader>
-                    <DrawerTitle>Add or Update Resource</DrawerTitle>
-                </DrawerHeader>
-                <DrawerBody>
-                    <Box>
-                        <Stack>
-                            <Box className="description-data">
-                                <HStack >
-                                    <Box className="w-1/3">
-                                        <Square>
 
-                                            <ResourceCardImage src={url} name={name} type={activeResource && activeResource.type || selectedResourceType[0]} />
-                                        </Square>
-                                    </Box>
-                                    <Box className="flex-1">
-                                        <Stack>
-                                            <Box>
-                                                <Input variant="flushed" placeholder="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
-                                            </Box>
-                                            <Box>
-                                                <Input variant="flushed" placeholder="Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
-                                            </Box>
-                                            <Box>
-                                                <Text>Tags will go here</Text>
-                                            </Box>
-                                        </Stack>
-                                    </Box>
-                                </HStack>
-                            </Box>
+        <Box>
+            <Stack>
+                <Box className="description-data">
+                    <HStack >
+                        <Box className="w-1/3">
+                            <Square>
 
-
-                            <HStack alignItems="flex-end">
-                                <Box className="w-1/3">
-
-
-                                    {activeResource ?
-                                        <Input variant="flushed" disabled value={activeResource && activeResource.type || ""} />
-                                        :
-                                        <SelectRoot variant="outline" collection={USER_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
-                                            <SelectLabel>Select resource type</SelectLabel>
-                                            <SelectTrigger>
-                                                <SelectValueText placeholder="Select Content Type" />
-                                            </SelectTrigger>
-                                            <SelectContent zIndex={100000}>
-                                                {USER_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
-                                                    <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
-                                                        {resource_type.label}
-                                                    </SelectItem>
-                                                )
-                                                )}
-                                            </SelectContent>
-                                        </SelectRoot>
-                                    }
-
-
+                                <ResourceCardImage src={url} name={name} type={activeResource && activeResource.type || selectedResourceType[0]} />
+                            </Square>
+                        </Box>
+                        <Box className="flex-1">
+                            <Stack>
+                                <Box>
+                                    <Input variant="flushed" placeholder="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
                                 </Box>
-                                <Box className="flex-1">
-                                    <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_IMAGE ? "hidden" : ""}`}>
-                                        {/*<Input id="image-selector" type="file" ref={imageSelectorRef} onChange={handleImageSelection} />*/}
-
-                                        <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} ref={imageSelectorRef} onChange={handleImageSelection}>
-                                            <FileUploadTrigger asChild>
-                                                <Button variant="outline" size="sm" >
-                                                    <HiUpload />Upload file
-                                                </Button>
-                                            </FileUploadTrigger>
-                                            <FileUploadList />
-                                        </FileUploadRoot>
-
-                                        {/*selectedImage && <Button id="image-uploader" onClick={handleImageProcess}>Process</Button>*/}
-                                    </Box>
-
-                                    <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_WEBSITE ? "hidden" : ""}`}>
-                                        <Input type="text" placeholder="URL" value={url} onChange={(e) => { setUrl(e.target.value) }} />
-                                    </Box>
+                                <Box>
+                                    <Input variant="flushed" placeholder="Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
                                 </Box>
-                            </HStack>
+                                <Box>
+                                    <Text>Tags will go here</Text>
+                                </Box>
+                            </Stack>
+                        </Box>
+                    </HStack>
+                </Box>
 
-                            {isProcessing && <p>Processing...</p>}
 
-                            {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
-                                <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={handleQuizQuestionChange} /> :
-                                <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
-                            }
+                <HStack alignItems="flex-end">
+                    <Box className="w-1/3">
 
-                            {processingError && <Text>{processingError}</Text>}
-                            <Box>
 
-                                {isUploading && <p>Uploading...</p>}
-                                {uploadingError && <Text>{uploadingError}</Text>}
-                                {uploadSuccess && <Text>Uploaded Successfully</Text>}
-                            </Box>
-                        </Stack>
+                        {activeResource ?
+                            <Input variant="flushed" disabled value={activeResource && activeResource.type || ""} />
+                            :
+                            <SelectRoot variant="outline" collection={USER_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
+                                <SelectLabel>Select resource type</SelectLabel>
+                                <SelectTrigger>
+                                    <SelectValueText placeholder="Select Content Type" />
+                                </SelectTrigger>
+                                <SelectContent zIndex={100000}>
+                                    {USER_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
+                                        <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
+                                            {resource_type.label}
+                                        </SelectItem>
+                                    )
+                                    )}
+                                </SelectContent>
+                            </SelectRoot>
+                        }
+
+
                     </Box>
+                    <Box className="flex-1">
+                        <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_IMAGE ? "hidden" : ""}`}>
+                            {/*<Input id="image-selector" type="file" ref={imageSelectorRef} onChange={handleImageSelection} />*/}
 
-                </DrawerBody>
-                <DrawerFooter>
-                    <Box>
-                        <Button onClick={activeResource ? handleUpdateResourceUpload : handleCreateResourceUpload} disabled={isUploading}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
+                            <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} ref={imageSelectorRef} onChange={handleImageSelection}>
+                                <FileUploadTrigger asChild>
+                                    <Button variant="outline" size="sm" >
+                                        <HiUpload />Upload file
+                                    </Button>
+                                </FileUploadTrigger>
+                                <FileUploadList />
+                            </FileUploadRoot>
+
+                            {/*selectedImage && <Button id="image-uploader" onClick={handleImageProcess}>Process</Button>*/}
+                        </Box>
+
+                        <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_WEBSITE ? "hidden" : ""}`}>
+                            <Input type="text" placeholder="URL" value={url} onChange={(e) => { setUrl(e.target.value) }} />
+                        </Box>
                     </Box>
-                </DrawerFooter>
-            </DrawerContent>
-        </DrawerRoot>
+                </HStack>
+
+                {isProcessing && <p>Processing...</p>}
+
+                {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
+                    <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={handleQuizQuestionChange} /> :
+                    <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
+                }
+
+                {processingError && <Text>{processingError}</Text>}
+                <Box>
+
+                    {isUploading && <p>Uploading...</p>}
+                    {uploadingError && <Text>{uploadingError}</Text>}
+                    {uploadSuccess && <Text>Uploaded Successfully</Text>}
+                </Box>
+            </Stack>
+            <Box>
+                <Button onClick={activeResource ? handleUpdateResourceUpload : handleCreateResourceUpload} disabled={isUploading}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
+            </Box>
+        </Box>
+
+
     )
 
 

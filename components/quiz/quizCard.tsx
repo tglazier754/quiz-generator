@@ -36,15 +36,13 @@ export const QuizCard = (props: QuizCardProps) => {
                         <Editable.Textarea />
                     </Editable.Root>
                 </Card.Title>
-                <Card.Description  >
-                    <Editable.Root
-                        selectOnFocus={false}
-                        value={answerText}
-                        onValueChange={handleAnswerTextChange}>
-                        <Editable.Preview />
-                        <Editable.Textarea />
-                    </Editable.Root>
-                </Card.Description>
+                <Editable.Root
+                    selectOnFocus={false}
+                    value={answerText}
+                    onValueChange={handleAnswerTextChange}>
+                    <Editable.Preview />
+                    <Editable.Textarea />
+                </Editable.Root>
 
             </Card.Body>
 

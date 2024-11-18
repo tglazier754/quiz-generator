@@ -11,17 +11,17 @@ type ResourceListProps = {
     resources: ResourceHash;
 }
 export const ResourceList = (props: ResourceListProps) => {
-    const { resources } = props;
-    const { resourceMap, setResourceMap, isGenerating } = useContext(ResourcesContext);
+    const { resources: resourceMap } = props;
+    const { isGenerating } = useContext(ResourcesContext);
 
     const { selectedResources, selectionHandler } = useSelectResources();
 
-    setResourceMap(resources);
+    //setResourceMap(resources);
     //on edit, send the list of selected id's
 
     return (
         <Box className="max-w-full w-full h-full max-h-full p-4">
-            {!Object.keys(resources).length ?
+            {!Object.keys(resourceMap).length ?
                 <Stack
                     flexDir="column"
                     mb="2"

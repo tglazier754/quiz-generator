@@ -11,6 +11,7 @@ import { ResourcesContext } from "@/context/resources/provider";
 import { GiCheckMark } from "react-icons/gi";
 import ResourceCardImage from "./resourceCardImage";
 import { archiveSingleResource } from "@/utils/resources/client";
+import Link from "next/link";
 
 type ResourceCardProps = {
     resource: Resource;
@@ -21,7 +22,7 @@ type ResourceCardProps = {
 export const ResourceCard = (props: ResourceCardProps) => {
     const { resource, selected, onSelectHandler } = props;
 
-    const { setActiveResource, setIsDrawerOpen } = useContext(ResourcesContext);
+    const { setIsDrawerOpen } = useContext(ResourcesContext);
 
     const handleSelection = () => {
         if (onSelectHandler) onSelectHandler(resource.id || "", !selected);
@@ -29,8 +30,6 @@ export const ResourceCard = (props: ResourceCardProps) => {
 
     const handleEditButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (event.stopPropagation) event.stopPropagation();
-        setActiveResource(resource);
-        setIsDrawerOpen(true);
     }
 
     const handleArchiveButton = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -73,7 +72,13 @@ export const ResourceCard = (props: ResourceCardProps) => {
                 <Button colorPalette="red" variant="ghost" onClick={handleArchiveButton} >
                     <TbTrash />
                 </Button>
-                <Button variant="outline" onClick={handleEditButton}><PiPencil /></Button>
+                <Link href={
+                    {
+                        pathname: '/resource_edit',
+                        query: { id: resource.id },
+                    }}>
+                    < Button variant="outline" onClick={handleEditButton}><PiPencil /></Button>
+                </Link>
             </Card.Footer>
         </Card.Root>
     )

@@ -103,15 +103,18 @@ export const archiveExistingResource = async (supabaseInstance: SupabaseClient, 
 export const saveQuizToDatabase = async (quizData: Resource) => {
     return new Promise<Resource[]>(async (resolve, reject) => {
         const supabaseConnection = createClient();
-        await supabaseConnection?.auth.getUser();
+        const { data: userData } = await supabaseConnection?.auth.getUser();
 
 
         if (quizData && quizData.quiz_questions && quizData.quiz_questions.length) {
             const { data: postedResource } = await supabaseConnection.from(TABLE_RESOURCES).insert({ name: quizData.name, description: quizData.description, type: RESOURCE_TYPE_QUIZ }).select();
 
             //populate the questions table with all of the questions data using that new id
-            const id = postedResource && postedResource[0] || "";
+            const id = postedResource && postedResource[0].id || "";
             if (postedResource && postedResource[0]) {
+
+                //TODO: Check for success here
+                await supabaseConnection.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: id });
                 const preppedQuizQuestions = quizData.quiz_questions.map((question: { question: string, answer: string }) => { return { resource_id: id, ...question } })
 
                 await supabaseConnection.from(TABLE_QUIZ_QUESTIONS).insert(preppedQuizQuestions).select();

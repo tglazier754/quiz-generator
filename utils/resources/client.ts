@@ -14,9 +14,10 @@ export const generateResource = async (type: string, inputIdList: string[]) => {
         return quizData;
     }
     if (type === RESOURCE_TYPE_LESSON_PLAN) {
-        const lessonPlanData = await fetch("/api/lesson_plans?" + resourceIdSearchParams.toString(), { method: "POST" });
-        console.log(await lessonPlanData.json());
-        return lessonPlanData;
+        const lessonPlanFetch = await fetch("/api/lesson_plans?" + resourceIdSearchParams.toString(), { method: "POST" });
+        const lessonPlanData = await lessonPlanFetch.json();
+        console.log(lessonPlanData);
+        return lessonPlanData[0];
     }
     if (type === RESOURCE_TYPE_SUMMARY) {
 

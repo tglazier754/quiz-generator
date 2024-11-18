@@ -11,14 +11,19 @@ import { DialogBody, DialogContent, DialogFooter, DialogRoot, DialogTitle, Dialo
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { toaster } from "../ui/toaster";
 import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
+import { BiPlus } from "react-icons/bi";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const ResourceActionsPanel = () => {
-    const { selectedResources, isGenerating, setIsGenerating, setActiveResource } = useContext(ResourcesContext);
+    const { selectedResources, isGenerating, setIsGenerating } = useContext(ResourcesContext);
     const [selectedResourceType, setSelectedResourceType] = useState<string[]>([]);
 
     const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false);
 
     const MACHINE_GENERATED_TYPES_LIST_DATA = createListCollection({ items: MACHINE_GENERATED_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
+
+    const router = useRouter();
 
 
 
@@ -32,10 +37,13 @@ export const ResourceActionsPanel = () => {
             try {
                 console.log(selectedResourceIdList);
                 const generatedResource = await generateResource(selectedResourceType[0], selectedResourceIdList);
-                setActiveResource(generatedResource);
+                console.log(generatedResource);
+                //redirect to /resource?id={generated_id}
+                router.push(`/resource?id=${generatedResource.id}`);
             }
             catch (error) {
                 console.log(error);
+                toaster.error({ title: "Error", description: "Unable to generate the resource" });
             }
         }
         else {
@@ -107,7 +115,11 @@ export const ResourceActionsPanel = () => {
 
                 </Box>
 
-                <LibraryResourceUploader />
+                <Link href={"/resource_edit"}>
+                    <Button disabled={isGenerating} variant="outline">
+                        <BiPlus />
+                    </Button>
+                </Link>
 
             </Flex >
         </Box >

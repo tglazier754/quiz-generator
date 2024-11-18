@@ -1,4 +1,4 @@
-import { RESOURCE_TYPE_LESSON_PLAN, TABLE_RESOURCES, URL_PARAM_RESOURCE_ID } from "@/types/constants";
+import { RESOURCE_TYPE_LESSON_PLAN, TABLE_RESOURCES, TABLE_USER_RESOURCES, URL_PARAM_RESOURCE_ID } from "@/types/constants";
 import { generateLessonPlanFromText } from "@/utils/lesson_plans/server";
 import { getCombinedContentFromSpecificResources } from "@/utils/resources/server";
 import { createClient } from "@/utils/supabase/server";
@@ -28,6 +28,12 @@ export async function POST(request: Request) {
             const generatedLessonPlanObject = JSON.parse(generatedLessonPlanData);
             //create a resource entry in the database
             const { data: lessonPlanEntry } = await supabaseConnection.from(TABLE_RESOURCES).insert({ name: generatedLessonPlanObject.name, description: generatedLessonPlanObject.description, type: RESOURCE_TYPE_LESSON_PLAN, value: generatedLessonPlanObject.lesson_plan }).select();
+            const id = lessonPlanEntry && lessonPlanEntry[0].id || "";
+            //TODO: Update this
+            const { data: userResourceEntry, error: userResourceEntryError } = await supabaseConnection.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: id });
+            console.log(userResourceEntry)
+            console.log(userResourceEntryError);
+
 
             return new Response(JSON.stringify(lessonPlanEntry));
 
