@@ -115,7 +115,7 @@ export const ResourceActionsPanel = () => {
 
                 </Box>
 
-                <Link href={"/resource_edit"}>
+                <Link href={"/resource"}>
                     <Button disabled={isGenerating} variant="outline">
                         <BiPlus />
                     </Button>

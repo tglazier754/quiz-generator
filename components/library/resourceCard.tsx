@@ -74,7 +74,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
                 </Button>
                 <Link href={
                     {
-                        pathname: '/resource_edit',
+                        pathname: '/resource',
                         query: { id: resource.id },
                     }}>
                     < Button variant="outline" onClick={handleEditButton}><PiPencil /></Button>
