@@ -1,7 +1,7 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { RefObject, useState } from "react";
+import { createRef, RefObject, useState } from "react";
 
 export type SignInError = {
     message: string;
@@ -14,14 +14,19 @@ type useUserAuthenticationReturnType = {
     signUpWithEmail: () => void;
     error: boolean;
     errorMessage: string;
+    emailRef: RefObject<HTMLInputElement>;
+    passwordRef: RefObject<HTMLInputElement>;
 }
 
 //TODO: Rename this
-export function useUserAuthentication<useUserAuthenticationReturnType>(emailRef: RefObject<HTMLInputElement>, passwordRef: RefObject<HTMLInputElement>) {
+export function useUserAuthentication<useUserAuthenticationReturnType>() {
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const router = useRouter();
+
+    const emailRef = createRef<HTMLInputElement>();
+    const passwordRef = createRef<HTMLInputElement>();
 
     async function handleSignInWithEmail() {
         setErrorMessage("");
@@ -87,6 +92,6 @@ export function useUserAuthentication<useUserAuthenticationReturnType>(emailRef:
     }
 
 
-    return { signInWithGoogle: handleSignInWithGoogle, signInWithEmail: handleSignInWithEmail, signUpWithEmail: handleSignUpWithEmail, error, errorMessage }
+    return { signInWithGoogle: handleSignInWithGoogle, signInWithEmail: handleSignInWithEmail, signUpWithEmail: handleSignUpWithEmail, error, errorMessage, emailRef, passwordRef }
 
 }

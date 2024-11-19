@@ -3,14 +3,10 @@ import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useUserAuthentication } from "@/hooks/useUserAuthentication";
 import { Box, Button, Fieldset, Flex, Heading, Input, Link, Separator, Stack } from "@chakra-ui/react";
-import { createRef } from "react";
 
 export default function Login() {
 
-    const emailRef = createRef<HTMLInputElement>();
-    const passwordRef = createRef<HTMLInputElement>();
-
-    const { signInWithEmail, signInWithGoogle, error, errorMessage } = useUserAuthentication(emailRef, passwordRef);
+    const { signInWithEmail, signInWithGoogle, error, errorMessage, emailRef, passwordRef } = useUserAuthentication();
 
     const handleLoginButton = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
