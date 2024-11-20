@@ -40,7 +40,6 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
 
     useEffect(() => {
-        console.log(processingStatus);
         if (processingStatus.status === "success" && processingValueMessage) {
             setValue(processingValueMessage);
         }
@@ -54,7 +53,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
             description: description || "",
             value: value || "",
             type: activeResource ? activeResource.type : selectedResourceType[0],
-            url: null,
+            url: activeResource ? activeResource.url : webUrl,
             last_modified: dateData.toISOString()
         }
         if (selectedImage) {
