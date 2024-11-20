@@ -3,6 +3,7 @@ import { QuizQuestion, Resource } from "@/types/resourceTypes";
 import { useContext } from "react";
 import { useActionStatus } from "./useActionStatus";
 import { sendQuizQuestionUpdate } from "@/utils/quiz_questions/client";
+import { useRouter } from "next/navigation";
 
 
 type useResourceEdit = {
@@ -17,7 +18,7 @@ export const useResourceEdit = (initialResource?: Resource | null): useResourceE
 
     const { setUploadStatus } = useActionStatus();
 
-
+    const router = useRouter();
 
     const uploadResource = async (resource: Resource, method: "POST" | "PUT") => {
         const formData = new FormData();
@@ -28,14 +29,10 @@ export const useResourceEdit = (initialResource?: Resource | null): useResourceE
             const result = await fetch("/api/resources", {
                 method, body: formData
             });
-            const returnedResource = await result.json();
+            const returnedResourceList = await result.json();
             setUploadStatus({ status: "success" })
-            console.log(returnedResource);
-            //redirect to this same page but with the generated id
-            /*if (imageSelectorRef.current) {
-                imageSelectorRef.current.files = null;
-                imageSelectorRef.current.value = "";
-            }*/
+            console.log(returnedResourceList);
+            router.push(`/resource?id=${returnedResourceList[0].id}`);
         }
         catch (error) {
             console.log(error);
