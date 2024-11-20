@@ -4,7 +4,7 @@ import ResourceList from "@/components/library/resourceList";
 import { getAllResources } from "@/utils/resources/server";
 import { Box, Heading, HStack } from "@chakra-ui/react"
 
-import ResourceContextProvider from "@/context/resources/provider";
+import ResourceContextProvider from "@/context/library/provider";
 
 const page = async () => {
 

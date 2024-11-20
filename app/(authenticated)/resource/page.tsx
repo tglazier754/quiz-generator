@@ -1,3 +1,4 @@
+import ResourceEditorContextProvider from "@/context/resource_editor/provider";
 import LibraryResourceUploader from "../../../components/image_processor/LibraryResourceUploader";
 import { getSpecificResources } from "@/utils/resources/server";
 
@@ -28,9 +29,13 @@ export default async function Page({
     }
 
     return (
-        <div>
-            <LibraryResourceUploader activeResource={activeResource} />
-        </div>
+
+        <ResourceEditorContextProvider>
+            <div>
+                <LibraryResourceUploader activeResource={activeResource} />
+            </div>
+
+        </ResourceEditorContextProvider>
     )
 
 }

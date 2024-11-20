@@ -35,3 +35,5 @@ export const archiveMultipleResources = async (resourceIdList: string[]) => {
     });
     return Promise.all(promiseArr);
 }
+
+

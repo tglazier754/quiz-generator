@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { Button } from "../ui/button";
 import { TbTrash } from "react-icons/tb";
 import { PiPencil } from "react-icons/pi";
-import { ResourcesContext } from "@/context/resources/provider";
+import { ResourcesContext } from "@/context/library/provider";
 import { GiCheckMark } from "react-icons/gi";
 import ResourceCardImage from "./resourceCardImage";
 import { archiveSingleResource } from "@/utils/resources/client";

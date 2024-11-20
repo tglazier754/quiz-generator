@@ -1,4 +1,4 @@
-import { ResourcesContext } from "@/context/resources/provider";
+import { ResourcesContext } from "@/context/library/provider";
 import { useContext } from "react";
 
 type UseSelectCards = {

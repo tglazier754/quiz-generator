@@ -2,7 +2,7 @@
 import { Resource } from "@/types/resourceTypes";
 import { Box, Center, Heading, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import ResourceCard from "./resourceCard";
-import { ResourcesContext } from "@/context/resources/provider";
+import { ResourcesContext } from "@/context/library/provider";
 import { useContext } from "react";
 import { ResourceHash } from "@/types/resourceTypes";
 import { useSelectResources } from "@/hooks/useSelectResources";

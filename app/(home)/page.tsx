@@ -2,7 +2,7 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
 import { getAllResources } from "@/utils/resources/server";
-import ResourceContextProvider from "@/context/resources/provider";
+import ResourceContextProvider from "@/context/resource_editor/provider";
 
 
 type PageProps = {

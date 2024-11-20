@@ -1,19 +1,20 @@
 "use client"
 
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
-import { QuizQuestion, Resource } from "@/types/resourceTypes";
-import { convertImageToDataUrl, extractImageText } from "@/utils/images/client";
-import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
-import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import { Resource } from "@/types/resourceTypes";
+import { Box, Button, createListCollection, Flex, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
-import { FileUploadList, FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
+import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
 import { HiUpload } from "react-icons/hi";
-import { BiPlus } from "react-icons/bi";
-import { ResourcesContext } from "@/context/resources/provider";
-import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import Quiz from "../quiz/quiz";
-import { IHash } from "@/types/globalTypes";
 import ResourceCardImage from "../library/resourceCardImage";
+import { useResourceEdit } from "./hooks/useResourceEdit";
+import { useImageUpload } from "./hooks/useImageUpload";
+import { useActionStatus } from "./hooks/useActionStatus";
+import { useInputController } from "./hooks/useInputController";
+import { convertImageToDataUrl } from "@/utils/images/client";
+import { useWebsiteUpload } from "./hooks/useWebsiteUpload";
 
 type LibraryResourceUploaderProps = {
     activeResource?: Resource | null;
@@ -23,193 +24,78 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
     const { activeResource } = props;
 
-    const { resourceMap, isDrawerOpen, setIsDrawerOpen, isGenerating } = useContext(ResourcesContext);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [name, setName] = useState(activeResource && activeResource.name || "");
-    const [description, setDescription] = useState(activeResource && activeResource.description || "");
-    const [url, setUrl] = useState(activeResource && activeResource.url as string || "");
-    const [valueText, setValueText] = useState<string>(activeResource && activeResource.value || "");
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [processingError, setProcessingError] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadingError, setUploadingError] = useState<string | null>(null);
-    const [uploadSuccess, setUploadSuccess] = useState(false);
-    const imageSelectorRef = useRef<HTMLInputElement>(null);
+    const { value: name, handleValueChange: nameChange } = useInputController(activeResource && activeResource.name || "");
+    const { value: description, handleValueChange: descriptionChange } = useInputController(activeResource && activeResource.description || "");
+    const { value: value, setValue, handleValueChange: valueChange } = useInputController(activeResource && activeResource.value || "");
     const [selectedResourceType, setSelectedResourceType] = useState<string[]>([RESOURCE_TYPE_TEXT]);
 
-    //Make this a ref
-    const quizQuestionChanges: IHash<QuizQuestion> = {};
+    const { submitResource, updateQuizQuestion } = useResourceEdit(activeResource);
+    const { uploadStatus, processingStatus } = useActionStatus();
+    const { status: uploadStatusValue, message: uploadErrorMessage } = uploadStatus;
+    const { status: processingStatusValue, message: processingErrorMessage, value: processingValueMessage } = processingStatus;
+    const { selectedImage, handleImageSelection } = useImageUpload();
+    const { webUrl, changeWebUrl, processWebsite } = useWebsiteUpload();
 
     const USER_GENERATED_TYPES_LIST_DATA = createListCollection({ items: USER_RESOURCE_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
 
     useEffect(() => {
-        setName(activeResource && activeResource.name || "");
-        setDescription(activeResource && activeResource.description || "");
-        setUrl(activeResource && activeResource.url as string || "");
-        setValueText(activeResource && activeResource.value || "");
-    }, [activeResource]);
-
-    const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
-
-        console.log(event);
-
-        if (event.target.files && event.target.files.length) {
-            setSelectedImage(event.target.files[0]);
-            handleImageProcess();
+        console.log(processingStatus);
+        if (processingStatus.status === "success" && processingValueMessage) {
+            setValue(processingValueMessage);
         }
-    }
+    }, [processingStatus, processingValueMessage, setValue]);
 
-    const handleImageProcess = async () => {
-        if (selectedImage) {
-            setUploadSuccess(false);
-            setIsProcessing(true);
-            extractImageText(selectedImage).then((value) => {
-                setValueText(value);
-            }).catch((error) => {
-                setProcessingError(error);
-            }).finally(() => {
-                setIsProcessing(false);
-            })
-
-        }
-    }
-
-    const handleValueInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const inputValue = e.target.value;
-        setValueText(inputValue);
-    }
-
-    const handleCreateResourceUpload = async () => {
-        setUploadSuccess(false);
-        setIsUploading(true);
+    const getConsolidatedResourceObject = async (): Promise<Resource> => {
+        const dateData = new Date();
         const resource: Resource = {
-            name,
-            description,
-            value: valueText,
-            type: selectedResourceType[0],
+            ...activeResource,
+            name: name || "",
+            description: description || "",
+            value: value || "",
+            type: activeResource ? activeResource.type : selectedResourceType[0],
             url: null,
+            last_modified: dateData.toISOString()
         }
         if (selectedImage) {
+            //this will be moved to a url returned from a cdn upload
             const convertedImage = await convertImageToDataUrl(selectedImage);
             resource.url = convertedImage as string;
         }
-        const formData = new FormData();
-        formData.append("data", JSON.stringify(resource));
-
-
-        try {
-            const result = await fetch("/api/resources", {
-                method: "POST", body: formData
-            });
-            const addedResource = await result.json();
-            setUploadSuccess(true);
-            resourceMap[addedResource.id] = addedResource;
-
-            setSelectedImage(null);
-            if (imageSelectorRef.current) {
-                imageSelectorRef.current.files = null;
-                imageSelectorRef.current.value = "";
-            }
-        }
-        catch (error) {
-            console.log(error);
-            setUploadingError(error as string);
-        }
-        finally {
-            setIsUploading(false);
-        }
+        return resource;
     }
 
-    const handleUpdateResourceUpload = async () => {
-        console.log("update resource");
-        //TODO: Update quiz questions first so that they are included in the return value
-
-
-        setUploadSuccess(false);
-        setIsUploading(true);
-        const dateData = new Date();
-
-        const questionUpdatePromises = Object.values(quizQuestionChanges).map((question: QuizQuestion) => {
-            return sendQuizQuestionUpdate(question);
-        })
-
-        const questionUpdateResult = await Promise.all(questionUpdatePromises);
-        console.log(questionUpdateResult);
-
-
-        const resource: Resource = {
-            ...activeResource,
-            name,
-            description,
-            value: valueText,
-            last_modified: dateData.toISOString()
-        }
-        delete resource.quiz_questions;
-        const formData = new FormData();
-        formData.append("data", JSON.stringify(resource));
-        console.log(resource);
-
-        try {
-            const result = await fetch("/api/resources", {
-                method: "PUT", body: formData,
-            });
-            const updatedResult = await result.json();
-            setUploadSuccess(true);
-
-            console.log(updatedResult);
-            resourceMap[updatedResult.id] = updatedResult;
-
-            setSelectedImage(null);
-            if (imageSelectorRef.current) {
-                imageSelectorRef.current.files = null;
-                imageSelectorRef.current.value = "";
-            }
-        }
-        catch (error) {
-            console.log(error);
-            setUploadingError(error as string);
-        }
-        finally {
-            setIsUploading(false);
-        }
-    }
-
-    const sendQuizQuestionUpdate = (quizQuestion: QuizQuestion) => {
-        const formData = new FormData();
-        formData.append("data", JSON.stringify(quizQuestion));
-        return fetch("/api/quiz_questions", {
-            method: "PUT", body: formData
-        })
-    }
-
-    const handleQuizQuestionChange = (updatedQuestion: QuizQuestion) => {
-        //TODO: remove the item from the changes list if there is no delta
-        if (updatedQuestion && updatedQuestion.id) {
-            quizQuestionChanges[updatedQuestion.id] = updatedQuestion;
-        }
-        console.log(quizQuestionChanges);
+    const handleSubmitResource = async () => {
+        const resourceData = await getConsolidatedResourceObject();
+        submitResource(resourceData);
     }
 
     return (
 
-        <Box>
-            <Stack>
+        <Flex
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            p={4}>
+            <Stack
+                width="100%"
+                maxWidth="900px"
+                minWidth="400px">
                 <Box className="description-data">
                     <HStack >
                         <Box className="w-1/3">
                             <Square>
 
-                                <ResourceCardImage src={url} name={name} type={activeResource && activeResource.type || selectedResourceType[0]} />
+                                <ResourceCardImage src={activeResource?.url} type={activeResource && activeResource.type || selectedResourceType[0]} />
                             </Square>
                         </Box>
                         <Box className="flex-1">
                             <Stack>
                                 <Box>
-                                    <Input variant="flushed" placeholder="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
+                                    <Input variant="flushed" placeholder="Name" value={name} onChange={nameChange} />
                                 </Box>
                                 <Box>
-                                    <Input variant="flushed" placeholder="Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
+                                    <Input variant="flushed" placeholder="Description" value={description} onChange={descriptionChange} />
                                 </Box>
                                 <Box>
                                     <Text>Tags will go here</Text>
@@ -247,45 +133,44 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                     </Box>
                     <Box className="flex-1">
                         <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_IMAGE ? "hidden" : ""}`}>
-                            {/*<Input id="image-selector" type="file" ref={imageSelectorRef} onChange={handleImageSelection} />*/}
-
-                            <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} ref={imageSelectorRef} onChange={handleImageSelection}>
+                            <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} onChange={handleImageSelection} >
                                 <FileUploadTrigger asChild>
-                                    <Button variant="outline" size="sm" >
+                                    <Button variant="outline" size="sm">
                                         <HiUpload />Upload file
                                     </Button>
                                 </FileUploadTrigger>
-                                <FileUploadList />
                             </FileUploadRoot>
-
-                            {/*selectedImage && <Button id="image-uploader" onClick={handleImageProcess}>Process</Button>*/}
                         </Box>
 
                         <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_WEBSITE ? "hidden" : ""}`}>
-                            <Input type="text" placeholder="URL" value={url} onChange={(e) => { setUrl(e.target.value) }} />
+                            <Stack
+                                direction="row">
+                                <Input type="text" placeholder="URL" value={webUrl} onChange={changeWebUrl} />
+                                <Button size="sm" variant="outline" onClick={processWebsite}>Process</Button>
+                            </Stack>
                         </Box>
                     </Box>
                 </HStack>
 
-                {isProcessing && <p>Processing...</p>}
+                {processingStatusValue === "pending" && <p>Processing...</p>}
+                {processingStatusValue === "error" && <Text>{processingErrorMessage}</Text>}
 
                 {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
-                    <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={handleQuizQuestionChange} /> :
-                    <Textarea rows={12} value={valueText} onChange={handleValueInputChange} disabled={isProcessing} />
+                    <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={updateQuizQuestion} /> :
+                    <Textarea rows={12} value={value} onChange={valueChange} disabled={processingStatusValue === "pending"} />
                 }
 
-                {processingError && <Text>{processingError}</Text>}
                 <Box>
 
-                    {isUploading && <p>Uploading...</p>}
-                    {uploadingError && <Text>{uploadingError}</Text>}
-                    {uploadSuccess && <Text>Uploaded Successfully</Text>}
+                    {uploadStatusValue === "pending" && <p>Uploading...</p>}
+                    {uploadStatusValue === "error" && <Text>{uploadErrorMessage}</Text>}
+                    {uploadStatusValue === "success" && <Text>Uploaded Successfully</Text>}
                 </Box>
             </Stack>
             <Box>
-                <Button onClick={activeResource ? handleUpdateResourceUpload : handleCreateResourceUpload} disabled={isUploading}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
+                <Button onClick={handleSubmitResource} disabled={uploadStatusValue === "pending"}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
             </Box>
-        </Box>
+        </Flex>
 
 
     )

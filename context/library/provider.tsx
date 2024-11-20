@@ -5,8 +5,8 @@ import { Resource, ResourceHash } from "@/types/resourceTypes";
 import { createContext, ReactElement, useRef, useState } from "react";
 
 export type ResourceContext = {
-    resourceMap: ResourceHash;
-    setResourceMap: (resourceList: ResourceHash) => void;
+    resourceMap: IHash<Resource>;
+    setResourceMap: (resourceList: IHash<Resource>) => void;
     selectedResources: IHash<Resource>;
     setSelectedResources: (hash: IHash<Resource>) => void;
     activeResource?: Resource | null;
@@ -25,7 +25,7 @@ type ResourceContextProviderProps = {
 
 export const ResourceContextProvider = ({ children }: ResourceContextProviderProps) => {
 
-    const [resourceMap, setResourceMap] = useState<ResourceHash>({});
+    const [resourceMap, setResourceMap] = useState<IHash<Resource>>({});
     const [selectedResources, setSelectedResources] = useState<IHash<Resource>>({});
     const [activeResource, setActiveResource] = useState<Resource | null>(null);
     const [isGenerating, setIsGenerating] = useState<boolean>(false);

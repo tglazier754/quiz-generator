@@ -1,6 +1,6 @@
 "use client";
 
-import { ResourcesContext } from "@/context/resources/provider";
+import { ResourcesContext } from "@/context/library/provider";
 import { MACHINE_GENERATED_TYPES } from "@/types/constants";
 import { archiveMultipleResources, generateResource } from "@/utils/resources/client";
 import { Box, Button, createListCollection, DialogHeader, Flex, } from "@chakra-ui/react";
@@ -10,7 +10,6 @@ import { TbTrash } from "react-icons/tb";
 import { DialogBody, DialogContent, DialogFooter, DialogRoot, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { toaster } from "../ui/toaster";
-import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
 import { BiPlus } from "react-icons/bi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,17 +32,13 @@ export const ResourceActionsPanel = () => {
         if (selectedResourceIdList.length) {
             setIsGenerating(true);
             setIsGenerateDialogOpen(false);
-            console.log(selectedResourceType[0]);
             try {
-                console.log(selectedResourceIdList);
                 const generatedResource = await generateResource(selectedResourceType[0], selectedResourceIdList);
-                console.log(generatedResource);
                 //redirect to /resource?id={generated_id}
                 router.push(`/resource?id=${generatedResource.id}`);
             }
             catch (error) {
-                console.log(error);
-                toaster.error({ title: "Error", description: "Unable to generate the resource" });
+                toaster.create({ type: "Error", description: "Unable to generate the resource" });
             }
         }
         else {
