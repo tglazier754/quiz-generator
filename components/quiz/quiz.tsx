@@ -1,7 +1,7 @@
 "use client";
 
+import { Flex } from "@chakra-ui/react";
 import QuizCard from "./quizCard";
-import "./quiz.scss";
 import { QuizQuestion } from "@/types/resourceTypes";
 
 type QuizProps = {
@@ -20,13 +20,16 @@ export const Quiz = (props: QuizProps) => {
 
 
     return (
-        <div className="quiz-container">
-            <div className="quiz-card-container">
-                {questions.map((question: QuizQuestion, index) =>
-                    <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} changeHandler={handleChange} />
-                )}
-            </div>
-        </div>
+        <Flex
+            direction="column"
+            gap={5}
+            p={4}
+            overflowY="scroll"
+        >
+            {questions.map((question: QuizQuestion, index) =>
+                <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} changeHandler={handleChange} />
+            )}
+        </Flex>
     )
 }
 

@@ -2,7 +2,7 @@
 
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Button, createListCollection, Flex, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
@@ -15,6 +15,7 @@ import { useActionStatus } from "./hooks/useActionStatus";
 import { useInputController } from "./hooks/useInputController";
 import { convertImageToDataUrl } from "@/utils/images/client";
 import { useWebsiteUpload } from "./hooks/useWebsiteUpload";
+import { Field } from "../ui/field";
 
 type LibraryResourceUploaderProps = {
     activeResource?: Resource | null;
@@ -45,6 +46,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
         }
     }, [processingStatus, processingValueMessage, setValue]);
 
+    //TODO: Make this code separate and testable
     const getConsolidatedResourceObject = async (): Promise<Resource> => {
         const dateData = new Date();
         const resource: Resource = {
@@ -71,16 +73,18 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
     return (
 
-        <Flex
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            p={4}>
+        <Stack
+            width="100%"
+            maxWidth="900px"
+            minWidth="400px"
+            height="100%"
+            maxHeight="100%"
+            position="absolute">
             <Stack
-                width="100%"
-                maxWidth="900px"
-                minWidth="400px">
-                <Box className="description-data">
+                overflow="auto"
+                maxHeight="100%">
+                <Box className="description-data"
+                    p={4}>
                     <HStack >
                         <Box className="w-1/3">
                             <Square>
@@ -91,13 +95,14 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                         <Box className="flex-1">
                             <Stack>
                                 <Box>
-                                    <Input variant="flushed" placeholder="Name" value={name} onChange={nameChange} />
+                                    <Field label="Name">
+                                        <Input value={name} onChange={nameChange} />
+                                    </Field>
                                 </Box>
                                 <Box>
-                                    <Input variant="flushed" placeholder="Description" value={description} onChange={descriptionChange} />
-                                </Box>
-                                <Box>
-                                    <Text>Tags will go here</Text>
+                                    <Field label="Description">
+                                        <Input value={description} onChange={descriptionChange} />
+                                    </Field>
                                 </Box>
                             </Stack>
                         </Box>
@@ -105,7 +110,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                 </Box>
 
 
-                <HStack alignItems="flex-end">
+                <HStack alignItems="flex-end" padding="4">
                     <Box className="w-1/3">
 
 
@@ -113,7 +118,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                             <Input variant="flushed" disabled value={activeResource && activeResource.type || ""} />
                             :
                             <SelectRoot variant="outline" collection={USER_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
-                                <SelectLabel>Select resource type</SelectLabel>
+                                <SelectLabel>Resource type</SelectLabel>
                                 <SelectTrigger>
                                     <SelectValueText placeholder="Select Content Type" />
                                 </SelectTrigger>
@@ -156,7 +161,8 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
                 {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
                     <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={updateQuizQuestion} /> :
-                    <Textarea rows={12} value={value} onChange={valueChange} disabled={processingStatusValue === "pending"} />
+                    <Field label="Resource value" p={4}>
+                        <Textarea rows={12} value={value} onChange={valueChange} disabled={processingStatusValue === "pending"} /></Field>
                 }
 
                 <Box>
@@ -166,10 +172,11 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                     {uploadStatusValue === "success" && <Text>Uploaded Successfully</Text>}
                 </Box>
             </Stack>
-            <Box>
+            <Box
+                p={4}>
                 <Button onClick={handleSubmitResource} disabled={uploadStatusValue === "pending"}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
             </Box>
-        </Flex>
+        </Stack>
 
 
     )
