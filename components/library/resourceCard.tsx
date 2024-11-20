@@ -2,12 +2,9 @@
 
 import { Resource } from "@/types/resourceTypes";
 import { AspectRatio, Card, Float, Icon, Show, Square } from "@chakra-ui/react";
-
-import { useContext } from "react";
 import { Button } from "../ui/button";
 import { TbTrash } from "react-icons/tb";
 import { PiPencil } from "react-icons/pi";
-import { ResourcesContext } from "@/context/library/provider";
 import { GiCheckMark } from "react-icons/gi";
 import ResourceCardImage from "./resourceCardImage";
 import { archiveSingleResource } from "@/utils/resources/client";
@@ -22,7 +19,6 @@ type ResourceCardProps = {
 export const ResourceCard = (props: ResourceCardProps) => {
     const { resource, selected, onSelectHandler } = props;
 
-    const { setIsDrawerOpen } = useContext(ResourcesContext);
 
     const handleSelection = () => {
         if (onSelectHandler) onSelectHandler(resource.id || "", !selected);

@@ -38,6 +38,7 @@ export const ResourceActionsPanel = () => {
                 router.push(`/resource?id=${generatedResource.id}`);
             }
             catch (error) {
+                console.log(error);
                 toaster.create({ type: "Error", description: "Unable to generate the resource" });
             }
         }
