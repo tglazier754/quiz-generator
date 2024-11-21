@@ -1,5 +1,5 @@
 "use server";
-import { RESOURCE_ORIGIN_USER, RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES, TABLE_USER_RESOURCES } from "@/types/constants";
+import { RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES, TABLE_USER_RESOURCES } from "@/types/constants";
 import { createClient } from "../supabase/server";
 import { Resource } from "@/types/resourceTypes";
 import { SupabaseClient } from "@supabase/supabase-js";
@@ -9,7 +9,6 @@ import { convertObjectArrayToHashMap } from "../global";
 export const getAllResources = async () => {
     const supabaseConnection = createClient();
     const { data: userData } = await supabaseConnection?.auth.getUser();
-    console.log(userData);
 
     //TODO: Proper checks for logged in user
     if (userData && userData.user) {
@@ -21,7 +20,6 @@ export const getAllResources = async () => {
 
         //TODO: make sure we use the totalOffset
         const { data } = await supabaseConnection.from(TABLE_RESOURCES).select(`*, quiz_questions(*), user_resources!inner(user_id)`).eq("user_resources.user_id", userData.user.id);
-        console.log(data);
         if (data) {
             return JSON.stringify(convertObjectArrayToHashMap(data));
         }
@@ -59,7 +57,7 @@ export const getSpecificResources = async (resourceIdList: string[]): Promise<Re
 
 
 export const getCombinedContentFromSpecificResources = async (resourceIdList: string[]) => {
-    return new Promise<string>(async (resolve, reject) => {
+    return new Promise<string>(async (resolve) => {
         const data = await getSpecificResources(resourceIdList);
         //TODO: Quizzes store their data separately, need to amalgamate the sources.
         const mappedValues = data?.map((resource) => { return resource.value });

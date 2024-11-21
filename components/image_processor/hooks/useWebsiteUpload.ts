@@ -11,8 +11,8 @@ export type WebsiteUploader = {
 }
 
 
-export const useWebsiteUpload = (): WebsiteUploader => {
-    const { value: webUrl, handleValueChange: changeWebUrl } = useInputController("");
+export const useWebsiteUpload = (initialValue: string): WebsiteUploader => {
+    const { value: webUrl, handleValueChange: changeWebUrl } = useInputController(initialValue);
 
     const { setUploadStatus, setProcessingStatus } = useContext(ResourceEditorContext);
 

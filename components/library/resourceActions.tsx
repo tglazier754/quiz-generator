@@ -3,16 +3,16 @@
 import { ResourcesContext } from "@/context/library/provider";
 import { MACHINE_GENERATED_TYPES } from "@/types/constants";
 import { archiveMultipleResources, generateResource } from "@/utils/resources/client";
-import { Box, Button, createListCollection, DialogHeader, Flex, } from "@chakra-ui/react";
+import { Box, Button, createListCollection, Flex, } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
-import { DialogBody, DialogContent, DialogFooter, DialogRoot, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { toaster } from "../ui/toaster";
 import { BiPlus } from "react-icons/bi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 
 export const ResourceActionsPanel = () => {
     const { selectedResources, isGenerating, setIsGenerating } = useContext(ResourcesContext);
@@ -60,6 +60,7 @@ export const ResourceActionsPanel = () => {
             //TODO: remove the archived from the list
         }
     }
+
     return (
         <Box>
             <Flex direction="row" gap="1rem" align="center" justify="flex-end">
@@ -71,26 +72,28 @@ export const ResourceActionsPanel = () => {
                 <Box>
 
 
-                    <DialogRoot lazyMount open={isGenerateDialogOpen} onOpenChange={(e) => setIsGenerateDialogOpen(e.open)}>
-                        <DialogTrigger asChild>
+                    <DrawerRoot lazyMount size="full" open={isGenerateDialogOpen} unmountOnExit onOpenChange={(e) => setIsGenerateDialogOpen(e.open)} key="full-drawer" closeOnInteractOutside={false}>
+                        <DrawerBackdrop />
+                        <DrawerTrigger asChild>
                             <Button disabled={isGenerating || !Object.keys(selectedResources).length} variant="outline">
                                 <FaWandMagicSparkles />
                             </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Generate Content</DialogTitle>
-                            </DialogHeader>
-                            <DialogBody>
+                        </DrawerTrigger>
+
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>Generate Content</DrawerTitle>
+                            </DrawerHeader>
+                            <DrawerBody>
 
                                 <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
                                     <SelectLabel>Select resource type</SelectLabel>
                                     <SelectTrigger>
                                         <SelectValueText placeholder="Select Content Type" />
                                     </SelectTrigger>
-                                    <SelectContent zIndex={100000}>
+                                    <SelectContent zIndex={100000} >
                                         {MACHINE_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
-                                            <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
+                                            <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value} >
                                                 {resource_type.label}
                                             </SelectItem>
                                         )
@@ -98,14 +101,16 @@ export const ResourceActionsPanel = () => {
                                     </SelectContent>
                                 </SelectRoot>
 
-                            </DialogBody>
-                            <DialogFooter>
+                            </DrawerBody>
+                            <DrawerFooter>
                                 <Button variant="ghost" disabled={isGenerating} onClick={() => setIsGenerateDialogOpen(false)}>Cancel</Button>
                                 <Button variant="surface" disabled={isGenerating || !selectedResourceType.length} onClick={generateResourceHandler}>Generate</Button>
-                            </DialogFooter>
-                        </DialogContent>
+                            </DrawerFooter>
 
-                    </DialogRoot>
+                            <DrawerCloseTrigger />
+                        </DrawerContent>
+
+                    </DrawerRoot>
                 </Box>
                 <Box>
 

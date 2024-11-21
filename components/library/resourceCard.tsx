@@ -19,7 +19,6 @@ type ResourceCardProps = {
 export const ResourceCard = (props: ResourceCardProps) => {
     const { resource, selected, onSelectHandler } = props;
 
-
     const handleSelection = () => {
         if (onSelectHandler) onSelectHandler(resource.id || "", !selected);
     }

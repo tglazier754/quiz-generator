@@ -2,7 +2,7 @@
 
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, createListCollection, Heading, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
@@ -16,6 +16,8 @@ import { useInputController } from "./hooks/useInputController";
 import { convertImageToDataUrl } from "@/utils/images/client";
 import { useWebsiteUpload } from "./hooks/useWebsiteUpload";
 import { Field } from "../ui/field";
+import Link from "next/link";
+import { BiArrowBack } from "react-icons/bi";
 
 type LibraryResourceUploaderProps = {
     activeResource?: Resource | null;
@@ -35,7 +37,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
     const { status: uploadStatusValue, message: uploadErrorMessage } = uploadStatus;
     const { status: processingStatusValue, message: processingErrorMessage, value: processingValueMessage } = processingStatus;
     const { selectedImage, handleImageSelection } = useImageUpload();
-    const { webUrl, changeWebUrl, processWebsite } = useWebsiteUpload();
+    const { webUrl, changeWebUrl, processWebsite } = useWebsiteUpload(activeResource && activeResource.url as string || "");
 
     const USER_GENERATED_TYPES_LIST_DATA = createListCollection({ items: USER_RESOURCE_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
@@ -80,6 +82,9 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
             height="100%"
             maxHeight="100%"
             position="absolute">
+
+            <Link href="/library"><span><BiArrowBack />Library</span></Link>
+            <Heading>Manage Resource</Heading>
             <Stack
                 overflow="auto"
                 maxHeight="100%">
@@ -136,7 +141,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
                     </Box>
                     <Box className="flex-1">
-                        <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_IMAGE ? "hidden" : ""}`}>
+                        <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_IMAGE || selectedResourceType[0] === RESOURCE_TYPE_IMAGE ? "" : "hidden"}>
                             <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} onChange={handleImageSelection} >
                                 <FileUploadTrigger asChild>
                                     <Button variant="outline" size="sm">
@@ -146,7 +151,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                             </FileUploadRoot>
                         </Box>
 
-                        <Box className={`${selectedResourceType[0] !== RESOURCE_TYPE_WEBSITE ? "hidden" : ""}`}>
+                        <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_WEBSITE || selectedResourceType[0] === RESOURCE_TYPE_WEBSITE ? "" : "hidden"}>
                             <Stack
                                 direction="row">
                                 <Input type="text" placeholder="URL" value={webUrl} onChange={changeWebUrl} />
