@@ -36,20 +36,25 @@ export const ResourceActionsPanel = () => {
                 const generatedResource = await generateResource(selectedResourceType[0], selectedResourceIdList);
                 //redirect to /resource?id={generated_id}
                 router.push(`/resource?id=${generatedResource.id}`);
+                setIsGenerating(false);
+                setSelectedResourceType([]);
             }
             catch (error) {
                 console.log(error);
+                setIsGenerating(false);
+                setSelectedResourceType([]);
                 toaster.create({ type: "Error", description: "Unable to generate the resource" });
             }
         }
         else {
+
+            setIsGenerating(false);
+            setSelectedResourceType([]);
             toaster.create({
                 description: "There are no selected resources to generate from",
                 type: "error"
             })
         }
-        setIsGenerating(false);
-        setSelectedResourceType([]);
     }
 
     const deleteResourcesHandler = async () => {
@@ -87,7 +92,7 @@ export const ResourceActionsPanel = () => {
                             <DrawerBody>
 
                                 <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
-                                    <SelectLabel>Select resource type</SelectLabel>
+                                    <SelectLabel>Resource type</SelectLabel>
                                     <SelectTrigger>
                                         <SelectValueText placeholder="Select Content Type" />
                                     </SelectTrigger>

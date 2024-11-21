@@ -35,7 +35,7 @@ export default function RootLayout({
           <header>
             <TopMenu />
           </header>
-          <main className="max-w-screen w-screen h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] absolute">
+          <main className="max-w-screen w-screen h-[calc(100vh-3rem)] max-h-[calc(100vh-3rem)] top-[3rem] absolute">
             {children}
 
             <Toaster />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Resource } from "@/types/resourceTypes";
-import { AspectRatio, Card, Float, Icon, Show, Square } from "@chakra-ui/react";
+import { AspectRatio, Card, Float, Show, Square } from "@chakra-ui/react";
 import { Button } from "../ui/button";
 import { TbTrash } from "react-icons/tb";
 import { PiPencil } from "react-icons/pi";
@@ -49,9 +49,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
                         outlineColor="bg"
                         borderRadius={2}
                     >
-                        <Icon>
-                            <GiCheckMark />
-                        </Icon>
+                        <GiCheckMark />
                     </Square>
 
                 </Float>

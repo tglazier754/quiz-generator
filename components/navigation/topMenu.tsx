@@ -5,7 +5,7 @@ export const TopMenu = async () => {
 
 
     return (
-        <Box className="w-screen  h-12 p-0 ">
+        <Box className="w-screen p-0 " position="fixed" top="0" height="12" zIndex="9999" backgroundColor="black">
 
             <Flex alignItems="center" className="min-h-12 pr-4 pl-4">
                 <Circle bg="red" color="white">
