@@ -32,9 +32,7 @@ export default async function Page({
     return (
 
         <ResourceEditorContextProvider>
-            <div>
-                <LibraryResourceUploader activeResource={activeResource} />
-            </div>
+            <LibraryResourceUploader activeResource={activeResource} />
 
         </ResourceEditorContextProvider>
     )

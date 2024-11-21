@@ -81,15 +81,16 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
             minWidth="400px"
             height="100%"
             maxHeight="100%"
-            position="absolute">
+            justifySelf="center">
 
-            <Link href="/library"><span><BiArrowBack />Library</span></Link>
+            <Link href="/library" className="flex items-center align-middle"><BiArrowBack />{" "}Library</Link>
             <Heading>Manage Resource</Heading>
             <Stack
                 overflow="auto"
                 maxHeight="100%">
                 <Box className="description-data"
-                    p={4}>
+                    pl={4}
+                    pr={4}>
                     <HStack >
                         <Box className="w-1/3">
                             <Square>
@@ -115,12 +116,14 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                 </Box>
 
 
-                <HStack alignItems="flex-end" padding="4">
+                <HStack alignItems="flex-end"
+                    pl={4}
+                    pr={4}>
                     <Box className="w-1/3">
 
 
                         {activeResource ?
-                            <Input variant="flushed" disabled value={activeResource && activeResource.type || ""} />
+                            <Text>{activeResource && activeResource.type || ""}</Text>
                             :
                             <SelectRoot variant="outline" collection={USER_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
                                 <SelectLabel>Resource type</SelectLabel>
