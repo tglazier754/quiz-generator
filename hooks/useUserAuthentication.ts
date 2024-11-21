@@ -8,7 +8,7 @@ export type SignInError = {
     code: number;
 }
 
-type useUserAuthenticationReturnType = {
+type UserAuthenticationReturnType = {
     signInWithEmail: () => void;
     signInWithGoogle: () => Promise<void>;
     signUpWithEmail: () => void;
@@ -19,7 +19,7 @@ type useUserAuthenticationReturnType = {
 }
 
 //TODO: Rename this
-export function useUserAuthentication<useUserAuthenticationReturnType>() {
+export const useUserAuthentication = (): UserAuthenticationReturnType => {
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -34,7 +34,7 @@ export function useUserAuthentication<useUserAuthenticationReturnType>() {
         const email = emailRef.current?.value;
         const password = passwordRef.current?.value;
         const supabase = createClient();
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
             email: email || "",
             password: password || ""
         })
@@ -56,11 +56,11 @@ export function useUserAuthentication<useUserAuthenticationReturnType>() {
         const email = emailRef.current?.value;
         const password = passwordRef.current?.value;
         const supabase = createClient();
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email: email || "",
             password: password || "",
             options: {
-                emailRedirectTo: 'http://localhost:3000/api/auth/callback'
+                emailRedirectTo: process.env.NEXT_PUBLIC_REDIRECT_HOST + '/api/auth/callback'
             },
         });
         if (error) {
@@ -86,7 +86,7 @@ export function useUserAuthentication<useUserAuthenticationReturnType>() {
                     access_type: '',
                     prompt: 'consent',
                 },
-                redirectTo: 'http://localhost:3000/api/auth/callback'
+                redirectTo: process.env.NEXT_PUBLIC_REDIRECT_HOST + '/api/auth/callback'
             },
         })
     }
