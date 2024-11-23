@@ -14,7 +14,7 @@ export const TopMenu = async () => {
         <Box className="w-screen" mb={4} position="fixed" top="0" zIndex="9999" backgroundColor="black">
 
             <Flex p={4} pr={9} pl={9} margin="auto" alignItems="center" justifyContent="space-between">
-                <Avatar name="Quiz Generator" color="white" backgroundColor="red" />
+                <Avatar name="Quiz Generator!" color="white" backgroundColor="red" />
                 <Spacer />
                 <div className="h-full">
                     <UserMenu user={user} />
