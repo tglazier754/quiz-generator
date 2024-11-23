@@ -11,9 +11,9 @@ export const TopMenu = async () => {
     const { user } = data;
 
     return (
-        <Box className="w-screen" p={4} position="fixed" top="0" zIndex="9999" backgroundColor="black">
+        <Box className="w-screen" mb={4} position="fixed" top="0" zIndex="9999" backgroundColor="black">
 
-            <Flex alignItems="center" justifyContent="space-between">
+            <Flex p={4} pr={9} pl={9} margin="auto" alignItems="center" justifyContent="space-between">
                 <Avatar name="Quiz Generator" color="white" backgroundColor="red" />
                 <Spacer />
                 <div className="h-full">

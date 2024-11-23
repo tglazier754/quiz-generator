@@ -14,14 +14,16 @@ const page = async () => {
     return (
         <ResourceContextProvider>
             <>
-                <HStack className="w-[calc(100vw-1rem)] p-4 pr-0 pt-9 h-12 fixed mb-4 t-0 z-10" bg="black" justify="space-between">
+                <Box className="w-full fixed z-10">
+                    <HStack className="w-[calc(1100px-1rem)] m-auto p-4 pt-9 mb-4 t-0 " bg="black" justify="space-between">
 
-                    <Heading fontSize="2xl">Library</Heading>
-                    <ResourceActionsPanel />
-                </HStack>
-                <Box className="p-4">
+                        <Heading fontSize="2xl">Library</Heading>
+                        <ResourceActionsPanel />
+                    </HStack>
+                </Box>
+                <Box className="w-[calc(1100px-1rem)] p-4 m-auto">
 
-                    <Box className="mt-12">
+                    <Box className="mt-24">
                         <ResourceList resources={data} />
                     </Box>
 
