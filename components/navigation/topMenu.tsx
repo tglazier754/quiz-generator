@@ -1,23 +1,33 @@
-import { Box, Circle, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Spacer } from "@chakra-ui/react";
 import UserMenu from "./userMenu";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { Avatar } from "../ui/avatar";
 
 export const TopMenu = async () => {
-
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) return redirect("/login");
+    const { user } = data;
 
     return (
-        <Box className="w-screen p-0 " position="fixed" top="0" height="12" zIndex="9999" backgroundColor="black">
+        <Box className="w-screen" p={4} position="fixed" top="0" zIndex="9999" backgroundColor="black">
 
-            <Flex alignItems="center" className="min-h-12 pr-4 pl-4">
-                <Circle bg="red" color="white">
-                    TG
-                </Circle>
+            <Flex alignItems="center" justifyContent="space-between">
+                <Avatar name="Quiz Generator" color="white" backgroundColor="red" />
                 <Spacer />
                 <div className="h-full">
-                    <UserMenu />
+                    <UserMenu user={user} />
                 </div>
             </Flex>
         </Box>
+
     )
 };
 
 export default TopMenu;
+
+
+/*
+
+        */

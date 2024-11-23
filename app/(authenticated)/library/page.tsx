@@ -14,7 +14,7 @@ const page = async () => {
     return (
         <ResourceContextProvider>
             <>
-                <HStack className="w-[calc(100vw-1rem)] p-9 h-12 fixed mb-4 t-0 z-10" bg="black" justify="space-between">
+                <HStack className="w-[calc(100vw-1rem)] p-4 pr-0 pt-9 h-12 fixed mb-4 t-0 z-10" bg="black" justify="space-between">
 
                     <Heading fontSize="2xl">Library</Heading>
                     <ResourceActionsPanel />

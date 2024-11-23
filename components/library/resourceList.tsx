@@ -20,7 +20,7 @@ export const ResourceList = (props: ResourceListProps) => {
     //on edit, send the list of selected id's
 
     return (
-        <Box className="max-w-full w-full h-full max-h-full p-4">
+        <Box className="max-w-full w-full h-full max-h-full">
             {!Object.keys(resourceMap).length ?
                 <Stack
                     flexDir="column"
