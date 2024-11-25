@@ -4,6 +4,7 @@ import "../globals.css";
 import { Providers } from "../providers";
 import TopMenu from "@/components/navigation/topMenu";
 import { Toaster } from "@/components/ui/toaster";
+import { Box, Flex } from "@chakra-ui/react";
 
 const geistSans = localFont({
   src: "../../fonts/GeistVF.woff",
@@ -33,10 +34,27 @@ export default function RootLayout({
       >
         <Providers>
           <header>
-            <TopMenu />
+
           </header>
-          <main className="max-w-screen w-screen h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] top-[4rem] absolute">
-            {children}
+          <main className="max-w-screen w-full h-full max-h-full absolute">
+            <Flex
+              justifyContent="center"
+              direction="column"
+              maxHeight="100%"
+              height="100%"
+              maxWidth="100%"
+              width="100%"
+              position="absolute">
+
+              <Box height="4rem" flex="0 auto">
+                <TopMenu />
+              </Box>
+
+              <Box maxWidth="1100px" minWidth="400px" width="100%" className="flex-grow" overflowY="auto" alignSelf="center" mb="4">
+                {children}
+              </Box>
+
+            </Flex>
 
             <Toaster />
           </main>

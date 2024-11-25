@@ -34,9 +34,9 @@ export const ResourceCard = (props: ResourceCardProps) => {
     }
 
     return (
-        <Card.Root h="100%" variant={selected ? "outline" : "subtle"} maxW="sm" onClick={handleSelection} >
+        <Card.Root height="100%" variant="elevated" size="sm" onClick={handleSelection} >
 
-            <AspectRatio ratio={16 / 9}>
+            <AspectRatio ratio={16 / 10}>
                 <ResourceCardImage src={resource.url} type={resource.type} name={resource.name} />
             </AspectRatio>
 

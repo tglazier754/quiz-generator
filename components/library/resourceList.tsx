@@ -30,7 +30,7 @@ export const ResourceList = (props: ResourceListProps) => {
                     <Heading size="2xl">No resources to display.</Heading>
                 </Stack> : ""}
 
-            <SimpleGrid minChildWidth="14rem" gap="2rem" className="max-w-full w-full " >
+            <SimpleGrid minChildWidth="12rem" gap="1rem" className="max-w-full w-full">
                 {Object.values(resourceMap).map((resource: Resource) => {
                     return (
                         <div key={`resource-preview-${resource.id}`} className="resource-preview">

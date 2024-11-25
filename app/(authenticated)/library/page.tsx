@@ -2,7 +2,7 @@
 import ResourceActionsPanel from "@/components/library/resourceActions";
 import ResourceList from "@/components/library/resourceList";
 import { getAllResources } from "@/utils/resources/server";
-import { Box, Heading, HStack } from "@chakra-ui/react"
+import { Box, Flex, Heading, HStack } from "@chakra-ui/react"
 
 import ResourceContextProvider from "@/context/library/provider";
 
@@ -13,22 +13,28 @@ const page = async () => {
 
     return (
         <ResourceContextProvider>
-            <>
-                <Box className="w-full fixed z-10">
-                    <HStack className="w-[calc(1100px-1rem)] m-auto p-4 pt-9 mb-4 t-0 " bg="black" justify="space-between">
+            <Flex
+                justifyContent="center"
+                direction="column"
+                maxHeight="100%"
+                height="100%"
+                maxWidth="100%"
+                width="100%">
+                <Box className="w-full z-10 flex-grow-0">
+                    <HStack className="m-auto p-4 pt-9" justify="space-between">
 
                         <Heading fontSize="2xl">Library</Heading>
                         <ResourceActionsPanel />
                     </HStack>
                 </Box>
-                <Box className="w-[calc(1100px-1rem)] p-4 m-auto">
+                <Box className="p-4 m-auto flex-grow" overflowY="auto">
 
-                    <Box className="mt-24">
+                    <Box>
                         <ResourceList resources={data} />
                     </Box>
 
                 </Box>
-            </>
+            </Flex>
         </ResourceContextProvider >
     )
 }

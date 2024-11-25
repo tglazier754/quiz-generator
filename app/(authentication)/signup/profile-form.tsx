@@ -25,7 +25,7 @@ export default function ProfileForm() {
             justifyContent="center"
             alignItems="center">
             <Heading size="3xl"> Quiz Generator </Heading>
-            <Box colorPalette={"grey"} backgroundColor="gray.900">
+            <Box colorPalette={"grey"}>
                 <form>
                     <Stack
                         flexDir="column"
