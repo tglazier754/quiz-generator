@@ -77,7 +77,11 @@ export const postNewResource = async (supabaseInstance: SupabaseClient, resource
         //get the post's id and add an entry for this user in the user resources table if it succeeded
         if (!resourceError) {
             //TODO: handle errors here
-            await supabaseInstance?.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: resourceData[0]?.id }).select(`*, quiz_questions(*)`);
+            const { data: userResourceData, error: userResourceError } = await supabaseInstance?.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: resourceData[0]?.id }).select();
+            console.log("/***** USER RESOURCE DATA");
+            console.log(userResourceData);
+            console.log("/***** USER RESOURCE ERROR");
+            console.log(userResourceError);
         }
         return resourceData;
     }
