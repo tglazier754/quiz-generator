@@ -1,27 +1,32 @@
 "use client";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Center, Heading, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
-import ResourceCard from "./resourceCard";
-import { ResourcesContext } from "@/context/library/provider";
-import { useContext } from "react";
-import { ResourceHash } from "@/types/resourceTypes";
-import { useSelectResources } from "@/hooks/useSelectResources";
+import { Box, Heading, SimpleGrid, Stack } from "@chakra-ui/react";
+import ResourceCard from "./resource_card/resourceCard";
+import { JSXElementConstructor, ReactElement } from "react";
 
 type ResourceListProps = {
-    resources: ResourceHash;
+    resources: Map<string, Resource>;
+    selectedResources?: Map<string, Resource>;
+    selectionCallback?: (selectedResource: Resource | undefined, state: boolean) => void;
+    selectable?: boolean;
+    compact?: boolean;
+    cardActions?: React.ComponentType<{
+        resourceId: string;
+    }>;
 }
 export const ResourceList = (props: ResourceListProps) => {
-    const { resources: resourceMap } = props;
-    const { isGenerating } = useContext(ResourcesContext);
+    const { resources: resourceMap, selectedResources, selectionCallback, selectable, compact } = props;
 
-    const { selectedResources, selectionHandler } = useSelectResources();
+    const selectionHandler = (id: string, state: boolean) => {
+        if (selectable) {
+            selectionCallback && selectionCallback(resourceMap.get(id), state);
+        }
+    }
 
-    //setResourceMap(resources);
-    //on edit, send the list of selected id's
 
     return (
         <Box className="max-w-full w-full h-full max-h-full">
-            {!Object.keys(resourceMap).length ?
+            {!resourceMap.size ?
                 <Stack
                     flexDir="column"
                     mb="2"
@@ -31,19 +36,22 @@ export const ResourceList = (props: ResourceListProps) => {
                 </Stack> : ""}
 
             <SimpleGrid minChildWidth="12rem" gap="1rem" className="max-w-full w-full">
-                {Object.values(resourceMap).map((resource: Resource) => {
-                    return (
-                        <div key={`resource-preview-${resource.id}`} className="resource-preview">
-                            <ResourceCard resource={resource} selected={resource.id && selectedResources[resource.id] ? true : false} onSelectHandler={selectionHandler} />
-                        </div>
-                    )
-                })}
+                {Array.from(resourceMap?.entries().map((value: [string, Resource]) => {
+                    if (value[1].id) {
+                        return (
+                            <div key={`resource-preview-${value[1].id}`} className="resource-preview">
+                                <ResourceCard
+                                    actionButtons={props.cardActions && <props.cardActions resourceId={value[1].id} />}
+                                    compact={compact || false}
+                                    resource={value[1]}
+                                    selected={selectable && value[1].id && selectedResources && selectedResources.get(value[1].id) ? true : false}
+                                    onSelectHandler={selectionHandler} />
+
+                            </div>)
+                    }
+                }
+                ))}
             </SimpleGrid>
-            {isGenerating ? <Box zIndex={100000000} pos="absolute" inset="0" bg="bg/80">
-                <Center h="full">
-                    <Spinner color="teal.500" />
-                </Center>
-            </Box> : null}
         </Box>
     )
 }

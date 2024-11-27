@@ -8,7 +8,7 @@ import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, Sele
 import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
 import { HiUpload } from "react-icons/hi";
 import Quiz from "../quiz/quiz";
-import ResourceCardImage from "../library/resourceCardImage";
+import ResourceCardImage from "../library/resource_card/resourceCardImage";
 import { useResourceEdit } from "./hooks/useResourceEdit";
 import { useImageUpload } from "./hooks/useImageUpload";
 import { useActionStatus } from "./hooks/useActionStatus";

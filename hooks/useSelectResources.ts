@@ -1,33 +1,37 @@
-import { ResourcesContext } from "@/context/library/provider";
-import { IHash } from "@/types/globalTypes";
 import { Resource } from "@/types/resourceTypes";
-import { useContext } from "react";
+import { useMap } from "./useMap";
 
 type UseSelectCards = {
-    selectedResources: IHash<Resource>;
-    selectionHandler: (selectedId: string, state: boolean) => void;
+    selectedResources: Map<string, Resource>;
+    selectionHandler: (selectedResource: Resource | undefined, state: boolean) => void;
+    setAllResources: (resourceMap: Map<string, Resource>) => void;
 }
 
 export const useSelectResources = (): UseSelectCards => {
 
-    const { selectedResources, setSelectedResources } = useContext(ResourcesContext);
+    const [map, actions] = useMap<string, Resource>();
 
-    const selectionHandler = (selectedId: string, state: boolean) => {
-        console.log("selected");
-        const selectedResourcesTemp = JSON.parse(JSON.stringify(selectedResources));
-        if (state) {
-            selectedResourcesTemp[selectedId] = state;
+    const selectionHandler = (selectedResource: Resource | undefined, state: boolean) => {
+        if (selectedResource && selectedResource.id) {
+            if (state) {
+                actions.set(selectedResource.id, selectedResource);
+            }
+            else {
+                actions.remove(selectedResource.id);
+            }
         }
-        else {
-            delete selectedResourcesTemp[selectedId];
-        }
+    }
 
-        setSelectedResources(selectedResourcesTemp);
+    const setAllResources = (resourceMap?: Map<string, Resource>) => {
+        if (resourceMap) {
+            actions.setAll(resourceMap);
+        }
     }
 
 
     return {
-        selectedResources,
-        selectionHandler
+        selectedResources: map,
+        selectionHandler,
+        setAllResources
     }
 }

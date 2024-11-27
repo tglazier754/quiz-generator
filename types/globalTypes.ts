@@ -8,3 +8,10 @@ export interface IHash<type> {
 export type WithIDField = any & {
     id: string;
 }
+
+
+export type StatusObject = {
+    status: "success" | "pending" | "error" | "uninitialized";
+    message?: string | null;
+    value?: string | null;
+}

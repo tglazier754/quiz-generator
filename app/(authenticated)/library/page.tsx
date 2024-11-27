@@ -1,15 +1,16 @@
 
 import ResourceActionsPanel from "@/components/library/resourceActions";
-import ResourceList from "@/components/library/resourceList";
 import { getAllResources } from "@/utils/resources/server";
 import { Box, Flex, Heading, HStack } from "@chakra-ui/react"
 
 import ResourceContextProvider from "@/context/library/provider";
+import ResourceListContainer from "@/components/library/resourceListContainer";
+import { Resource } from "@/types/resourceTypes";
 
 const page = async () => {
 
     const resources = await getAllResources();
-    const data = JSON.parse(resources);
+    const data = new Map<string, Resource>(Object.entries(JSON.parse(resources)));
 
     return (
         <ResourceContextProvider>
@@ -30,7 +31,7 @@ const page = async () => {
                 <Box className="p-4 m-auto flex-grow" overflowY="auto">
 
                     <Box>
-                        <ResourceList resources={data} />
+                        <ResourceListContainer resourceMap={data} />
                     </Box>
 
                 </Box>

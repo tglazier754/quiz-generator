@@ -1,15 +1,10 @@
 "use client";
 
-import { IHash } from "@/types/globalTypes";
+import { IHash, StatusObject } from "@/types/globalTypes";
 import { QuizQuestion } from "@/types/resourceTypes";
 import { createContext, ReactElement, useState } from "react";
 
 
-export type StatusObject = {
-    status: "success" | "pending" | "error" | "uninitialized";
-    message?: string | null;
-    value?: string | null;
-}
 export type ResourceEditorContext = {
     uploadStatus: StatusObject;
     setUploadStatus: (status: StatusObject) => void;

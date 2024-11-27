@@ -1,21 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "../globals.css";
 import { Providers } from "../providers";
 import TopMenu from "@/components/navigation/topMenu";
 import { Toaster } from "@/components/ui/toaster";
 import { Box, Flex } from "@chakra-ui/react";
-
-const geistSans = localFont({
-  src: "../../fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "../../fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata: Metadata = {
   title: "Quiz Generator",
@@ -29,9 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
         <Providers>
           <header>
 
@@ -50,7 +36,13 @@ export default function RootLayout({
                 <TopMenu />
               </Box>
 
-              <Box maxWidth="1100px" minWidth="400px" width="100%" className="flex-grow" overflowY="auto" alignSelf="center" mb="4">
+              <Box
+                maxWidth="1100px"
+                minWidth="400px"
+                width="100%"
+                className="flex-grow"
+                overflowY="auto"
+                alignSelf="center">
                 {children}
               </Box>
 
