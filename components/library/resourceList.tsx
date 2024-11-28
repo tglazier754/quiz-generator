@@ -1,6 +1,6 @@
 "use client";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Heading, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Box, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import ResourceCard from "./resource_card/resourceCard";
 import { JSXElementConstructor, ReactElement } from "react";
 
@@ -32,11 +32,12 @@ export const ResourceList = (props: ResourceListProps) => {
                     mb="2"
                     justifyContent="center"
                     alignItems="center">
-                    <Heading size="2xl">No resources to display.</Heading>
+                    <Text>No resources to display.</Text>
                 </Stack> : ""}
 
             <SimpleGrid minChildWidth="12rem" gap="1rem" className="max-w-full w-full">
-                {Array.from(resourceMap?.entries().map((value: [string, Resource]) => {
+
+                {resourceMap && Array.from(resourceMap?.entries().map((value: [string, Resource]) => {
                     if (value[1].id) {
                         return (
                             <div key={`resource-preview-${value[1].id}`} className="resource-preview">

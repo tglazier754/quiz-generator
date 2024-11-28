@@ -8,13 +8,16 @@ import { Resource } from "@/types/resourceTypes";
 import { useSelectResources } from "@/hooks/useSelectResources";
 import { ResourceCardSelectDeleteActions } from "../library/resource_card/resourceCardSelectDeleteActions";
 import { ResourceCardDeSelectAction } from "../library/resource_card/resourceCardDeSelectAction";
+import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
+import ResourceUploaderContainer from "./ResourceUploaderContainer";
 
 
 export const ContentInputPanel = () => {
 
     const { inputContent, setAllInputContent } = useContext(ContentCreationContext);
     const [resources, setResources] = useState<Map<string, Resource>>(new Map());
-    const [showTray, setShowTray] = useState(false);
+    const [showExistingTray, setShowExistingTray] = useState(false);
+    const [showNewTray, setShowNewTray] = useState(false);
     const { selectedResources, selectionHandler, setAllResources } = useSelectResources();
 
     useEffect(() => {
@@ -36,12 +39,14 @@ export const ContentInputPanel = () => {
 
     const updateInputContentList = () => {
         setAllInputContent(selectedResources);
-        setShowTray(false);
+        setShowExistingTray(false);
+        setShowNewTray(false);
     }
 
     const cancelSelectionUpdate = () => {
         setAllResources(inputContent);
-        setShowTray(false);
+        setShowExistingTray(false);
+        setShowNewTray(false);
     }
 
     return (
@@ -59,7 +64,7 @@ export const ContentInputPanel = () => {
                 <Stack className="flex-grow-0 mb-4">
                     <Heading>Input Content</Heading>
                     <Box>
-                        <DrawerRoot lazyMount size="lg" open={showTray} unmountOnExit onOpenChange={(e) => setShowTray(e.open)} key="full-drawer" closeOnInteractOutside={false}>
+                        <DrawerRoot lazyMount size="lg" open={showExistingTray} unmountOnExit onOpenChange={(e) => setShowExistingTray(e.open)} key="existing-drawer" closeOnInteractOutside={false}>
                             <DrawerBackdrop />
                             <DrawerTrigger asChild>
                                 <Button variant="outline">Add Existing</Button>
@@ -89,7 +94,7 @@ export const ContentInputPanel = () => {
                     </Box>
 
                     <Box>
-                        <Button variant="outline">Add New</Button>
+                        <ResourceUploaderContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowNewTray} showTray={showNewTray} />
                     </Box>
                 </Stack>
 

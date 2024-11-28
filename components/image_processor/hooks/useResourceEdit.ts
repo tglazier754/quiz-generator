@@ -7,37 +7,38 @@ import { useRouter } from "next/navigation";
 
 
 type useResourceEdit = {
-    submitResource: (resource: Resource) => void;
+    submitResource: (resource: Resource) => Promise<Resource>;
     updateQuizQuestion: (updatedQuestion: QuizQuestion) => void;
 }
 
 
 export const useResourceEdit = (initialResource?: Resource | null): useResourceEdit => {
 
-    const { quizQuestionChanges } = useContext(ResourceEditorContext);
+    const { quizQuestionChanges, setUploadStatus } = useContext(ResourceEditorContext);
 
-    const { setUploadStatus } = useActionStatus();
 
-    const router = useRouter();
 
-    const uploadResource = async (resource: Resource, method: "POST" | "PUT") => {
+    const uploadResource = async (resource: Resource, method: "POST" | "PUT"): Promise<Resource> => {
         const formData = new FormData();
         formData.append("data", JSON.stringify(resource));
+        return new Promise<Resource>(async (resolve, reject) => {
 
-
-        try {
-            const result = await fetch("/api/resources", {
-                method, body: formData
-            });
-            const returnedResourceList = await result.json();
-            setUploadStatus({ status: "success" })
-            console.log(returnedResourceList);
-            router.push(`/resource?id=${returnedResourceList[0].id}`);
-        }
-        catch (error) {
-            console.log(error);
-            setUploadStatus({ status: "success" })
-        }
+            try {
+                const result = await fetch("/api/resources", {
+                    method, body: formData
+                });
+                const returnedResourceList = await result.json();
+                setUploadStatus({ status: "success" });
+                console.log(returnedResourceList);
+                resolve(returnedResourceList[0]);
+                //router.push(`/resource?id=${returnedResourceList[0].id}`);
+            }
+            catch (error) {
+                console.log(error);
+                setUploadStatus({ status: "error", message: error as string });
+                reject(error);
+            }
+        });
     }
 
     //TODO: move this over to the client file
@@ -60,7 +61,7 @@ export const useResourceEdit = (initialResource?: Resource | null): useResourceE
             updateQuizQuestions();
         }
 
-        await uploadResource(resource, method);
+        return uploadResource(resource, method);
     }
 
     //TODO: Move this to the client file

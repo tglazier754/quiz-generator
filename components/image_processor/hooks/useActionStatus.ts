@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import { ResourceEditorContext, StatusObject } from "@/context/resource_editor/provider";
+import { ResourceEditorContext } from "@/context/resource_editor/provider";
+import { StatusObject } from "@/types/globalTypes";
 
 
 

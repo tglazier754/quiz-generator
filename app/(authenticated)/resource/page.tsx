@@ -2,6 +2,7 @@ import ResourceEditorContextProvider from "@/context/resource_editor/provider";
 import LibraryResourceUploader from "../../../components/image_processor/LibraryResourceUploader";
 import { getSpecificResources } from "@/utils/resources/server";
 import { Resource } from "@/types/resourceTypes";
+import LibraryResourceUploaderContainer from "@/components/image_processor/LibraryResourceUploaderContainer";
 
 
 export default async function Page({
@@ -32,7 +33,7 @@ export default async function Page({
     return (
 
         <ResourceEditorContextProvider>
-            <LibraryResourceUploader activeResource={activeResource} />
+            <LibraryResourceUploaderContainer activeResource={activeResource} />
 
         </ResourceEditorContextProvider>
     )

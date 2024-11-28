@@ -36,7 +36,7 @@ const page = async () => {
 
                 </Box>
             </Flex>
-        </ResourceContextProvider >
+        </ResourceContextProvider>
     )
 }
 
