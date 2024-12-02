@@ -1,47 +1,20 @@
 "use client";
 import { ContentCreationContext } from "@/context/create/provider";
-import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
-import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
+import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
+import { useContext, useState } from "react";
 import ResourceList from "../library/resourceList";
-import { Resource } from "@/types/resourceTypes";
 import { useSelectResources } from "@/hooks/useSelectResources";
-import { ResourceCardSelectDeleteActions } from "../library/resource_card/resourceCardSelectDeleteActions";
 import { ResourceCardDeSelectAction } from "../library/resource_card/resourceCardDeSelectAction";
-import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
 import ResourceUploaderContainer from "./ResourceUploaderContainer";
+import ResourceSelectorContainer from "./ResourceSelectorContainer";
 
 
 export const ContentInputPanel = () => {
 
-    const { inputContent, setAllInputContent } = useContext(ContentCreationContext);
-    const [resources, setResources] = useState<Map<string, Resource>>(new Map());
+    const { inputContent } = useContext(ContentCreationContext);
     const [showExistingTray, setShowExistingTray] = useState(false);
     const [showNewTray, setShowNewTray] = useState(false);
-    const { selectedResources, selectionHandler, setAllResources } = useSelectResources();
-
-    useEffect(() => {
-        fetch("/api/resources").then((value) => {
-            value.json().then((jsonValue) => {
-                console.log(jsonValue);
-                const jsonValueMap: Map<string, Resource> = new Map(Object.entries(jsonValue));
-                console.log(jsonValueMap);
-                setResources(jsonValueMap);
-            })
-        });
-    }, []);
-
-    useEffect(() => {
-        setAllResources(inputContent);
-    }, [inputContent]);
-
-
-
-    const updateInputContentList = () => {
-        setAllInputContent(selectedResources);
-        setShowExistingTray(false);
-        setShowNewTray(false);
-    }
+    const { setAllResources } = useSelectResources();
 
     const cancelSelectionUpdate = () => {
         setAllResources(inputContent);
@@ -64,33 +37,7 @@ export const ContentInputPanel = () => {
                 <Stack className="flex-grow-0 mb-4">
                     <Heading>Input Content</Heading>
                     <Box>
-                        <DrawerRoot lazyMount size="lg" open={showExistingTray} unmountOnExit onOpenChange={(e) => setShowExistingTray(e.open)} key="existing-drawer" closeOnInteractOutside={false}>
-                            <DrawerBackdrop />
-                            <DrawerTrigger asChild>
-                                <Button variant="outline">Add Existing</Button>
-                            </DrawerTrigger>
-
-                            <DrawerContent>
-                                <DrawerHeader>
-                                    <DrawerTitle>Existing Resources</DrawerTitle>
-                                </DrawerHeader>
-                                <DrawerBody>
-
-                                    {/*TODO: Need a ResourceList that has a container
-                                    that passes down a selection handler*/}
-
-                                    <ResourceList resources={resources} selectable selectedResources={selectedResources} selectionCallback={selectionHandler} />
-
-                                </DrawerBody>
-                                <DrawerFooter>
-                                    <Button variant="ghost" onClick={cancelSelectionUpdate}>Cancel</Button>
-                                    <Button variant="surface" onClick={updateInputContentList}>Select</Button>
-                                </DrawerFooter>
-
-                                <DrawerCloseTrigger />
-                            </DrawerContent>
-
-                        </DrawerRoot>
+                        <ResourceSelectorContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowExistingTray} showTray={showExistingTray} />
                     </Box>
 
                     <Box>
