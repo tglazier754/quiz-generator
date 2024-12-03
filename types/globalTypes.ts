@@ -13,5 +13,5 @@ export type WithIDField = any & {
 export type StatusObject = {
     status: "success" | "pending" | "error" | "uninitialized";
     message?: string | null;
-    value?: string | null;
+    value?: any;
 }

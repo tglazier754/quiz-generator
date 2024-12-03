@@ -1,14 +1,15 @@
 "use client";
-import { Box, Button, createListCollection, Group, Stack, Text } from "@chakra-ui/react";
+import { Box, createListCollection, Group, Stack, Text } from "@chakra-ui/react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { GRADE_LEVELS, MACHINE_GENERATED_TYPES } from "@/types/constants";
 import { NumberInputField, NumberInputRoot } from "../ui/number-input";
 import { Field } from "../ui/field";
 import { Controller, useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
-import { generateResource } from "@/utils/resources/client";
 import { ContentCreationContext } from "@/context/create/provider";
 import { useRouter } from "next/navigation";
+import useResourceCreation from "@/hooks/useResourceCreation";
+import { Button } from "../ui/button";
 
 
 export const ParameterForm = () => {
@@ -17,10 +18,11 @@ export const ParameterForm = () => {
 
     const router = useRouter();
     const { inputContent } = useContext(ContentCreationContext);
+    const { createResource, uploadStatus } = useResourceCreation();
     const { control, register, unregister, handleSubmit, watch } = useForm({ shouldUnregister: true, });
     const handleCreateResource = async (data: any) => {
         console.log(data);
-        const generatedResource = await generateResource(data.contentType[0], Array.from(inputContent.keys()));
+        const generatedResource = await createResource(data.contentType[0], Array.from(inputContent.keys()));
         console.log(generatedResource);
         router.push(`/resource?id=${generatedResource.id}`);
     }
@@ -157,7 +159,12 @@ export const ParameterForm = () => {
                 </Group>
             </Field>}
             <Box>
-                <Button><input type="submit" value="Create" /></Button>
+                <Button
+                    disabled={uploadStatus.status === "pending"}
+                    loading={uploadStatus.status === "pending"}
+                    type="submit">
+                    Create
+                </Button>
             </Box>
 
         </Stack >
