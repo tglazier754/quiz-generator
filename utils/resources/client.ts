@@ -1,6 +1,7 @@
 import { RESOURCE_TYPE_LESSON_PLAN, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_SUMMARY, URL_PARAM_RESOURCE_ID } from "@/types/constants";
 
 
+//use a hook to wrap this that includes status
 export const generateResource = async (type: string, inputIdList: string[]) => {
     const resourceIdParamArray = inputIdList.map((key) => [URL_PARAM_RESOURCE_ID, key]);
     console.log(type);
