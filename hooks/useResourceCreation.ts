@@ -1,19 +1,20 @@
 import { useActionStatus } from "@/components/image_processor/hooks/useActionStatus";
 import { StatusObject } from "@/types/globalTypes";
 import { Resource } from "@/types/resourceTypes";
-import { generateResource } from "@/utils/resources/client";
+import { generateResource, ResourceGenerationParams } from "@/utils/resources/client";
 
 type ResourceCreation = {
-    createResource: (type: string, inputIdList: string[]) => Promise<Resource>;
+    createResource: (params: ResourceGenerationParams, inputIdList: string[]) => Promise<Resource>;
     resourceGenerationStatus: StatusObject;
 }
 
 export const useResourceCreation = () => {
     const { uploadStatus, setUploadStatus } = useActionStatus();
 
-    const createResource = async (type: string, inputIdList: string[]) => {
+    const createResource = async (params: ResourceGenerationParams, inputIdList: string[]) => {
         setUploadStatus({ status: "pending" });
-        const generatedResource = await generateResource(type, inputIdList);
+        console.log(params);
+        const generatedResource = await generateResource(params, inputIdList);
         if (generatedResource) {
 
             setUploadStatus({ status: "success" });

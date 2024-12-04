@@ -8,8 +8,12 @@ import { getCombinedContentFromSpecificResources, saveQuizToDatabase } from "@/u
 export async function POST(request: Request) {
     //use POST because we will create the quiz data on the backend
     //get the parameters (resource id array)
+
+    console.log("POST");
     const reqUrl = request.url;
     const { searchParams } = new URL(reqUrl);
+    const parameters = await request.json();
+    console.log(parameters);
 
     const supabaseConnection = createClient();
     const { data: userData } = await supabaseConnection?.auth.getUser();
@@ -20,11 +24,11 @@ export async function POST(request: Request) {
         const idList = searchParams.getAll(URL_PARAM_RESOURCE_ID);
 
         try {
-            const content = await getCombinedContentFromSpecificResources(idList);
+            const inputContent = await getCombinedContentFromSpecificResources(idList);
 
             //call quiz generator OpenAI using the resources data
 
-            const generatedQuizData = await generateQuizDataFromText(content);
+            const generatedQuizData = await generateQuizDataFromText(parameters, inputContent);
             const generatedQuizObject = JSON.parse(generatedQuizData);
             const postedQuizData = await saveQuizToDatabase(generatedQuizObject);
 

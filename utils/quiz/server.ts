@@ -8,13 +8,15 @@ import {
     RunnableSequence,
     RunnablePassthrough,
 } from "@langchain/core/runnables";
+import { ResourceGenerationParams } from "../resources/client";
 
 
-export async function generateQuizDataFromText(contextData?: string) {
+export async function generateQuizDataFromText(parameters: ResourceGenerationParams, contextData?: string) {
 
     //TODO: Ensure that we keep the data focused if the input is no good
     //TODO: return this as a promise for error handling
-
+    console.log("INPUT PARAMETERS");
+    console.log(parameters);
     if (contextData) {
 
         //initialize the open ai model

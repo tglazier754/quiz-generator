@@ -23,9 +23,9 @@ export const ParameterForm = () => {
     const { control, register, unregister, handleSubmit, watch } = useForm<ResourceGenerationParams>({ shouldUnregister: true, });
     const handleCreateResource: SubmitHandler<ResourceGenerationParams> = async (data: ResourceGenerationParams) => {
         console.log(data);
-        const generatedResource = await createResource(data.content_type[0], Array.from(inputContent.keys()));
+        const generatedResource = await createResource(data, Array.from(inputContent.keys()));
         console.log(generatedResource);
-        router.push(`/resource?id=${generatedResource.id}`);
+        //router.push(`/resource?id=${generatedResource.id}`);
     }
     const handleSubmitError = (data: any) => { console.log(data) };
     const watchResourceTypeSelection = watch("content_type");
@@ -34,7 +34,7 @@ export const ParameterForm = () => {
 
     useEffect(() => {
         console.log(watchResourceTypeSelection);
-        if (watchResourceTypeSelection && watchResourceTypeSelection[0] === "QUIZ") {
+        if (watchResourceTypeSelection && watchResourceTypeSelection === "QUIZ") {
             setShowQuizSection(true);
             register("true_false_count");
             register("multiple_choice_count");
@@ -66,7 +66,7 @@ export const ParameterForm = () => {
                     render={({ field: { ref, ...restField } }) => (
                         <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA}
                             onValueChange={(value) => {
-                                restField.onChange(value.value);
+                                restField.onChange(value.value[0]);
                             }} >
 
                             <SelectLabel>Resource type</SelectLabel>
@@ -98,7 +98,7 @@ export const ParameterForm = () => {
                     render={({ field: { ref, ...restField } }) => (
                         <SelectRoot collection={GRADE_LEVEL_LIST_DATA}
                             onValueChange={(value) => {
-                                restField.onChange(value.value);
+                                restField.onChange(value.value[0]);
                             }} >
                             <SelectLabel>Grade Level</SelectLabel>
                             <SelectTrigger>

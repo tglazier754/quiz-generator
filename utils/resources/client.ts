@@ -13,20 +13,23 @@ export type ResourceGenerationParams = {
 }
 //use a hook to wrap this that includes status
 export const generateResource = async (params: ResourceGenerationParams, inputIdList: string[]) => {
+    console.log("GENERATE");
     const { content_type } = params;
     const resourceIdParamArray = inputIdList.map((key) => [URL_PARAM_RESOURCE_ID, key]);
     console.log(content_type);
+    console.log(params);
 
     const resourceIdSearchParams = new URLSearchParams(resourceIdParamArray);
     if (content_type === RESOURCE_TYPE_QUIZ) {
         //TODO: Put this into a server action
-        const quizFetch = await fetch("/api/quiz?" + resourceIdSearchParams.toString(), { method: "POST" });
+        console.log("QUIZ GENERATION");
+        const quizFetch = await fetch("/api/quiz?" + resourceIdSearchParams.toString(), { method: "POST", body: JSON.stringify(params) });
         const quizData = await quizFetch.json();
         console.log(quizData);
         return quizData;
     }
     if (content_type === RESOURCE_TYPE_LESSON_PLAN) {
-        const lessonPlanFetch = await fetch("/api/lesson_plans?" + resourceIdSearchParams.toString(), { method: "POST" });
+        const lessonPlanFetch = await fetch("/api/lesson_plans?" + resourceIdSearchParams.toString(), { method: "POST", body: JSON.stringify(params) });
         const lessonPlanData = await lessonPlanFetch.json();
         console.log(lessonPlanData);
         return lessonPlanData[0];
