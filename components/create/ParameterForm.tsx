@@ -4,12 +4,13 @@ import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, Sele
 import { GRADE_LEVELS, MACHINE_GENERATED_TYPES } from "@/types/constants";
 import { NumberInputField, NumberInputRoot } from "../ui/number-input";
 import { Field } from "../ui/field";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { ContentCreationContext } from "@/context/create/provider";
 import { useRouter } from "next/navigation";
 import useResourceCreation from "@/hooks/useResourceCreation";
 import { Button } from "../ui/button";
+import { ResourceGenerationParams } from "@/utils/resources/client";
 
 
 export const ParameterForm = () => {
@@ -19,15 +20,15 @@ export const ParameterForm = () => {
     const router = useRouter();
     const { inputContent } = useContext(ContentCreationContext);
     const { createResource, uploadStatus } = useResourceCreation();
-    const { control, register, unregister, handleSubmit, watch } = useForm({ shouldUnregister: true, });
-    const handleCreateResource = async (data: any) => {
+    const { control, register, unregister, handleSubmit, watch } = useForm<ResourceGenerationParams>({ shouldUnregister: true, });
+    const handleCreateResource: SubmitHandler<ResourceGenerationParams> = async (data: ResourceGenerationParams) => {
         console.log(data);
-        const generatedResource = await createResource(data.contentType[0], Array.from(inputContent.keys()));
+        const generatedResource = await createResource(data.content_type[0], Array.from(inputContent.keys()));
         console.log(generatedResource);
         router.push(`/resource?id=${generatedResource.id}`);
     }
     const handleSubmitError = (data: any) => { console.log(data) };
-    const watchResourceTypeSelection = watch("contentType");
+    const watchResourceTypeSelection = watch("content_type");
 
     const [showQuizSection, setShowQuizSection] = useState(true);
 
@@ -35,18 +36,17 @@ export const ParameterForm = () => {
         console.log(watchResourceTypeSelection);
         if (watchResourceTypeSelection && watchResourceTypeSelection[0] === "QUIZ") {
             setShowQuizSection(true);
-            register("trueFalseCount");
-            register("multipleChoiceCount");
-            register("shortAnswerCount");
-            register("LongFormCount");
+            register("true_false_count");
+            register("multiple_choice_count");
+            register("short_answer_count");
+            register("long_form_count");
         }
         else {
-            console.log("unregister");
             setShowQuizSection(false);
-            unregister("trueFalseCount");
-            unregister("multipleChoiceCount");
-            unregister("shortAnswerCount");
-            unregister("LongFormCount");
+            unregister("true_false_count");
+            unregister("multiple_choice_count");
+            unregister("short_answer_count");
+            unregister("long_form_count");
         }
     }, [watchResourceTypeSelection])
 
@@ -55,7 +55,7 @@ export const ParameterForm = () => {
 
             <Box>
                 <Controller
-                    name="contentType"
+                    name="content_type"
                     control={control}
                     rules={{
                         required: {
@@ -64,16 +64,16 @@ export const ParameterForm = () => {
                         }
                     }}
                     render={({ field: { ref, ...restField } }) => (
-                        <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA} {...restField}
+                        <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA}
                             onValueChange={(value) => {
                                 restField.onChange(value.value);
                             }} >
 
                             <SelectLabel>Resource type</SelectLabel>
-                            <SelectTrigger>
+                            <SelectTrigger  >
                                 <SelectValueText placeholder="Select Content Type" />
                             </SelectTrigger>
-                            <SelectContent zIndex={100000} ref={ref}>
+                            <SelectContent zIndex={100000} ref={ref} {...restField}>
                                 {MACHINE_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
                                     <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value} >
                                         {resource_type.label}
@@ -87,7 +87,7 @@ export const ParameterForm = () => {
             </Box>
             <Box>
                 <Controller
-                    name="gradeLevel"
+                    name="grade_level"
                     control={control}
                     rules={{
                         required: {
@@ -96,7 +96,7 @@ export const ParameterForm = () => {
                         }
                     }}
                     render={({ field: { ref, ...restField } }) => (
-                        <SelectRoot collection={GRADE_LEVEL_LIST_DATA}{...restField}
+                        <SelectRoot collection={GRADE_LEVEL_LIST_DATA}
                             onValueChange={(value) => {
                                 restField.onChange(value.value);
                             }} >
@@ -104,7 +104,7 @@ export const ParameterForm = () => {
                             <SelectTrigger>
                                 <SelectValueText placeholder="Select Grade Level" />
                             </SelectTrigger>
-                            <SelectContent zIndex={100000} >
+                            <SelectContent zIndex={100000} ref={ref} {...restField}>
                                 {GRADE_LEVEL_LIST_DATA.items.map((grade_level) => (
                                     <SelectItem key={`resource-generation-grade-select-${grade_level.value}`} item={grade_level.value} >
                                         {grade_level.label}
@@ -116,21 +116,10 @@ export const ParameterForm = () => {
                     )} />
             </Box>
             <Field label="Expected Duration (in minutes)">
-                <Controller
-                    name="expected-duration"
-                    control={control}
-                    rules={{
-                        required: {
-                            value: true,
-                            message: "Expected Duration is Required",
-                        }
-                    }}
-                    render={({ field: { ref, ...restField } }) => (
-                        <NumberInputRoot {...restField} min={0} >
-                            <NumberInputField ref={ref} name={restField.name} />
-                        </NumberInputRoot>
-                    )}
-                />
+
+                <NumberInputRoot min={0} >
+                    <NumberInputField {...register("expected_duration")} />
+                </NumberInputRoot>
 
             </Field>
             {showQuizSection && <Field label="Question Mix">
@@ -138,22 +127,22 @@ export const ParameterForm = () => {
                 <Group>
                     <Field label="True/False">
                         <NumberInputRoot >
-                            <NumberInputField {...register("trueFalseCount")} />
+                            <NumberInputField {...register("true_false_count")} />
                         </NumberInputRoot>
                     </Field>
                     <Field label="Multiple Choice">
                         <NumberInputRoot >
-                            <NumberInputField {...register("multipleChoiceCount")} />
+                            <NumberInputField {...register("multiple_choice_count")} />
                         </NumberInputRoot>
                     </Field>
                     <Field label="Short Answer">
                         <NumberInputRoot >
-                            <NumberInputField {...register("shortAnswerCount")} />
+                            <NumberInputField {...register("short_answer_count")} />
                         </NumberInputRoot>
                     </Field>
                     <Field label="Long Form">
                         <NumberInputRoot >
-                            <NumberInputField {...register("LongFormCount")} />
+                            <NumberInputField {...register("long_form_count")} />
                         </NumberInputRoot>
                     </Field>
                 </Group>
