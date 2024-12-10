@@ -7,7 +7,7 @@ import { Field } from "../ui/field";
 import { Controller, FieldErrors, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { ContentCreationContext } from "@/context/create/provider";
-//import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import useResourceCreation from "@/hooks/useResourceCreation";
 import { Button } from "../ui/button";
 import { ResourceGenerationParams } from "@/utils/resources/client";
@@ -17,7 +17,7 @@ export const ParameterForm = () => {
     const GRADE_LEVEL_LIST_DATA = createListCollection({ items: GRADE_LEVELS.map((type) => { return { label: type.toLowerCase(), value: type } }) });
     const MACHINE_GENERATED_TYPES_LIST_DATA = createListCollection({ items: MACHINE_GENERATED_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
-    //const router = useRouter();
+    const router = useRouter();
     const { inputContent } = useContext(ContentCreationContext);
     const { createResource, uploadStatus } = useResourceCreation();
     const { control, register, unregister, handleSubmit, watch } = useForm<ResourceGenerationParams>({ shouldUnregister: true, });
@@ -25,7 +25,7 @@ export const ParameterForm = () => {
         console.log(data);
         const generatedResource = await createResource(data, Array.from(inputContent.keys()));
         console.log(generatedResource);
-        //router.push(`/resource?id=${generatedResource.id}`);
+        router.push(`/resource?id=${generatedResource.id}`);
     }
     const handleSubmitError: SubmitErrorHandler<ResourceGenerationParams> = (data: FieldErrors<ResourceGenerationParams>) => { console.log(data) };
     const watchResourceTypeSelection = watch("content_type");
