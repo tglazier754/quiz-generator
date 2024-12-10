@@ -10,8 +10,8 @@ export type WithIDField = any & {
 }
 
 
-export type StatusObject = {
+export type StatusObject<T = any> = {
     status: "success" | "pending" | "error" | "uninitialized";
     message?: string | null;
-    value?: any;
+    value?: T | null;
 }

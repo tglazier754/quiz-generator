@@ -1,4 +1,4 @@
-import { generateQuizDataFromText } from "@/utils/quiz/server";
+import { generateParameterizedQuiz, generateQuiz, generateQuizDataFromText } from "@/utils/quiz/server";
 import { createClient } from "@/utils/supabase/server";
 import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
 import { getCombinedContentFromSpecificResources, saveQuizToDatabase } from "@/utils/resources/server";
@@ -28,16 +28,18 @@ export async function POST(request: Request) {
 
             //call quiz generator OpenAI using the resources data
 
-            const generatedQuizData = await generateQuizDataFromText(parameters, inputContent);
-            const generatedQuizObject = JSON.parse(generatedQuizData);
-            const postedQuizData = await saveQuizToDatabase(generatedQuizObject);
-
-            if (postedQuizData) {
+            const generatedQuizStatusObject = await generateQuiz(parameters, inputContent);
+            console.log(generatedQuizStatusObject);
+            //const postedQuizData = await saveQuizToDatabase(generatedQuizObject);
+            return new Response(JSON.stringify(generatedQuizStatusObject.value));
+            /*if (postedQuizData) {
                 return new Response(JSON.stringify(postedQuizData));
             }
             else {
                 return new Response("Unable to generate quiz");
             }
+                */
+            return new Response("Success");
         }
         catch (error) {
             console.log(error);

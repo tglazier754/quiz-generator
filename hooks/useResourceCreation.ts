@@ -5,7 +5,7 @@ import { generateResource, ResourceGenerationParams } from "@/utils/resources/cl
 
 type ResourceCreation = {
     createResource: (params: ResourceGenerationParams, inputIdList: string[]) => Promise<Resource>;
-    resourceGenerationStatus: StatusObject;
+    resourceGenerationStatus: StatusObject<Resource>;
 }
 
 export const useResourceCreation = () => {
@@ -17,7 +17,7 @@ export const useResourceCreation = () => {
         const generatedResource = await generateResource(params, inputIdList);
         if (generatedResource) {
 
-            setUploadStatus({ status: "success" });
+            setUploadStatus({ status: "success", value: generatedResource });
         }
         else {
             setUploadStatus({ status: "error", message: "Unable to create the resource" });
