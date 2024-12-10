@@ -1,9 +1,10 @@
 "use server";
-import { RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES, TABLE_USER_RESOURCES } from "@/types/constants";
+import { RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTION_OPTIONS, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES, TABLE_USER_RESOURCES } from "@/types/constants";
 import { createClient } from "../supabase/server";
 import { Resource } from "@/types/resourceTypes";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 import { convertObjectArrayToHashMap } from "../global";
+import { QuizFormat, QuizQuestion } from "../quiz/server";
 
 
 export const getAllResources = async () => {
@@ -98,28 +99,40 @@ export const archiveExistingResource = async (supabaseInstance: SupabaseClient, 
 }
 
 
-export const saveQuizToDatabase = async (quizData: Resource) => {
+export const saveQuizToDatabase = async (quizData: QuizFormat) => {
     return new Promise<Resource[]>(async (resolve, reject) => {
         const supabaseConnection = createClient();
         const { data: userData } = await supabaseConnection?.auth.getUser();
 
 
-        if (quizData && quizData.quiz_questions && quizData.quiz_questions.length) {
-            const { data: postedResource } = await supabaseConnection.from(TABLE_RESOURCES).insert({ name: quizData.name, description: quizData.description, type: RESOURCE_TYPE_QUIZ }).select();
-
+        if (quizData && quizData && quizData.questions && quizData.questions.length) {
+            //console.log(quizData);
+            //create a new quiz resource that we can associate the questions to
+            const { data: postedResource, error: postedResourceError } = await supabaseConnection.from(TABLE_RESOURCES).insert({ name: quizData.name, description: quizData.description, expected_duration: quizData.duration, type: RESOURCE_TYPE_QUIZ }).select();
+            console.log(postedResource);
+            console.log(postedResourceError);
             //populate the questions table with all of the questions data using that new id
             const id = postedResource && postedResource[0].id || "";
             if (postedResource && postedResource[0]) {
 
                 //TODO: Check for success here
+
+                //create the connection between the uploader and the resource
                 await supabaseConnection.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: id });
-                const preppedQuizQuestions = quizData.quiz_questions.map((question: { question: string, answer: string }) => { return { resource_id: id, ...question } })
 
-                await supabaseConnection.from(TABLE_QUIZ_QUESTIONS).insert(preppedQuizQuestions).select();
 
-                const retData = { ...postedResource[0], questions: quizData.quiz_questions };
+                //split out multiple choice from the rest before doing the bulk insert
+                const bulkQuestions = quizData.questions.filter((value) => { return value.type.toLowerCase() !== "multiple_choice" });
+                console.log(bulkQuestions);
+                const multipleChoiceQuestions = quizData.questions.filter((value) => { return value.type.toLowerCase() === "multiple_choice" });
+                console.log(multipleChoiceQuestions);
+                const bulkQuestionSave = await saveQuizQuestionsToDatabase(supabaseConnection, id, bulkQuestions);
+                console.log(bulkQuestionSave);
+                const multipleChoiceQuestionsSave = await saveMultipleChoiceQuestionsToDatabase(supabaseConnection, id, multipleChoiceQuestions);
+                console.log(multipleChoiceQuestionsSave);
 
-                resolve(retData);
+                //return the new resource object
+                resolve({ ...postedResource[0], id: id });
 
             }
             else {
@@ -130,4 +143,41 @@ export const saveQuizToDatabase = async (quizData: Resource) => {
             reject("There is no data here to save");
         }
     });
+}
+
+
+export const saveQuizQuestionsToDatabase = async (dbConnection: SupabaseClient, quizId: string, questions: QuizQuestion[]) => {
+
+    const preppedQuizQuestions = questions.map((question: QuizQuestion) => { return { resource_id: quizId, ...question } })
+
+    const insertedQuestions = await dbConnection.from(TABLE_QUIZ_QUESTIONS).insert(preppedQuizQuestions).select();
+
+    return insertedQuestions;
+}
+
+export const saveMultipleChoiceQuestionsToDatabase = async (dbConnection: SupabaseClient, quizId: string, questions: QuizQuestion[]) => {
+
+    const promises: Promise<any>[] = [];
+    questions.forEach(async (question) => {
+        promises.push(saveMultipleChoiceQuestionToDatabase(dbConnection, quizId, question));
+    })
+
+    return Promise.all(promises);
+
+}
+
+export const saveMultipleChoiceQuestionToDatabase = async (dbConnection: SupabaseClient, quizId: string, question: QuizQuestion) => {
+
+    console.log(quizId);
+    console.log({ resource_id: quizId, ...question });
+    const inputQuestion = { resource_id: quizId, ...question };
+    delete inputQuestion.options;
+
+    const { data: insertedQuestion } = await dbConnection.from(TABLE_QUIZ_QUESTIONS).insert(inputQuestion).select();
+    const id = insertedQuestion && insertedQuestion[0].id || "";
+
+    const preppedQuestionOptions = question.options?.map((value, index) => { return { quiz_question_id: id, order: index, value } });
+
+    const insertedQuestionOptions = await dbConnection.from(TABLE_QUIZ_QUESTION_OPTIONS).insert(preppedQuestionOptions).select();
+    return insertedQuestionOptions;
 }

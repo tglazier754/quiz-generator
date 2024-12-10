@@ -21,7 +21,7 @@ export type QuizQuestion = {
     question: string,
     options?: string[],
     answer: string,
-    duration: number
+    expected_duration: number
 }
 
 export const generateQuiz = (parameters: ResourceGenerationParams, inputContent: string): Promise<StatusObject<QuizFormat>> => {
@@ -52,7 +52,7 @@ export const generateParameterizedQuiz = async (parameters: ResourceGenerationPa
         const quizBreakdown = {
             long_form: parameters.long_form_count,
             short_answer: parameters.short_answer_count,
-            multipleChoice: parameters.multiple_choice_count,
+            multiple_choice: parameters.multiple_choice_count,
             true_false: parameters.true_false_count
         };
 

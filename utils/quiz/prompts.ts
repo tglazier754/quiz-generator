@@ -14,7 +14,6 @@ Follow the provided guidelines regarding expected duration in minutes and questi
 Do not include any banter.
 Include a brief description of the quiz.
 Use the following JSON schema :
-{{quiz:
 {{
 name:string,
 description:string
@@ -24,9 +23,8 @@ questions:[
 question:string,
 options?:string[],
 answer:string,
-duration:number}}
+expected_duration:number}}
 ]
-}}
 }}
 expected duration: {expected_duration}
 question breakdown:{quiz_breakdown}

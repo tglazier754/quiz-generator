@@ -1,7 +1,7 @@
 import { generateQuiz } from "@/utils/quiz/server";
 import { createClient } from "@/utils/supabase/server";
 import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
-import { getCombinedContentFromSpecificResources } from "@/utils/resources/server";
+import { getCombinedContentFromSpecificResources, saveQuizToDatabase } from "@/utils/resources/server";
 
 
 //TODO: Move this functionality into its own function
@@ -30,15 +30,17 @@ export async function POST(request: Request) {
 
             const generatedQuizStatusObject = await generateQuiz(parameters, inputContent);
             console.log(generatedQuizStatusObject);
-            //const postedQuizData = await saveQuizToDatabase(generatedQuizObject);
-            return new Response(JSON.stringify(generatedQuizStatusObject.value));
-            /*if (postedQuizData) {
-                return new Response(JSON.stringify(postedQuizData));
+            if (generatedQuizStatusObject.status === "success" && generatedQuizStatusObject.value) {
+                const postedQuizData = await saveQuizToDatabase(generatedQuizStatusObject.value);
+                //return new Response(JSON.stringify(generatedQuizStatusObject.value));
+                if (postedQuizData) {
+                    return new Response(JSON.stringify(postedQuizData));
+                }
+                else {
+                    return new Response("Unable to generate quiz");
+                }
             }
-            else {
-                return new Response("Unable to generate quiz");
-            }
-                */
+
             return new Response("Success");
         }
         catch (error) {

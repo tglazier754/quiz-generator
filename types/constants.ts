@@ -7,6 +7,7 @@ export const TABLE_RESOURCES = "resources";
 export const TABLE_USERS = "users";
 export const TABLE_USER_RESOURCES = "user_resources";
 export const TABLE_QUIZ_QUESTIONS = "quiz_questions";
+export const TABLE_QUIZ_QUESTION_OPTIONS = "quiz_question_options";
 
 //page sizes
 export const DEFAULT_SELECT_PAGE_OFFSET = 0;
