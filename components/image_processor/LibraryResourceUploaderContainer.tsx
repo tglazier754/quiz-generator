@@ -18,7 +18,7 @@ export const LibraryResourceUploaderContainer = (props: LibraryResourceUploaderC
     const { activeResource } = props;
     const { submitResource } = useResourceEdit();
     const { uploadStatus } = useActionStatus();
-    const { status: uploadStatusValue, message: uploadErrorMessage } = uploadStatus;
+    const { status: uploadStatusValue } = uploadStatus;
     const [resource, setResource] = useState<Resource | null>(null);
     const router = useRouter();
 

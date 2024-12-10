@@ -1,8 +1,7 @@
 "use client";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import ResourceCard from "./resource_card/resourceCard";
-import { JSXElementConstructor, ReactElement } from "react";
 
 type ResourceListProps = {
     resources: Map<string, Resource>;
@@ -18,8 +17,8 @@ export const ResourceList = (props: ResourceListProps) => {
     const { resources: resourceMap, selectedResources, selectionCallback, selectable, compact } = props;
 
     const selectionHandler = (id: string, state: boolean) => {
-        if (selectable) {
-            selectionCallback && selectionCallback(resourceMap.get(id), state);
+        if (selectable && selectionCallback) {
+            selectionCallback(resourceMap.get(id), state);
         }
     }
 

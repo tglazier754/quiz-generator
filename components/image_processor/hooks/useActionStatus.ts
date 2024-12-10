@@ -12,7 +12,7 @@ type ActionStatus<T> = {
 }
 
 
-export const useActionStatus = (): ActionStatus<any> => {
+export const useActionStatus = <T>(): ActionStatus<T> => {
 
     const {
         processingStatus,

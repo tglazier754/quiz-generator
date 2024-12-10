@@ -1,13 +1,13 @@
 "use client";
-import { Box, createListCollection, Group, Stack, Text } from "@chakra-ui/react";
+import { Box, createListCollection, Group, Stack } from "@chakra-ui/react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { GRADE_LEVELS, MACHINE_GENERATED_TYPES } from "@/types/constants";
 import { NumberInputField, NumberInputRoot } from "../ui/number-input";
 import { Field } from "../ui/field";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, FieldErrors, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { ContentCreationContext } from "@/context/create/provider";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 import useResourceCreation from "@/hooks/useResourceCreation";
 import { Button } from "../ui/button";
 import { ResourceGenerationParams } from "@/utils/resources/client";
@@ -17,7 +17,7 @@ export const ParameterForm = () => {
     const GRADE_LEVEL_LIST_DATA = createListCollection({ items: GRADE_LEVELS.map((type) => { return { label: type.toLowerCase(), value: type } }) });
     const MACHINE_GENERATED_TYPES_LIST_DATA = createListCollection({ items: MACHINE_GENERATED_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
-    const router = useRouter();
+    //const router = useRouter();
     const { inputContent } = useContext(ContentCreationContext);
     const { createResource, uploadStatus } = useResourceCreation();
     const { control, register, unregister, handleSubmit, watch } = useForm<ResourceGenerationParams>({ shouldUnregister: true, });
@@ -27,7 +27,7 @@ export const ParameterForm = () => {
         console.log(generatedResource);
         //router.push(`/resource?id=${generatedResource.id}`);
     }
-    const handleSubmitError = (data: any) => { console.log(data) };
+    const handleSubmitError: SubmitErrorHandler<ResourceGenerationParams> = (data: FieldErrors<ResourceGenerationParams>) => { console.log(data) };
     const watchResourceTypeSelection = watch("content_type");
 
     const [showQuizSection, setShowQuizSection] = useState(true);
@@ -48,7 +48,7 @@ export const ParameterForm = () => {
             unregister("short_answer_count");
             unregister("long_form_count");
         }
-    }, [watchResourceTypeSelection])
+    }, [watchResourceTypeSelection, register, unregister])
 
     return (<form onSubmit={handleSubmit(handleCreateResource, handleSubmitError)}>
         <Stack justify="space-between" gap="8">

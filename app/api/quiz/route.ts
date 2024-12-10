@@ -1,7 +1,7 @@
-import { generateParameterizedQuiz, generateQuiz, generateQuizDataFromText } from "@/utils/quiz/server";
+import { generateQuiz } from "@/utils/quiz/server";
 import { createClient } from "@/utils/supabase/server";
 import { URL_PARAM_RESOURCE_ID } from "@/types/constants";
-import { getCombinedContentFromSpecificResources, saveQuizToDatabase } from "@/utils/resources/server";
+import { getCombinedContentFromSpecificResources } from "@/utils/resources/server";
 
 
 //TODO: Move this functionality into its own function

@@ -2,7 +2,7 @@
 
 import { ResourcesContext } from "@/context/library/provider";
 import { MACHINE_GENERATED_TYPES } from "@/types/constants";
-import { archiveMultipleResources, generateResource } from "@/utils/resources/client";
+import { archiveMultipleResources, generateResource, ResourceType } from "@/utils/resources/client";
 import { Box, Button, createListCollection, Flex, } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaWandMagicSparkles } from "react-icons/fa6";
@@ -33,7 +33,7 @@ export const ResourceActionsPanel = () => {
             setIsGenerating(true);
             setIsGenerateDialogOpen(false);
             try {
-                const generatedResource = await generateResource(selectedResourceType[0], selectedResourceIdList);
+                const generatedResource = await generateResource({ content_type: selectedResourceType[0].toUpperCase() as ResourceType, expected_duration: 30, grade_level: "7-8" }, selectedResourceIdList);
                 //redirect to /resource?id={generated_id}
                 router.push(`/resource?id=${generatedResource.id}`);
                 setIsGenerating(false);

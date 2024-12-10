@@ -1,10 +1,7 @@
 import { ResourceEditorContext } from "@/context/resource_editor/provider";
 import { QuizQuestion, Resource } from "@/types/resourceTypes";
 import { useContext } from "react";
-import { useActionStatus } from "./useActionStatus";
 import { sendQuizQuestionUpdate } from "@/utils/quiz_questions/client";
-import { useRouter } from "next/navigation";
-
 
 type useResourceEdit = {
     submitResource: (resource: Resource) => Promise<Resource>;
@@ -15,8 +12,6 @@ type useResourceEdit = {
 export const useResourceEdit = (initialResource?: Resource | null): useResourceEdit => {
 
     const { quizQuestionChanges, setUploadStatus } = useContext(ResourceEditorContext);
-
-
 
     const uploadResource = async (resource: Resource, method: "POST" | "PUT"): Promise<Resource> => {
         const formData = new FormData();

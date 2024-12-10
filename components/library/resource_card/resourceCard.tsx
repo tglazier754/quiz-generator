@@ -2,13 +2,8 @@
 
 import { Resource } from "@/types/resourceTypes";
 import { AspectRatio, Card, Float, Show, Square } from "@chakra-ui/react";
-import { Button } from "../../ui/button";
-import { TbTrash } from "react-icons/tb";
-import { PiPencil } from "react-icons/pi";
 import { GiCheckMark } from "react-icons/gi";
 import ResourceCardImage from "./resourceCardImage";
-import { archiveSingleResource } from "@/utils/resources/client";
-import Link from "next/link";
 import { ReactElement } from "react";
 
 type ResourceCardProps = {

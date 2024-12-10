@@ -2,7 +2,7 @@
 
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Button, createListCollection, Heading, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
@@ -32,7 +32,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
     const [selectedResourceType, setSelectedResourceType] = useState<string[]>([RESOURCE_TYPE_TEXT]);
 
     const { updateQuizQuestion } = useResourceEdit(activeResource);
-    const { uploadStatus, processingStatus } = useActionStatus();
+    const { uploadStatus, processingStatus } = useActionStatus<string>();
     const { status: uploadStatusValue, message: uploadErrorMessage } = uploadStatus;
     const { status: processingStatusValue, message: processingErrorMessage, value: processingValueMessage } = processingStatus;
     const { selectedImage, handleImageSelection } = useImageUpload();
@@ -47,14 +47,6 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
         }
     }, [processingStatus, processingValueMessage, setValue]);
 
-    useEffect(() => {
-        const getResourceData = async () => {
-            const resourceData = await getConsolidatedResourceObject();
-            updateResourceValue(resourceData);
-        }
-        getResourceData();
-
-    }, [activeResource, name, description, value, selectedResourceType, webUrl, selectedImage]);
 
     //TODO: Make this code separate and testable
     const getConsolidatedResourceObject = async (): Promise<Resource> => {
@@ -75,6 +67,16 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
         }
         return resource;
     }
+
+
+    useEffect(() => {
+        const getResourceData = async () => {
+            const resourceData = await getConsolidatedResourceObject();
+            updateResourceValue(resourceData);
+        }
+        getResourceData();
+
+    }, [updateResourceValue, activeResource, name, description, value, selectedResourceType, webUrl, selectedImage]);
 
 
     return (
