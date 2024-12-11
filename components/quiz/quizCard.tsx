@@ -33,7 +33,7 @@ export const QuizCard = (props: QuizCardProps) => {
                 <Text>{question.answer}</Text>
                 <Text>{question.quiz_question_options && question.quiz_question_options.length ? "Options" : ""}</Text>
 
-                {sortedQuestionOptions && sortedQuestionOptions.map((option) => { return <Text>{option.value}</Text> })}
+                {sortedQuestionOptions && sortedQuestionOptions.map((option) => { return <Text key={`quiz-question-option-${option.id}`}>{option.value}</Text> })}
 
 
             </Card.Body>
