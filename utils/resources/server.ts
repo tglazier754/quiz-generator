@@ -45,7 +45,10 @@ export const getSpecificResources = async (resourceIdList: string[]): Promise<Re
             //const totalOffset = pageOffset * pageSize;
 
             //TODO: make sure we use the totalOffset
-            const { data, error } = await supabaseConnection.from('resources').select(`*, quiz_questions(*)`).in('id', resourceIdList);
+            const { data, error } = await supabaseConnection
+                .from('resources')
+                .select(`*, 
+                quiz_questions:quiz_questions!resource_id(*,quiz_question_options(*))`).in('id', resourceIdList);
             if (data) resolve(data);
             if (error) reject(error);
 

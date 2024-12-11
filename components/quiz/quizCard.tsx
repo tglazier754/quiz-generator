@@ -1,8 +1,8 @@
 "use client";
 
 import { QuizQuestion } from "@/types/resourceTypes";
-import { Card, Editable, EditableValueChangeDetails } from "@chakra-ui/react";
-import { useState } from "react";
+import { Card, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -10,39 +10,24 @@ type QuizCardProps = {
 }
 
 export const QuizCard = (props: QuizCardProps) => {
-    const { question, changeHandler } = props;
-
-    const [questionText, setQuestionText] = useState(question.question);
-    const [answerText, setAnswerText] = useState(question.answer);
-
-    const handleQuestionTextChange = (e: EditableValueChangeDetails) => {
-        setQuestionText(e.value);
-        changeHandler({ ...question, question: e.value, answer: answerText });
-    }
-    const handleAnswerTextChange = (e: EditableValueChangeDetails) => {
-        setAnswerText(e.value);
-        changeHandler({ ...question, question: questionText, answer: e.value });
-    }
+    const { question } = props;
+    useEffect(() => { console.log(question); }, []);
 
     return (
         <Card.Root>
             <Card.Body>
                 <Card.Title >
-                    <Editable.Root
-                        selectOnFocus={false}
-                        value={questionText}
-                        onValueChange={handleQuestionTextChange}>
-                        <Editable.Preview />
-                        <Editable.Textarea />
-                    </Editable.Root>
+
+
+
                 </Card.Title>
-                <Editable.Root
-                    selectOnFocus={false}
-                    value={answerText}
-                    onValueChange={handleAnswerTextChange}>
-                    <Editable.Preview />
-                    <Editable.Textarea />
-                </Editable.Root>
+                <Text>{question.type}</Text>
+                <Text>{question.question}</Text>
+                <Text>{question.answer}</Text>
+                <Text>Options</Text>
+
+                {question.quiz_question_options && question.quiz_question_options.map((option) => { return <Text>{option.value}</Text> })}
+
 
             </Card.Body>
 

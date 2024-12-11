@@ -6,7 +6,18 @@ export type QuizQuestion = {
     created_at: string;
     question: string;
     answer: string;
+    type: string;
+    expected_duration: string;
+    quiz_question_options?: QuizQuestionOption[];
 }
+export type QuizQuestionOption = {
+    created_at: string;
+    id: string;
+    order: number;
+    quiz_question_id: string;
+    value: string;
+}
+
 export type Resource = {
     id?: string;
     url?: File | string | null;
