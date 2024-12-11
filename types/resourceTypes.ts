@@ -8,6 +8,7 @@ export type QuizQuestion = {
     answer: string;
     type: string;
     expected_duration: string;
+    order: number;
     quiz_question_options?: QuizQuestionOption[];
 }
 export type QuizQuestionOption = {

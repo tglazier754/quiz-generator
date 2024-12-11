@@ -2,7 +2,8 @@
 
 import { QuizQuestion } from "@/types/resourceTypes";
 import { Card, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { Button } from "../ui/button";
+import { useMemo } from "react";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -11,7 +12,11 @@ type QuizCardProps = {
 
 export const QuizCard = (props: QuizCardProps) => {
     const { question } = props;
-    useEffect(() => { console.log(question); }, []);
+
+    const sortedQuestionOptions = useMemo(() => {
+        return question.quiz_question_options && question.quiz_question_options.sort((a, b) => { return a.order - b.order });
+    }, [question.quiz_question_options]);
+
 
     return (
         <Card.Root>
@@ -21,15 +26,21 @@ export const QuizCard = (props: QuizCardProps) => {
 
 
                 </Card.Title>
+                <Text>{question.order}</Text>
+                <Text>{question.expected_duration} minutes</Text>
                 <Text>{question.type}</Text>
                 <Text>{question.question}</Text>
                 <Text>{question.answer}</Text>
-                <Text>Options</Text>
+                <Text>{question.quiz_question_options && question.quiz_question_options.length ? "Options" : ""}</Text>
 
-                {question.quiz_question_options && question.quiz_question_options.map((option) => { return <Text>{option.value}</Text> })}
+                {sortedQuestionOptions && sortedQuestionOptions.map((option) => { return <Text>{option.value}</Text> })}
 
 
             </Card.Body>
+            <Card.Footer>
+                <Button>Update</Button>
+                <Button>Delete</Button>
+            </Card.Footer>
 
         </Card.Root>
     )

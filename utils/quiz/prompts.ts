@@ -23,7 +23,8 @@ questions:[
 question:string,
 options?:string[],
 answer:string,
-expected_duration:number}}
+expected_duration:number,
+order:number}}
 ]
 }}
 expected duration: {expected_duration}

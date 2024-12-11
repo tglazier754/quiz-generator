@@ -3,6 +3,7 @@
 import { Flex } from "@chakra-ui/react";
 import QuizCard from "./quizCard";
 import { QuizQuestion } from "@/types/resourceTypes";
+import { useMemo } from "react";
 
 type QuizProps = {
     questions: QuizQuestion[];
@@ -18,6 +19,10 @@ export const Quiz = (props: QuizProps) => {
         questionUpdateHandler(updatedQuestion);
     }
 
+    const sortedQuestions = useMemo(() => {
+        return questions.sort((a, b) => { return a.order - b.order });
+    }, [questions]);
+
 
     return (
         <Flex
@@ -26,7 +31,7 @@ export const Quiz = (props: QuizProps) => {
             p={4}
             overflowY="scroll"
         >
-            {questions.map((question: QuizQuestion, index) =>
+            {sortedQuestions.map((question: QuizQuestion, index) =>
                 <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} changeHandler={handleChange} />
             )}
         </Flex>
