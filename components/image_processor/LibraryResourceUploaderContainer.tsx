@@ -15,7 +15,7 @@ type LibraryResourceUploaderContainerProps = {
 export const LibraryResourceUploaderContainer = (props: LibraryResourceUploaderContainerProps) => {
 
     const { activeResource } = props;
-    const { submitResource } = useResourceEdit();
+    const { submitResource } = useResourceEdit(activeResource);
     const { uploadStatus } = useActionStatus();
     const { status: uploadStatusValue } = uploadStatus;
     const router = useRouter();
