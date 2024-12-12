@@ -16,20 +16,24 @@ import { useInputController } from "./hooks/useInputController";
 import { convertImageToDataUrl } from "@/utils/images/client";
 import { useWebsiteUpload } from "./hooks/useWebsiteUpload";
 import { Field } from "../ui/field";
+import { Controller, FieldErrors, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 
 type LibraryResourceUploaderProps = {
     activeResource?: Resource | null;
+    formName: string;
     updateResourceValue: (resource: Resource) => void;
 }
 
 export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => {
 
-    const { activeResource, updateResourceValue } = props;
+    const { activeResource, formName, updateResourceValue } = props;
 
-    const { value: name, handleValueChange: nameChange } = useInputController(activeResource && activeResource.name || "");
-    const { value: description, handleValueChange: descriptionChange } = useInputController(activeResource && activeResource.description || "");
-    const { value: value, setValue, handleValueChange: valueChange } = useInputController(activeResource && activeResource.value || "");
-    const [selectedResourceType, setSelectedResourceType] = useState<string[]>([RESOURCE_TYPE_TEXT]);
+    const { control, register, unregister, handleSubmit, watch, setValue } = useForm<Resource>({ shouldUnregister: true, });
+    const defaultName = activeResource && activeResource.name || "";
+    const defaultDescription = activeResource && activeResource.description || "";
+    const defaultValue = activeResource && activeResource.value || "";
+    const defaultType = activeResource && activeResource.type || RESOURCE_TYPE_TEXT;
+    const watchResourceTypeSelection = watch("type");
 
     const { updateQuizQuestion } = useResourceEdit(activeResource);
     const { uploadStatus, processingStatus } = useActionStatus<string>();
@@ -43,141 +47,143 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
     useEffect(() => {
         if (processingStatus.status === "success" && processingValueMessage) {
-            setValue(processingValueMessage);
+            setValue("value", processingValueMessage);
         }
     }, [processingStatus, processingValueMessage, setValue]);
 
-
-    //TODO: Make this code separate and testable
-    const getConsolidatedResourceObject = async (): Promise<Resource> => {
+    const handleCreateOrUpdateResource: SubmitHandler<Resource> = async (data: Resource) => {
+        console.log(data);
         const dateData = new Date();
-        const resource: Resource = {
-            ...activeResource,
-            name: name || "",
-            description: description || "",
-            value: value || "",
-            type: activeResource ? activeResource.type : selectedResourceType[0],
-            url: activeResource ? activeResource.url : webUrl,
-            last_modified: dateData.toISOString()
+        data.last_modified = dateData.toISOString();
+        if (activeResource) {
+            data.id = activeResource.id;
         }
         if (selectedImage) {
             //this will be moved to a url returned from a cdn upload
             const convertedImage = await convertImageToDataUrl(selectedImage);
-            resource.url = convertedImage as string;
+            data.url = convertedImage as string;
         }
-        return resource;
+        console.log(data);
+        updateResourceValue(data);
     }
-
-
-    useEffect(() => {
-        const getResourceData = async () => {
-            const resourceData = await getConsolidatedResourceObject();
-            updateResourceValue(resourceData);
-        }
-        getResourceData();
-
-    }, [updateResourceValue, activeResource, name, description, value, selectedResourceType, webUrl, selectedImage]);
+    const handleSubmitError: SubmitErrorHandler<Resource> = (data: FieldErrors<Resource>) => { console.log(data) };
 
 
     return (
+        <form id={formName} onSubmit={handleSubmit(handleCreateOrUpdateResource, handleSubmitError)}>
+            <Stack
+                overflow="auto"
+                maxHeight="100%">
+                <Box className="description-data"
+                    pl={4}
+                    pr={4}>
+                    <HStack >
+                        <Box className="w-1/3">
+                            <Square>
+
+                                <ResourceCardImage src={activeResource?.url} type={activeResource && activeResource.type || watchResourceTypeSelection} />
+                            </Square>
+                        </Box>
+                        <Box className="flex-1">
+                            <Stack>
+                                <Box>
+                                    <Field label="Name">
+                                        <Input defaultValue={defaultName} {...register("name")} />
+                                    </Field>
+                                </Box>
+                                <Box>
+                                    <Field label="Description">
+                                        <Input defaultValue={defaultDescription} {...register("description")} />
+                                    </Field>
+                                </Box>
+                            </Stack>
+                        </Box>
+                    </HStack>
+                </Box>
 
 
-        <Stack
-            overflow="auto"
-            maxHeight="100%">
-            <Box className="description-data"
-                pl={4}
-                pr={4}>
-                <HStack >
+                <HStack alignItems="flex-end"
+                    pl={4}
+                    pr={4}>
                     <Box className="w-1/3">
-                        <Square>
 
-                            <ResourceCardImage src={activeResource?.url} type={activeResource && activeResource.type || selectedResourceType[0]} />
-                        </Square>
+                        <Controller
+                            name="type"
+                            control={control}
+                            defaultValue={defaultType}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: "Select a Content Type",
+                                }
+                            }}
+                            render={({ field: { ref, ...restField } }) => (
+                                <SelectRoot
+                                    variant="outline"
+                                    collection={USER_GENERATED_TYPES_LIST_DATA}
+                                    defaultValue={[defaultType]}
+                                    onValueChange={(value) => {
+                                        restField.onChange(value.value[0]);
+                                    }}
+                                    disabled={activeResource && activeResource.type ? true : false} >
+
+                                    <SelectLabel>Resource type</SelectLabel>
+                                    <SelectTrigger>
+                                        <SelectValueText placeholder="Select Content Type" />
+                                    </SelectTrigger>
+                                    <SelectContent zIndex={100000}>
+                                        {USER_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
+                                            <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
+                                                {resource_type.label}
+                                            </SelectItem>
+                                        )
+                                        )}
+                                    </SelectContent>
+                                </SelectRoot>
+                            )}
+                        />
+
+
+
                     </Box>
                     <Box className="flex-1">
-                        <Stack>
-                            <Box>
-                                <Field label="Name">
-                                    <Input value={name} onChange={nameChange} />
-                                </Field>
-                            </Box>
-                            <Box>
-                                <Field label="Description">
-                                    <Input value={description} onChange={descriptionChange} />
-                                </Field>
-                            </Box>
-                        </Stack>
+                        <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_IMAGE || watchResourceTypeSelection === RESOURCE_TYPE_IMAGE ? "" : "hidden"}>
+                            <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} onChange={handleImageSelection} >
+                                <FileUploadTrigger asChild>
+                                    <Button variant="outline" size="sm">
+                                        <HiUpload />Upload file
+                                    </Button>
+                                </FileUploadTrigger>
+                            </FileUploadRoot>
+                        </Box>
+
+                        <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_WEBSITE || watchResourceTypeSelection === RESOURCE_TYPE_WEBSITE ? "" : "hidden"}>
+                            <Stack
+                                direction="row">
+                                <Input type="text" placeholder="URL" value={webUrl} onChange={changeWebUrl} />
+                                <Button size="sm" variant="outline" onClick={processWebsite}>Process</Button>
+                            </Stack>
+                        </Box>
                     </Box>
                 </HStack>
-            </Box>
 
+                {processingStatusValue === "pending" && <p>Processing...</p>}
+                {processingStatusValue === "error" && <Text>{processingErrorMessage}</Text>}
 
-            <HStack alignItems="flex-end"
-                pl={4}
-                pr={4}>
-                <Box className="w-1/3">
+                {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || watchResourceTypeSelection === RESOURCE_TYPE_QUIZ ?
+                    <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={updateQuizQuestion} /> :
+                    <Field label="Resource value" p={4}>
+                        <Textarea rows={12} defaultValue={defaultValue} {...register("value")} disabled={processingStatusValue === "pending"} /></Field>
+                }
 
+                <Box>
 
-                    {activeResource ?
-                        <Text>{activeResource && activeResource.type || ""}</Text>
-                        :
-                        <SelectRoot variant="outline" collection={USER_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
-                            <SelectLabel>Resource type</SelectLabel>
-                            <SelectTrigger>
-                                <SelectValueText placeholder="Select Content Type" />
-                            </SelectTrigger>
-                            <SelectContent zIndex={100000}>
-                                {USER_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
-                                    <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
-                                        {resource_type.label}
-                                    </SelectItem>
-                                )
-                                )}
-                            </SelectContent>
-                        </SelectRoot>
-                    }
-
-
+                    {uploadStatusValue === "pending" && <p>Uploading...</p>}
+                    {uploadStatusValue === "error" && <Text>{uploadErrorMessage}</Text>}
+                    {uploadStatusValue === "success" && <Text>Uploaded Successfully</Text>}
                 </Box>
-                <Box className="flex-1">
-                    <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_IMAGE || selectedResourceType[0] === RESOURCE_TYPE_IMAGE ? "" : "hidden"}>
-                        <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} onChange={handleImageSelection} >
-                            <FileUploadTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    <HiUpload />Upload file
-                                </Button>
-                            </FileUploadTrigger>
-                        </FileUploadRoot>
-                    </Box>
-
-                    <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_WEBSITE || selectedResourceType[0] === RESOURCE_TYPE_WEBSITE ? "" : "hidden"}>
-                        <Stack
-                            direction="row">
-                            <Input type="text" placeholder="URL" value={webUrl} onChange={changeWebUrl} />
-                            <Button size="sm" variant="outline" onClick={processWebsite}>Process</Button>
-                        </Stack>
-                    </Box>
-                </Box>
-            </HStack>
-
-            {processingStatusValue === "pending" && <p>Processing...</p>}
-            {processingStatusValue === "error" && <Text>{processingErrorMessage}</Text>}
-
-            {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || selectedResourceType[0] === RESOURCE_TYPE_QUIZ ?
-                <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={updateQuizQuestion} /> :
-                <Field label="Resource value" p={4}>
-                    <Textarea rows={12} value={value} onChange={valueChange} disabled={processingStatusValue === "pending"} /></Field>
-            }
-
-            <Box>
-
-                {uploadStatusValue === "pending" && <p>Uploading...</p>}
-                {uploadStatusValue === "error" && <Text>{uploadErrorMessage}</Text>}
-                {uploadStatusValue === "success" && <Text>Uploaded Successfully</Text>}
-            </Box>
-        </Stack>
-
+            </Stack>
+        </form>
 
     )
 

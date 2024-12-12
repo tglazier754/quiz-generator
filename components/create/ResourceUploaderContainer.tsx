@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useResourceEdit } from "../image_processor/hooks/useResourceEdit";
-import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
 import { Button } from "../ui/button";
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import { Resource } from "@/types/resourceTypes";
 import { ContentCreationContext } from "@/context/create/provider";
+import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
 
 type ResourceUploaderContainerProps = {
     showTray: boolean,
@@ -17,13 +17,8 @@ export const ResourceUploaderContainer = (props: ResourceUploaderContainerProps)
     const { showTray, setShowTray, cancelAction } = props;
     const { setInputContent } = useContext(ContentCreationContext);
     const { submitResource } = useResourceEdit();
-    const [resource, setResource] = useState<Resource | null>(null);
 
-    const handleUpdateResourceData = (resourceData: Resource) => {
-        setResource(resourceData);
-    }
-
-    const handleSubmit = async () => {
+    const handleSubmit = async (resource: Resource) => {
         if (submitResource && resource) {
             //TODO: Handle errors here
             const submittedResource = await submitResource(resource);
@@ -49,12 +44,12 @@ export const ResourceUploaderContainer = (props: ResourceUploaderContainerProps)
                     {/*TODO: Need a ResourceList that has a container
                                     that passes down a selection handler*/}
 
-                    <LibraryResourceUploader updateResourceValue={handleUpdateResourceData} />
+                    <LibraryResourceUploader formName="resource-uploader" updateResourceValue={handleSubmit} />
 
                 </DrawerBody>
                 <DrawerFooter>
                     <Button variant="ghost" onClick={cancelAction}>Cancel</Button>
-                    <Button variant="surface" onClick={handleSubmit}>Create</Button>
+                    <Button variant="surface" type="submit" form="resource-uploader">Create</Button>
                 </DrawerFooter>
 
                 <DrawerCloseTrigger />
