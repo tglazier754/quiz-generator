@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import useResourceCreation from "@/hooks/useResourceCreation";
 import { Button } from "../ui/button";
 import { ResourceGenerationParams } from "@/utils/resources/client";
+import { ErrorMessage } from "@hookform/error-message";
+import { toaster } from "../ui/toaster";
 
 
 export const ParameterForm = () => {
@@ -20,12 +22,17 @@ export const ParameterForm = () => {
     const router = useRouter();
     const { inputContent } = useContext(ContentCreationContext);
     const { createResource, uploadStatus } = useResourceCreation();
-    const { control, register, unregister, handleSubmit, watch } = useForm<ResourceGenerationParams>({ shouldUnregister: true, });
+    const { control, register, unregister, handleSubmit, watch, formState: { errors } } = useForm<ResourceGenerationParams>({ shouldUnregister: true, });
     const handleCreateResource: SubmitHandler<ResourceGenerationParams> = async (data: ResourceGenerationParams) => {
         console.log(data);
         const generatedResource = await createResource(data, Array.from(inputContent.keys()));
-        console.log(generatedResource);
-        router.push(`/resource?id=${generatedResource.id}`);
+        if (generatedResource.status === "success") {
+            console.log(generatedResource);
+            router.push(`/resource?id=${generatedResource.value.id}`);
+        }
+        else {
+            toaster.create({ title: "Error", description: generatedResource?.message });
+        }
     }
     const handleSubmitError: SubmitErrorHandler<ResourceGenerationParams> = (data: FieldErrors<ResourceGenerationParams>) => { console.log(data) };
     const watchResourceTypeSelection = watch("content_type");
@@ -81,6 +88,7 @@ export const ParameterForm = () => {
                                 )
                                 )}
                             </SelectContent>
+                            <ErrorMessage errors={errors} name="content_type" />
                         </SelectRoot>
                     )}
                 />
@@ -92,11 +100,12 @@ export const ParameterForm = () => {
                     rules={{
                         required: {
                             value: true,
-                            message: "Select a Grade Level",
+                            message: "Must select a grade level",
                         }
                     }}
                     render={({ field: { ref, ...restField } }) => (
-                        <SelectRoot collection={GRADE_LEVEL_LIST_DATA}
+                        <SelectRoot
+                            collection={GRADE_LEVEL_LIST_DATA}
                             onValueChange={(value) => {
                                 restField.onChange(value.value[0]);
                             }} >
@@ -112,6 +121,7 @@ export const ParameterForm = () => {
                                 )
                                 )}
                             </SelectContent>
+                            <ErrorMessage errors={errors} name="grade_level" />
                         </SelectRoot>
                     )} />
             </Box>
@@ -120,6 +130,7 @@ export const ParameterForm = () => {
                 <NumberInputRoot min={0} >
                     <NumberInputField {...register("expected_duration")} />
                 </NumberInputRoot>
+                <ErrorMessage errors={errors} name="expected_duration" />
 
             </Field>
             {showQuizSection && <Field label="Question Mix">

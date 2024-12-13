@@ -34,21 +34,21 @@ export async function POST(request: Request) {
                 const postedQuizData = await saveQuizToDatabase(generatedQuizStatusObject.value);
                 //return new Response(JSON.stringify(generatedQuizStatusObject.value));
                 if (postedQuizData) {
-                    return new Response(JSON.stringify(postedQuizData));
+                    return new Response(JSON.stringify({ status: "success", data: postedQuizData }), { status: 200, statusText: "OK" });
                 }
                 else {
-                    return new Response("Unable to generate quiz");
+                    return new Response(JSON.stringify(generatedQuizStatusObject), { status: 500, statusText: "Server Error" });
                 }
             }
 
-            return new Response("Success");
+            return new Response(JSON.stringify(generatedQuizStatusObject), { status: 500, statusText: "Server Error" });
         }
         catch (error) {
             console.log(error);
-            return new Response("Unable to generate quiz");
+            return new Response(JSON.stringify({ status: "error", message: error }), { status: 500, statusText: "Server Error" });
         }
     }
 
 
-    return new Response("POST QUIZ ENDPOINT");
+    return new Response(JSON.stringify({ status: "error", message: "Unauthorized User" }), { status: 401, statusText: "Unauthorized" });
 }

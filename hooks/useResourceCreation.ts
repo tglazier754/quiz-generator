@@ -15,14 +15,15 @@ export const useResourceCreation = () => {
         setUploadStatus({ status: "pending" });
         console.log(params);
         const generatedResource = await generateResource(params, inputIdList);
-        if (generatedResource) {
+        if (generatedResource.status === "success") {
 
-            setUploadStatus({ status: "success", value: generatedResource });
+            setUploadStatus({ status: "success", value: generatedResource.data });
+            return { status: "success", value: generatedResource.data };
         }
         else {
-            setUploadStatus({ status: "error", message: "Unable to create the resource" });
+            setUploadStatus(generatedResource);
+            return generatedResource;
         }
-        return generatedResource;
     }
 
     return { createResource, uploadStatus };

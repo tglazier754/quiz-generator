@@ -35,7 +35,7 @@ export const generateQuiz = (parameters: ResourceGenerationParams, inputContent:
 
 export const generateParameterizedQuiz = async (parameters: ResourceGenerationParams, inputContent: string, model: ChatOpenAI): Promise<StatusObject<QuizFormat>> => {
     //TODO: Check the paramaters first
-    if (model && inputContent) {
+    if (model && inputContent && inputContent !== "") {
         const QUIZ_GENERATION_PROMPT = PromptTemplate.fromTemplate(paramterizedQuizPrompt);
         const quizGenerationChain = RunnableSequence.from([
             {
