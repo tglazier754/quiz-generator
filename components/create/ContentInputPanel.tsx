@@ -35,7 +35,6 @@ export const ContentInputPanel = () => {
             >
 
                 <Stack className="flex-grow-0 mb-4">
-                    <Heading>Input Content</Heading>
                     <Box>
                         <ResourceSelectorContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowExistingTray} showTray={showExistingTray} />
                     </Box>

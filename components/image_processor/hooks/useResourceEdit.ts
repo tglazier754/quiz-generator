@@ -46,7 +46,6 @@ export const useResourceEdit = (initialResource?: Resource | null): useResourceE
         return questionUpdateResult;
     }
 
-    //TODO: Move this to the client file
     const submitResource = async (resource: Resource) => {
         setUploadStatus({ status: "pending" })
         delete resource.quiz_questions;

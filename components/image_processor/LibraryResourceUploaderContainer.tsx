@@ -37,14 +37,16 @@ export const LibraryResourceUploaderContainer = (props: LibraryResourceUploaderC
             height="100%"
             maxHeight="100%"
             justifySelf="center">
-            <Heading>Manage Resource</Heading>
-            <LibraryResourceUploader formName="resource-uploader" key="resource-upload-page-uploader" activeResource={activeResource} updateResourceValue={handleSubmit} />
-
+            <Box>
+                <Heading>Manage Resource</Heading>
+                <LibraryResourceUploader formName="resource-uploader" key="resource-upload-page-uploader" activeResource={activeResource} updateResourceValue={handleSubmit} />
+            </Box>
             <Box
                 p={4}>
                 <Button type="submit" form="resource-uploader" disabled={uploadStatusValue === "pending"}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
             </Box>
-        </Stack>)
+        </Stack >
+    )
 }
 
 export default LibraryResourceUploaderContainer;
