@@ -36,7 +36,7 @@ export const ResourceList = (props: ResourceListProps) => {
 
             <SimpleGrid minChildWidth="12rem" gap="1rem" className="max-w-full w-full">
 
-                {resourceMap && resourceMap.size && Array.from(resourceMap?.entries().map((value: [string, Resource]) => {
+                {resourceMap && resourceMap.size > 0 && Array.from(resourceMap?.entries().map((value: [string, Resource]) => {
                     if (value[1].id) {
                         return (
                             <div key={`resource-preview-${value[1].id}`} className="resource-preview">
