@@ -1,11 +1,15 @@
 "use client";
 
 import { QuizQuestion } from "@/types/resourceTypes";
-import { Box, Card, Flex, Stack, Text } from "@chakra-ui/react";
-import { Button } from "../ui/button";
-import { useMemo, useState } from "react";
+import { Box, Card, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
 import { BsClock } from "react-icons/bs";
 import { IHash } from "@/types/globalTypes";
+import { EditableTextField } from "./EditableTextField";
+import { useQuizQuestion } from "./useQuizQuestion";
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import { DraggableAnswer } from "./DraggableAnswer";
+import { BiX } from "react-icons/bi";
+import { Button } from "../ui/button";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -21,15 +25,38 @@ const questionTypeLabels: IHash<string> = {
 
 export const QuizCard = (props: QuizCardProps) => {
     const { question } = props;
-    const [isEditing, setIsEditing] = useState(false);
 
-    const sortedQuestionOptions = useMemo(() => {
-        return question.quiz_question_options && question.quiz_question_options.sort((a, b) => { return a.order - b.order });
-    }, [question.quiz_question_options]);
+    const { question: quizQuestion, answer, options, updateQuestion, updateAnswer, updateOption, reorderOptions, addOption, removeOption, toggleCorrectOption } = useQuizQuestion(question);
+
+    const onDragEnd = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const sourceIndex = result.source.index;
+        const destinationIndex = result.destination.index;
+
+        if (sourceIndex !== destinationIndex) {
+            reorderOptions(sourceIndex, destinationIndex);
+        }
+    }
+
+
+    //question an answer are separate
+    //if multiple choice, answer is a drop down of options from quiz_question_options
+
+    //quiz question should be drag and drop (to change the order field)
+    //quiz_question_options is drag and drop (to change the order field)
+
+    //if edit is selected, it can only be undone by submitting or cancelling
+    //need a useEffect for edit mode to register/unregister
 
 
     return (
         <Card.Root>
+            <Card.Header>
+                <IconButton variant="ghost" size="xs" position="absolute" top={2} right={2}><Box><BiX /></Box></IconButton>
+            </Card.Header>
             <Card.Body>
                 <Stack direction="row" justifyContent="space-between" pb={4}>
                     <Flex gap={4}>
@@ -41,22 +68,41 @@ export const QuizCard = (props: QuizCardProps) => {
                 <Box>
 
                     <Stack gap={4}>
-                        <Text>{question.question}</Text>
-                        <Text>{question.answer}</Text>
+                        <EditableTextField initialText={quizQuestion} onSave={(text) => updateQuestion(text)} />
+                        {
+                            question.type !== "multiple_choice" ? <EditableTextField initialText={answer} onSave={(text) => updateAnswer(text)} /> : null
+                        }
+
                     </Stack>
                 </Box>
+                {
+                    question.type === "multiple_choice" ?
+                        <Box>
+                            <DragDropContext onDragEnd={onDragEnd}>
+                                <Droppable droppableId="answers">
+                                    {(provided, snapshot) => (
+                                        <ul
+                                            {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            className={`space-y-4 transition-colors ${snapshot.isDraggingOver ? 'bg-gray-50 rounded-md p-4' : ''
+                                                }`}
+                                        >
+                                            {options && options.map((option) => { return <DraggableAnswer key={option.id} answer={option} index={option.order} updateAnswer={updateOption} removeAnswer={removeOption} toggleCorrectAnswer={toggleCorrectOption} isCorrect={answer === option.value} /> })}
 
+                                            {provided.placeholder}
+                                        </ul>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
 
-                {sortedQuestionOptions && sortedQuestionOptions.map((option) => { return <Text key={`quiz-question-option-${option.id}`}>{option.value}</Text> })}
+                            <Button size="sm" onClick={addOption}>Add Option</Button>
+                        </Box>
+                        : null
+                }
+
 
 
             </Card.Body>
-            <Card.Footer>
-
-                <Button>Edit</Button>
-                <Button variant="outline">Delete</Button>
-
-            </Card.Footer>
 
         </Card.Root>
     )

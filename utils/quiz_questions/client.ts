@@ -1,6 +1,5 @@
 import { QuizQuestion } from "@/types/resourceTypes";
 
-
 export const sendQuizQuestionUpdate = (quizQuestion: QuizQuestion) => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(quizQuestion));
