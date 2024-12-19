@@ -5,6 +5,7 @@ import { Resource } from "@/types/resourceTypes";
 import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 import { convertObjectArrayToHashMap } from "../global";
 import { QuizFormat, QuizQuestion } from "../quiz/server";
+import { StatusObject } from "@/types/globalTypes";
 
 
 export const getAllResources = async () => {
@@ -29,8 +30,8 @@ export const getAllResources = async () => {
     return (JSON.stringify({}));
 }
 
-export const getSpecificResources = async (resourceIdList: string[]): Promise<Resource[]> => {
-    return new Promise<Resource[]>(async (resolve, reject) => {
+export const getSpecificResources = async (resourceIdList: string[]): Promise<StatusObject<Resource[]>> => {
+    return new Promise<StatusObject<Resource[]>>(async (resolve, reject) => {
 
         const supabaseConnection = createClient();
         const { data: userData } = await supabaseConnection?.auth.getUser();
@@ -48,30 +49,34 @@ export const getSpecificResources = async (resourceIdList: string[]): Promise<Re
             const { data, error } = await supabaseConnection
                 .from('resources')
                 .select(`*, 
-                quiz_questions:quiz_questions!resource_id(*,quiz_question_options(*))`).in('id', resourceIdList);
-            if (data) resolve(data);
-            if (error) reject(error);
+                quiz_questions:quiz_questions!resource_id(*,quiz_question_options(*))`).in('id', resourceIdList).returns<Resource[]>();
+            if (data) resolve({status:"success", value:data});
+            if (error) reject({status:"error", message:error.message});
 
         }
         else {
-            reject("Authentication Error");
+            reject({status:"error", message:"Authentication Error"});
         }
     });
 }
 
-
+//TODO: Convert to StatusObject
 export const getCombinedContentFromSpecificResources = async (resourceIdList: string[]) => {
-    return new Promise<string>(async (resolve) => {
-        const data = await getSpecificResources(resourceIdList);
+    return new Promise<string>(async (resolve, reject) => {
+        const {status, value} = await getSpecificResources(resourceIdList);
+        if (status === "error")
+        {
+            reject ("");
+        }
         //TODO: Quizzes store their data separately, need to amalgamate the sources.
-        const mappedValues = data?.map((resource) => { return resource.value });
-        const content = mappedValues?.join(" ");
+        const mappedValues = value?.map((resource) => { return resource.value });
+        const content = mappedValues?.join(" ") || "";
 
         resolve(content);
     });
 }
 
-export const postNewResource = async (supabaseInstance: SupabaseClient, resource: Resource) => {
+export const postNewResource = async (supabaseInstance: SupabaseClient, resource: Resource):Promise<StatusObject<Resource[]>> => {
     //TODO:Handle errors here
     const { data: userData, error: userError } = await supabaseInstance.auth.getUser();
     if (!userError) {
@@ -83,9 +88,9 @@ export const postNewResource = async (supabaseInstance: SupabaseClient, resource
             //TODO: handle errors here
             await supabaseInstance?.from(TABLE_USER_RESOURCES).insert({ user_id: userData.user?.id, resource_id: resourceData[0]?.id }).select();
         }
-        return resourceData;
+        return {status:"success", value:resourceData};
     }
-    return JSON.stringify({ error: "User not logged in" });
+    return { status:"error", message:"User not logged in" };
 }
 
 export const putExistingResource = async (supabaseInstance: SupabaseClient, resource: Resource) => {
@@ -102,7 +107,7 @@ export const archiveExistingResource = async (supabaseInstance: SupabaseClient, 
 }
 
 
-export const saveQuizToDatabase = async (quizData: QuizFormat) => {
+export const saveQuizToDatabase = async (quizData: QuizFormat):Promise<Resource[]> => {
     return new Promise<Resource[]>(async (resolve, reject) => {
         const supabaseConnection = createClient();
         const { data: userData } = await supabaseConnection?.auth.getUser();
@@ -135,7 +140,7 @@ export const saveQuizToDatabase = async (quizData: QuizFormat) => {
                 console.log(multipleChoiceQuestionsSave);
 
                 //return the new resource object
-                resolve({ ...postedResource[0], id: id });
+                resolve([{ ...postedResource[0], id: id } as Resource]);
 
             }
             else {

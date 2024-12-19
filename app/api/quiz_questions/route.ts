@@ -13,15 +13,15 @@ export async function POST(request: Request) {
         if (resourceData) {
             const data = await postNewQuizQuestion(supabaseConnection, JSON.parse(resourceData));
             //console.log(data);
-            return new Response(JSON.stringify(data));
+            return Response.json({ status: "success", data }, { status: 200, statusText: "Success" });
         }
     }
     else {
         //TODO: redirect to /login
-        return new Response("Invalid login", { status: 500 });
+        return Response.json({ status: "error", data: "Invalid login" }, { status: 401, statusText: "Unauthorized" });
     }
 
-    return new Response("No resource data included in POST", { status: 500 });
+    return Response.json({ status: "error", data: "No resource data included in POST" }, { status: 500, statusText: "Server Error"});
 }
 
 export async function PUT(request: Request) {
@@ -35,13 +35,13 @@ export async function PUT(request: Request) {
         if (resourceData) {
             const data = await putExistingQuizQuestion(supabaseConnection, JSON.parse(resourceData));
             //console.log(data);
-            return new Response(JSON.stringify(data));
+            return Response.json({ status: "success", data }, { status: 200, statusText: "Success" });
         }
     }
     else {
         //TODO: redirect to /login
-        return new Response("Invalid login", { status: 500 });
+        return Response.json({ status: "error", data: "Invalid login" }, { status: 401, statusText: "Unauthorized" });
     }
 
-    return new Response("No resource data included in POST", { status: 500 });
+    return Response.json({ status: "error", data: "No resource data included in POST" }, { status: 500, statusText: "Server Error" });
 }

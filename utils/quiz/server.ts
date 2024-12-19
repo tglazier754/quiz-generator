@@ -25,6 +25,7 @@ export type QuizQuestion = {
 }
 
 export const generateQuiz = (parameters: ResourceGenerationParams, inputContent: string): Promise<StatusObject<QuizFormat>> => {
+    //TODO: make this customizable
     const model = new ChatOpenAI({
         model: "gpt-4o-mini",
         temperature: 0
