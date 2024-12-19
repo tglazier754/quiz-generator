@@ -6,10 +6,11 @@ import { BsClock } from "react-icons/bs";
 import { IHash } from "@/types/globalTypes";
 import { EditableTextField } from "./EditableTextField";
 import { useQuizQuestion } from "./useQuizQuestion";
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import { DraggableAnswer } from "./DraggableAnswer";
 import { BiX } from "react-icons/bi";
 import { Button } from "../ui/button";
+import { StrictModeDroppable } from "./StrictModeDroppable";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -35,6 +36,9 @@ export const QuizCard = (props: QuizCardProps) => {
 
         const sourceIndex = result.source.index;
         const destinationIndex = result.destination.index;
+
+        console.log(sourceIndex);
+        console.log(destinationIndex);
 
         if (sourceIndex !== destinationIndex) {
             reorderOptions(sourceIndex, destinationIndex);
@@ -79,7 +83,7 @@ export const QuizCard = (props: QuizCardProps) => {
                     question.type === "multiple_choice" ?
                         <Box>
                             <DragDropContext onDragEnd={onDragEnd}>
-                                <Droppable droppableId="answers">
+                                <StrictModeDroppable droppableId="answers">
                                     {(provided, snapshot) => (
                                         <ul
                                             {...provided.droppableProps}
@@ -87,12 +91,12 @@ export const QuizCard = (props: QuizCardProps) => {
                                             className={`space-y-4 transition-colors ${snapshot.isDraggingOver ? 'bg-gray-50 rounded-md p-4' : ''
                                                 }`}
                                         >
-                                            {options && options.map((option) => { return <DraggableAnswer key={option.id} answer={option} index={option.order} updateAnswer={updateOption} removeAnswer={removeOption} toggleCorrectAnswer={toggleCorrectOption} isCorrect={answer === option.value} /> })}
+                                            {options && options.map((option, index) => { return <DraggableAnswer key={option.id} answer={option} index={index} updateAnswer={updateOption} removeAnswer={removeOption} toggleCorrectAnswer={toggleCorrectOption} isCorrect={answer === option.value} /> })}
 
                                             {provided.placeholder}
                                         </ul>
                                     )}
-                                </Droppable>
+                                </StrictModeDroppable>
                             </DragDropContext>
 
                             <Button size="sm" onClick={addOption}>Add Option</Button>
@@ -100,11 +104,11 @@ export const QuizCard = (props: QuizCardProps) => {
                         : null
                 }
 
-
+                <Box><Button size="sm" mt={4} onClick={() => console.log(options)}>Submit Changes</Button></Box>
 
             </Card.Body>
 
-        </Card.Root>
+        </Card.Root >
     )
 }
 

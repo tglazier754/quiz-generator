@@ -5,7 +5,10 @@ import { useState } from 'react'
 export function useQuizQuestion(initialQuestion: QuizQuestion) {
   const [question, setQuestion] = useState(initialQuestion.question)
   const [answer, setAnswer] = useState(initialQuestion.answer);
-  const [options, setOptions] = useState(initialQuestion.quiz_question_options || []);
+
+  const sortedOptions =  initialQuestion.quiz_question_options && initialQuestion.quiz_question_options.sort((a, b) => { return a.order - b.order });
+
+  const [options, setOptions] = useState(sortedOptions || []);
 
   const updateQuestion = (newQuestion: string) => {
     setQuestion(newQuestion)
@@ -24,7 +27,7 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
   const addOption = () => {
     const date = Date.now().toString();
     const newOption: QuizQuestionOption = {
-      id: "temp" + date,
+      id: "temp-" + date,
       created_at: date,
       value: 'New answer',
       order: options && options.length || 1,
@@ -43,8 +46,12 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
   }
 
   const reorderOptions = (startIndex:number, endIndex:number) => {
-    console.log (startIndex);
-    console.log (endIndex);
+    setOptions(prevOptions => {
+      const result = Array.from(prevOptions);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result.map ((option, index) => {return {...option, order:index}});
+    });
   }
 
   return {
