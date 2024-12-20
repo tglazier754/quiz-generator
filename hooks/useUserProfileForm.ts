@@ -16,7 +16,7 @@ type useUserProfileReturnType = {
 }
 
 //TODO: Rename this
-export function useUserProfileForm<useUserProfileReturnType>(firstNameRef: RefObject<HTMLInputElement>, lastNameRef: RefObject<HTMLInputElement>, roleRef: RefObject<HTMLInputElement>, subjectRef: RefObject<HTMLInputElement>) {
+export function useUserProfileForm(firstNameRef: RefObject<HTMLInputElement>, lastNameRef: RefObject<HTMLInputElement>, roleRef: RefObject<HTMLInputElement>, subjectRef: RefObject<HTMLInputElement>): useUserProfileReturnType {
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -34,7 +34,7 @@ export function useUserProfileForm<useUserProfileReturnType>(firstNameRef: RefOb
         const supabase = createClient();
         const { data, error } = await supabase.auth.getUser();
         const { user } = data;
-        if (user && user.id) {
+        if (user && user.id && !error) {
 
             console.log({ id: user.id, first_name: firstName, last_name: lastName, title: role, subject });
             const { data, error } = await supabase.from(TABLE_USERS).insert({ id: user.id, first_name: firstName, last_name: lastName, title: role, complete: true }).select();

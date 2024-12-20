@@ -7,7 +7,7 @@ export async function GET() {
     //const { searchParams } = new URL(reqUrl);
 
     const data = await getAllResources();
-    return new Response(data);
+    return Response.json({status:"sucess", value:data}, {status:200, statusText:"OK"});
 
 }
 
@@ -22,15 +22,15 @@ export async function POST(request: Request) {
         if (resourceData) {
             const data = await postNewResource(supabaseConnection, JSON.parse(resourceData));
             //console.log(data);
-            return new Response(JSON.stringify(data));
+            return Response.json({status:"success", value:data}, {status:200, statusText:"OK"});
         }
     }
     else {
         //TODO: redirect to /login
-        return new Response("Invalid login", { status: 500 });
+        return Response.json({status:"erro", message:"Invalid login"}, { status: 401, statusText:"Unauthorized" });
     }
 
-    return new Response("No resource data included in POST", { status: 500 });
+    return Response.json({status:"error", message:"No resource data included in POST"}, { status: 500, statusText:"Server Error" });
 }
 
 export async function PUT(request: Request) {
@@ -45,14 +45,14 @@ export async function PUT(request: Request) {
         if (resourceData) {
             const data = await putExistingResource(supabaseConnection, JSON.parse(resourceData));
             //console.log(data);
-            return new Response(JSON.stringify(data));
+            return Response.json({status:"success", value:data}, {status:200, statusText:"OK"});
         }
     }
 
     else {
         //TODO: redirect to /login
-        return new Response("Invalid login", { status: 500 });
+        return Response.json({status:"error", message:"Invalid login"}, { status: 401, statusText:"Unauthenticated" });
     }
 
-    return new Response("No resource data included in POST", { status: 500 });
+    return Response.json({status:"error", message:"No resource data included in POST"}, { status: 500, statusText:"Server Error" });
 }

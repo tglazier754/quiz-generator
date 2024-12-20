@@ -11,6 +11,7 @@ import { DraggableAnswer } from "./DraggableAnswer";
 import { BiX } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { StrictModeDroppable } from "./StrictModeDroppable";
+import { useQuizQuestionUpdate } from "./useQuizQuestionUpdate";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -28,6 +29,7 @@ export const QuizCard = (props: QuizCardProps) => {
     const { question } = props;
 
     const { question: quizQuestion, answer, options, updateQuestion, updateAnswer, updateOption, reorderOptions, addOption, removeOption, toggleCorrectOption } = useQuizQuestion(question);
+    const { uploadStatus, updateQuizQuestion } = useQuizQuestionUpdate();
 
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) {
@@ -43,6 +45,10 @@ export const QuizCard = (props: QuizCardProps) => {
         if (sourceIndex !== destinationIndex) {
             reorderOptions(sourceIndex, destinationIndex);
         }
+    }
+
+    const submitQuizQuestionChanges = () => {
+        updateQuizQuestion({ ...question, question: quizQuestion, answer, quiz_question_options: options });
     }
 
 
@@ -104,7 +110,7 @@ export const QuizCard = (props: QuizCardProps) => {
                         : null
                 }
 
-                <Box><Button size="sm" mt={4} onClick={() => console.log(options)}>Submit Changes</Button></Box>
+                <Box><Button size="sm" mt={4} disabled={uploadStatus.status === "pending"} onClick={submitQuizQuestionChanges}>Submit Changes</Button></Box>
 
             </Card.Body>
 

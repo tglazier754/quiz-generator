@@ -13,7 +13,8 @@ export async function POST(request: Request) {
         if (resourceData) {
             const data = await postNewQuizQuestion(supabaseConnection, JSON.parse(resourceData));
             //console.log(data);
-            return Response.json({ status: "success", data }, { status: 200, statusText: "Success" });
+            if (data.status === "error") return Response.json (data, {status:500, statusText:"Server Error"});
+            return Response.json(data, { status: 200, statusText: "Success" });
         }
     }
     else {
@@ -35,7 +36,8 @@ export async function PUT(request: Request) {
         if (resourceData) {
             const data = await putExistingQuizQuestion(supabaseConnection, JSON.parse(resourceData));
             //console.log(data);
-            return Response.json({ status: "success", data }, { status: 200, statusText: "Success" });
+            if (data.status === "error") return Response.json (data, {status:500, statusText:"Server Error"});
+            return Response.json(data, { status: 200, statusText: "Success" });
         }
     }
     else {

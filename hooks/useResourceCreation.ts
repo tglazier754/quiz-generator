@@ -5,15 +5,14 @@ import { generateResource, ResourceGenerationParams } from "@/utils/resources/cl
 
 type ResourceCreation = {
     createResource: (params: ResourceGenerationParams, inputIdList: string[]) => Promise<Resource>;
-    resourceGenerationStatus: StatusObject<Resource>;
+    uploadStatus: StatusObject<Resource>;
 }
 
-export const useResourceCreation = () => {
-    const { uploadStatus, setUploadStatus } = useActionStatus();
+export const useResourceCreation = ():ResourceCreation => {
+    const { uploadStatus, setUploadStatus } = useActionStatus<Resource>();
 
     const createResource = async (params: ResourceGenerationParams, inputIdList: string[]) => {
         setUploadStatus({ status: "pending" });
-        console.log(params);
         const generatedResource = await generateResource(params, inputIdList);
         if (generatedResource.status === "success") {
 
