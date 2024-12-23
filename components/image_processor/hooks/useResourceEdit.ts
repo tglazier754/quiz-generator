@@ -1,7 +1,7 @@
 import { ResourceEditorContext } from "@/context/resource_editor/provider";
 import { QuizQuestion, Resource } from "@/types/resourceTypes";
 import { useContext } from "react";
-import { sendQuizQuestionUpdate } from "@/utils/quiz_questions/client";
+import { createOrUpdateQuizQuestion } from "@/utils/quiz_questions/client";
 
 type useResourceEdit = {
     submitResource: (resource: Resource) => Promise<Resource>;
@@ -39,7 +39,7 @@ export const useResourceEdit = (initialResource?: Resource | null): useResourceE
     //TODO: move this over to the client file
     const updateQuizQuestions = async () => {
         const questionUpdatePromises = Object.values(quizQuestionChanges).map((question: QuizQuestion) => {
-            return sendQuizQuestionUpdate(question);
+            return createOrUpdateQuizQuestion(question);
         })
 
         const questionUpdateResult = await Promise.all(questionUpdatePromises);

@@ -30,3 +30,16 @@ export const putExistingQuizQuestion = async (supabaseInstance: SupabaseClient, 
     }
     return { status: "error", message: "Unauthenticated" };
 }
+
+export const deleteExistingQuizQuestion = async (supabaseInstance: SupabaseClient, quizQuestion:{id:string}): Promise<StatusObject<string>> => {
+    const { error: userError } = await supabaseInstance.auth.getUser();
+    if (!userError) {
+        console.log(quizQuestion);
+        const { data: resourceData, error:resourceError } = await supabaseInstance?.from(TABLE_QUIZ_QUESTIONS).delete().eq('id', quizQuestion.id);
+        console.log(resourceData);
+        console.log(resourceError);
+        if (resourceError) return {status:"error", message:resourceError.message};
+        return { status: "success", value: quizQuestion.id };
+    }
+    return { status: "error", message: "Unauthenticated" };
+}

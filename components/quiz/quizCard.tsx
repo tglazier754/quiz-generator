@@ -1,6 +1,6 @@
 "use client";
 
-import { QuizQuestion } from "@/types/resourceTypes";
+import { QuizQuestion, QuizQuestionOption } from "@/types/resourceTypes";
 import { Box, Card, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
 import { BsClock } from "react-icons/bs";
 import { IHash } from "@/types/globalTypes";
@@ -12,10 +12,11 @@ import { BiX } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 import { useQuizQuestionUpdate } from "./useQuizQuestionUpdate";
+import { useEffect } from "react";
+import { useQuizQuestionOptionUpdate } from "./useQuizQuestionOptionUpdate";
 
 type QuizCardProps = {
     question: QuizQuestion;
-    changeHandler: (updatedQuestion: QuizQuestion) => void;
 }
 
 const questionTypeLabels: IHash<string> = {
@@ -28,8 +29,9 @@ const questionTypeLabels: IHash<string> = {
 export const QuizCard = (props: QuizCardProps) => {
     const { question } = props;
 
-    const { question: quizQuestion, answer, options, updateQuestion, updateAnswer, updateOption, reorderOptions, addOption, removeOption, toggleCorrectOption } = useQuizQuestion(question);
-    const { uploadStatus, updateQuizQuestion } = useQuizQuestionUpdate();
+    const { question: quizQuestion, answer, options, resetValues, updateQuestion, updateAnswer, updateOption, reorderOptions, addOption, removeOption, toggleCorrectOption } = useQuizQuestion(question);
+    const { uploadStatus, resetUploadStatus, updateQuizQuestion } = useQuizQuestionUpdate();
+    const { uploadStatus: optionUploadStatus, resetUploadStatus: resetOptionUploadStatus, removeQuizQuestionOption, uploadQuizQuestionOption } = useQuizQuestionOptionUpdate();
 
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) {
@@ -50,6 +52,53 @@ export const QuizCard = (props: QuizCardProps) => {
     const submitQuizQuestionChanges = () => {
         updateQuizQuestion({ ...question, question: quizQuestion, answer, quiz_question_options: options });
     }
+
+    const createNewQuizQuestionOption = () => {
+        const date = new Date().toISOString();
+        const newOption: QuizQuestionOption = {
+            created_at: date,
+            value: 'New answer',
+            order: options && options.length || 1,
+            quiz_question_id: question.id!,
+            is_correct: false,
+        }
+        uploadQuizQuestionOption(question.id!, newOption);
+    }
+
+    useEffect(() => {
+        if (uploadStatus.status !== "pending" && uploadStatus.status !== "uninitialized") {
+            if (uploadStatus.status === "success") {
+
+                resetValues(uploadStatus.value);
+                resetUploadStatus();
+            }
+        }
+    }, [uploadStatus, resetValues, resetUploadStatus]);
+
+    const handleRemoveQuizQuestionOption = (optionID: string) => {
+
+        //attempt to remove it from the server
+        //if successful, remove it from the list
+        removeQuizQuestionOption(optionID);
+        //removeOption(optionID);
+    }
+
+    useEffect(() => {
+        if (optionUploadStatus.status !== "pending" && optionUploadStatus.status !== "uninitialized") {
+            if (optionUploadStatus.status === "success") {
+                console.log(optionUploadStatus);
+                if (optionUploadStatus.value && Array.isArray(optionUploadStatus.value) && optionUploadStatus.value[0].quiz_question_id) {
+                    //this is a quiz question
+
+                    addOption(optionUploadStatus.value[0]);
+                }
+                else {
+                    removeOption(optionUploadStatus.value);
+                }
+                resetOptionUploadStatus();
+            }
+        }
+    }, [optionUploadStatus, removeOption, resetOptionUploadStatus])
 
 
     //question an answer are separate
@@ -97,7 +146,7 @@ export const QuizCard = (props: QuizCardProps) => {
                                             className={`space-y-4 transition-colors ${snapshot.isDraggingOver ? 'bg-gray-50 rounded-md p-4' : ''
                                                 }`}
                                         >
-                                            {options && options.map((option, index) => { return <DraggableAnswer key={option.id} answer={option} index={index} updateAnswer={updateOption} removeAnswer={removeOption} toggleCorrectAnswer={toggleCorrectOption} isCorrect={answer === option.value} /> })}
+                                            {options && options.map((option, index) => { return <DraggableAnswer key={option.id} answer={option} index={index} updateAnswer={updateOption} removeAnswer={handleRemoveQuizQuestionOption} toggleCorrectAnswer={toggleCorrectOption} isCorrect={answer === option.value} /> })}
 
                                             {provided.placeholder}
                                         </ul>
@@ -105,12 +154,12 @@ export const QuizCard = (props: QuizCardProps) => {
                                 </StrictModeDroppable>
                             </DragDropContext>
 
-                            <Button size="sm" onClick={addOption}>Add Option</Button>
+                            <Button size="sm" onClick={createNewQuizQuestionOption}>Add Option</Button>
                         </Box>
                         : null
                 }
 
-                <Box><Button size="sm" mt={4} disabled={uploadStatus.status === "pending"} onClick={submitQuizQuestionChanges}>Submit Changes</Button></Box>
+                <Box><Button size="sm" mt={4} disabled={uploadStatus.status === "pending" || optionUploadStatus.status === "pending"} onClick={submitQuizQuestionChanges}>Submit Changes</Button></Box>
 
             </Card.Body>
 

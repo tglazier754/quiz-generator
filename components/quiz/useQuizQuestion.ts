@@ -10,6 +10,14 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
 
   const [options, setOptions] = useState(sortedOptions || []);
 
+  const resetValues = (resetQuestion: QuizQuestion) => {
+    setQuestion (resetQuestion.question);
+    setAnswer (resetQuestion.answer);
+    console.log (resetQuestion.quiz_question_options);
+    const sortedOptions =  resetQuestion.quiz_question_options && resetQuestion.quiz_question_options.sort((a, b) => { return a.order - b.order });
+    setOptions (sortedOptions || []);
+  }
+
   const updateQuestion = (newQuestion: string) => {
     setQuestion(newQuestion)
   }
@@ -24,15 +32,8 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
     ))
   }
 
-  const addOption = () => {
-    const date = Date.now().toString();
-    const newOption: QuizQuestionOption = {
-      id: "temp-" + date,
-      created_at: date,
-      value: 'New answer',
-      order: options && options.length || 1,
-      quiz_question_id: initialQuestion.id!,
-    }
+  const addOption = (newOption:QuizQuestionOption) => {
+    console.log (newOption);
     setOptions([...options, newOption])
   }
 
@@ -41,8 +42,18 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
   }
 
   const toggleCorrectOption = (id: string) => {
-    const selectedOption = options.find ((option) => {return option.id === id});
-    if (selectedOption) setAnswer(selectedOption.value);
+    setOptions(options.map(option => 
+    {
+      if (option.id === id) {
+        setAnswer(option.value);
+        return { ...option, is_correct: true };
+      }
+      else {
+        return { ...option, is_correct: false };
+      }
+
+    }
+    ))
   }
 
   const reorderOptions = (startIndex:number, endIndex:number) => {
@@ -58,6 +69,7 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
     question,
     answer,
     options,
+    resetValues,
     updateQuestion,
     updateAnswer,
     updateOption,

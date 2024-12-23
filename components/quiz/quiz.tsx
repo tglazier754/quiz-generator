@@ -7,17 +7,12 @@ import { useMemo } from "react";
 
 type QuizProps = {
     questions: QuizQuestion[];
-    questionUpdateHandler: (updatedQuestion: QuizQuestion) => void;
 }
 
 export const Quiz = (props: QuizProps) => {
 
-    const { questions, questionUpdateHandler } = props;
+    const { questions } = props;
 
-
-    const handleChange = (updatedQuestion: QuizQuestion) => {
-        questionUpdateHandler(updatedQuestion);
-    }
 
     const sortedQuestions = useMemo(() => {
         return questions.sort((a, b) => { return a.order - b.order });
@@ -32,7 +27,7 @@ export const Quiz = (props: QuizProps) => {
             overflowY="scroll"
         >
             {sortedQuestions.map((question: QuizQuestion, index) =>
-                <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} changeHandler={handleChange} />
+                <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} />
             )}
         </Flex>
     )

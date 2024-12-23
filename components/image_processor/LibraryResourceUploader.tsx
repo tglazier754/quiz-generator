@@ -171,7 +171,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                 {processingStatusValue === "error" && <Text>{processingErrorMessage}</Text>}
 
                 {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || watchResourceTypeSelection === RESOURCE_TYPE_QUIZ ?
-                    <Quiz questions={activeResource?.quiz_questions || []} questionUpdateHandler={updateQuizQuestion} /> :
+                    <Quiz questions={activeResource?.quiz_questions || []} /> :
                     <Field label="Resource value" p={4}>
                         <Textarea rows={12} defaultValue={defaultValue} {...register("value")} disabled={processingStatusValue === "pending"} /></Field>
                 }

@@ -13,10 +13,11 @@ export type QuizQuestion = {
 }
 export type QuizQuestionOption = {
     created_at: string;
-    id: string;
+    id?: string;
     order: number;
     quiz_question_id: string;
     value: string;
+    is_correct: boolean;
 }
 
 export type Resource = {

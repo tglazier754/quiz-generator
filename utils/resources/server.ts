@@ -2,7 +2,7 @@
 import { RESOURCE_TYPE_QUIZ, TABLE_QUIZ_QUESTION_OPTIONS, TABLE_QUIZ_QUESTIONS, TABLE_RESOURCES, TABLE_USER_RESOURCES } from "@/types/constants";
 import { createClient } from "../supabase/server";
 import { Resource } from "@/types/resourceTypes";
-import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { convertObjectArrayToHashMap } from "../global";
 import { QuizFormat, QuizQuestion } from "../quiz/server";
 import { StatusObject } from "@/types/globalTypes";
