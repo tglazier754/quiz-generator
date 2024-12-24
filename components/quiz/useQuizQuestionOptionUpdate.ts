@@ -12,6 +12,7 @@ export const useQuizQuestionOptionUpdate = () => {
 
         const deleteQuizQuestionResponse = await deleteQuizQuestionOption (quizQuestionOptionID);
         setUploadStatus(deleteQuizQuestionResponse);
+        return deleteQuizQuestionResponse;
     }
 
     const uploadQuizQuestionOption = async (quizQuestionID:string, quizQuestionOption:QuizQuestionOption) => {
@@ -19,6 +20,7 @@ export const useQuizQuestionOptionUpdate = () => {
 
         const uploadQuizQuestionOptionResponse = await createOrUpdateQuizQuestionOption (quizQuestionID, quizQuestionOption);
         setUploadStatus(uploadQuizQuestionOptionResponse);
+        return uploadQuizQuestionOptionResponse;
     }
 
     const resetUploadStatus = () => {

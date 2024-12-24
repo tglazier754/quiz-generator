@@ -8,7 +8,7 @@ import { createOrUpdateMultipleQuizQuestionOptions } from "@/utils/quiz_question
 export const useQuizQuestionUpdate = () => {
     const [uploadStatus, setUploadStatus] = useState<StatusObject>({ status: "uninitialized", message: null });
 
-    const updateQuizQuestion = async (updatedValues:QuizQuestion) => {
+    const updateQuizQuestion = async (updatedValues:Partial<QuizQuestion>) => {
         setUploadStatus({ status: "pending" });
         //remove the quiz questions, update them separately
         const quizQuestionOptions = updatedValues.quiz_question_options;
@@ -16,6 +16,7 @@ export const useQuizQuestionUpdate = () => {
         const updateQuestionResponse = await createOrUpdateQuizQuestion (updatedValues);
         if (updateQuestionResponse.status === "error"){
             setUploadStatus(updateQuestionResponse);
+            return updateQuestionResponse;
         }
         else {
             if (quizQuestionOptions && Array.isArray(quizQuestionOptions)){
@@ -24,9 +25,11 @@ export const useQuizQuestionUpdate = () => {
                 const updatedOptions = updateQuizQuestionOptions.value && updateQuizQuestionOptions.value.map ((statusObject) => {return statusObject.value[0]});
                 const updatedBody = {...updateQuestionResponse.value[0], quiz_question_options: updatedOptions}
                 setUploadStatus({status:updateQuizQuestionOptions.status, value:updatedBody});
+                return {status:updateQuizQuestionOptions.status, value:updatedBody};
             }
             else {
                 setUploadStatus(updateQuestionResponse);
+                return updateQuestionResponse;
             }
             
         }

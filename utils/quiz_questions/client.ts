@@ -1,6 +1,6 @@
 import { QuizQuestion } from "@/types/resourceTypes";
 
-export const updateQuizQuestion = async (quizQuestion: QuizQuestion) => {
+export const updateQuizQuestion = async (quizQuestion: Partial<QuizQuestion>) => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(quizQuestion));
     const initialFetch = await fetch("/api/quiz_questions", {
@@ -9,7 +9,7 @@ export const updateQuizQuestion = async (quizQuestion: QuizQuestion) => {
     return await initialFetch.json();
 }
 
-export const createNewQuizQuestion = async (quizQuestion: QuizQuestion) => {
+export const createNewQuizQuestion = async (quizQuestion: Partial<QuizQuestion>) => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(quizQuestion));
     const initialFetch = await fetch("/api/quiz_questions", {
@@ -18,7 +18,7 @@ export const createNewQuizQuestion = async (quizQuestion: QuizQuestion) => {
     return await initialFetch.json();
 }
 
-export const createOrUpdateQuizQuestion = async (quizQuestion: QuizQuestion) => {
+export const createOrUpdateQuizQuestion = async (quizQuestion: Partial<QuizQuestion>) => {
     if (quizQuestion.id && quizQuestion.id.includes("temp") || !quizQuestion.id)
     {
         delete quizQuestion.id;
