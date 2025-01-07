@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { Providers } from "../providers";
-import TopMenu, { Navbar } from "@/components/navigation/topMenu";
+import TopMenu from "@/components/navigation/topMenu";
 import { Toaster } from "@/components/ui/toaster";
 import { Box, Flex } from "@chakra-ui/react";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
               position="absolute">
 
               <Box height="4rem" flex="0 auto">
-                <Navbar />
+                <TopMenu />
               </Box>
 
               <Box
