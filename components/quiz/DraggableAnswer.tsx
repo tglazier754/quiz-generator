@@ -23,7 +23,7 @@ export function DraggableAnswer({
     toggleCorrectAnswer
 }: DraggableAnswerProps) {
     return (
-        <Draggable draggableId={answer.id} index={index}>
+        <Draggable draggableId={answer.id!} index={index}>
             {(provided, snapshot) => (
                 <li
                     ref={provided.innerRef}
@@ -40,19 +40,19 @@ export function DraggableAnswer({
                     </div>
                     <IconButton
                         variant="outline"
-                        onClick={() => toggleCorrectAnswer(answer.id)}
+                        onClick={() => toggleCorrectAnswer(answer.id!)}
                         className={isCorrect ? 'bg-green-100' : ''}
                     >
                         <BiCheck className={`h-4 w-4 ${isCorrect ? 'opacity-100' : 'opacity-0'}`} />
                     </IconButton>
                     <EditableTextField
                         initialText={answer.value}
-                        onSave={(text) => updateAnswer(answer.id, text)}
+                        onSave={(text) => updateAnswer(answer.id!, text)}
                         className="flex-grow"
                     />
                     <IconButton
                         variant="outline"
-                        onClick={() => removeAnswer(answer.id)}
+                        onClick={() => removeAnswer(answer.id!)}
                     >
                         <BiTrash className="h-4 w-4" />
                     </IconButton>

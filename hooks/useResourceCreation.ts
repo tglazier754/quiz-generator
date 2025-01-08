@@ -4,7 +4,7 @@ import { Resource } from "@/types/resourceTypes";
 import { generateResource, ResourceGenerationParams } from "@/utils/resources/client";
 
 type ResourceCreation = {
-    createResource: (params: ResourceGenerationParams, inputIdList: string[]) => Promise<Resource>;
+    createResource: (params: ResourceGenerationParams, inputIdList: string[]) => Promise<StatusObject<Resource>>;
     uploadStatus: StatusObject<Resource>;
 }
 

@@ -26,7 +26,7 @@ export const ParameterForm = () => {
     const handleCreateResource: SubmitHandler<ResourceGenerationParams> = async (data: ResourceGenerationParams) => {
         console.log(data);
         const generatedResource = await createResource(data, Array.from(inputContent.keys()));
-        if (generatedResource.status === "success") {
+        if (generatedResource.status === "success" && generatedResource.value) {
             console.log(generatedResource);
             router.push(`/resource?id=${generatedResource.value.id}`);
         }
