@@ -33,7 +33,7 @@ export function useQuizQuestion(initialQuestion: QuizQuestion) {
         }
         resetUploadStatus();
     }
-}, [uploadStatus, resetUploadStatus]);
+}, [uploadStatus.status, resetUploadStatus]);
 
 useEffect(() => {
     if (optionUploadStatus.status !== "pending" && optionUploadStatus.status !== "uninitialized") {
@@ -42,7 +42,7 @@ useEffect(() => {
         }
         resetOptionUploadStatus();
     }
-}, [optionUploadStatus, resetOptionUploadStatus])
+}, [optionUploadStatus.status, resetOptionUploadStatus])
 
   const updateQuestion = async (newQuestion: string) => {
     const sendUpdatedQuestion = await updateQuizQuestion({id:initialQuestion.id, question:newQuestion });

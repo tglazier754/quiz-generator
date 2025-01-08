@@ -3,17 +3,10 @@
 import { createClient } from "@/utils/supabase/client";
 import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from "../ui/menu";
 import { useRouter } from "next/navigation";
-import { User } from "@supabase/supabase-js";
 import { Button } from "../ui/button";
 import { BiUser } from "react-icons/bi";
 
-type UserMenuProps = {
-    user: User;
-}
-
-export const UserMenu = (props: UserMenuProps) => {
-
-    const { user } = props;
+export const UserMenu = () => {
     const supabaseConnection = createClient();
     const router = useRouter();
 

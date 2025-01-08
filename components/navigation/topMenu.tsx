@@ -19,9 +19,8 @@ const navItems = [
 
 export async function TopMenu() {
     const supabase = createClient();
-    const { data, error } = await supabase.auth.getUser();
+    const { error } = await supabase.auth.getUser();
     if (error) return redirect("/login");
-    const { user } = data;
 
     return (
         <nav className="bg-background border-b">
@@ -46,7 +45,7 @@ export async function TopMenu() {
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <UserMenu user={user} />
+                        <UserMenu />
                     </div>
                     <div className="md:hidden">
                         <DrawerRoot placement="end">
@@ -68,7 +67,7 @@ export async function TopMenu() {
                                             {item.name}
                                         </Link>
                                     ))}
-                                    <UserMenu user={user} />
+                                    <UserMenu />
                                 </div>
                             </DrawerContent>
                         </DrawerRoot>

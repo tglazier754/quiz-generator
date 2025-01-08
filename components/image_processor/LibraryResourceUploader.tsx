@@ -3,16 +3,14 @@
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
 import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
 import { HiUpload } from "react-icons/hi";
 import Quiz from "../quiz/quiz";
 import ResourceCardImage from "../library/resource_card/resourceCardImage";
-import { useResourceEdit } from "./hooks/useResourceEdit";
 import { useImageUpload } from "./hooks/useImageUpload";
 import { useActionStatus } from "./hooks/useActionStatus";
-import { useInputController } from "./hooks/useInputController";
 import { convertImageToDataUrl } from "@/utils/images/client";
 import { useWebsiteUpload } from "./hooks/useWebsiteUpload";
 import { Field } from "../ui/field";
@@ -28,14 +26,13 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
     const { activeResource, formName, updateResourceValue } = props;
 
-    const { control, register, unregister, handleSubmit, watch, setValue } = useForm<Resource>({ shouldUnregister: true, });
+    const { control, register, handleSubmit, watch, setValue } = useForm<Resource>({ shouldUnregister: true, });
     const defaultName = activeResource && activeResource.name || "";
     const defaultDescription = activeResource && activeResource.description || "";
     const defaultValue = activeResource && activeResource.value || "";
     const defaultType = activeResource && activeResource.type || RESOURCE_TYPE_TEXT;
     const watchResourceTypeSelection = watch("type");
 
-    const { updateQuizQuestion } = useResourceEdit(activeResource);
     const { uploadStatus, processingStatus } = useActionStatus<string>();
     const { status: uploadStatusValue, message: uploadErrorMessage } = uploadStatus;
     const { status: processingStatusValue, message: processingErrorMessage, value: processingValueMessage } = processingStatus;
@@ -117,7 +114,7 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
                                     message: "Select a Content Type",
                                 }
                             }}
-                            render={({ field: { ref, ...restField } }) => (
+                            render={({ field: { ...restField } }) => (
                                 <SelectRoot
                                     variant="outline"
                                     collection={USER_GENERATED_TYPES_LIST_DATA}

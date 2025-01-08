@@ -1,6 +1,6 @@
 "use client";
 import { ContentCreationContext } from "@/context/create/provider";
-import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import ResourceList from "../library/resourceList";
 import { useSelectResources } from "@/hooks/useSelectResources";
