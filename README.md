@@ -8,6 +8,8 @@ This project is a POC demonstration, written in React/TypeScript/Next of some te
 -Tesseract
 -HTML-to-Text
 
+User logins are only in testing stage. A new user must be added by me to the whitelist
+
 ## Capabilities + How to Use
 The app revolves around the concept of resources. In order to generate a quiz, you must specify a resource to include.
 A resource can be generated from a url, from copied/typed text or extracted from an image using the tesseract library.
@@ -19,6 +21,7 @@ Once at least one usable resource exists, you can generate a quiz or a lesson pl
 -unauthenticated user checks are buggy/missing
 -UI updates
 -Tighten up code
+-Move user auth to prod - can only authenticate whitelisted users for now
 
 ## Database Structure
 
