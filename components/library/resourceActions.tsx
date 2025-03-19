@@ -3,19 +3,17 @@
 import { ResourcesContext } from "@/context/library/provider";
 import { MACHINE_GENERATED_TYPES } from "@/types/constants";
 import { archiveMultipleResources, generateResource, ResourceType } from "@/utils/resources/client";
-import { Box, Button, createListCollection, Flex, } from "@chakra-ui/react";
+import { Badge, Box, Button, createListCollection, } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaWandMagicSparkles } from "react-icons/fa6";
-import { TbTrash } from "react-icons/tb";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
 import { toaster } from "../ui/toaster";
-import { BiPlus } from "react-icons/bi";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
+import { Trash, X } from "lucide-react";
 
 export const ResourceActionsPanel = () => {
-    const { selectedResources, isGenerating, setIsGenerating } = useContext(ResourcesContext);
+    const { selectedResources, clearSelectedResources, isGenerating, setIsGenerating } = useContext(ResourcesContext);
     const [selectedResourceType, setSelectedResourceType] = useState<string[]>([]);
 
     const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false);
@@ -68,66 +66,65 @@ export const ResourceActionsPanel = () => {
 
     return (
         <Box>
-            <Flex direction="row" gap="1rem" align="center" justify="flex-end">
-                <Box>
-                    <Button disabled={isGenerating || !Object.keys(selectedResources).length} colorPalette="red" variant="ghost" onClick={deleteResourcesHandler}>
-                        <TbTrash />
-                    </Button>
-                </Box>
-                <Box>
+            {selectedResources.size > 0 && (
+                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-white border rounded-lg shadow-xl px-4 py-3 flex items-center gap-4 w-[90%] max-w-xl">
+                    <div className="flex items-center gap-2">
+                        <Badge variant="solid" className="h-7 px-2">
+                            {selectedResources.size} selected
+                        </Badge>
+                        <Button variant="ghost" size="sm" onClick={clearSelectedResources} className="h-7 px-2">
+                            <X className="h-4 w-4 mr-1" />
+                            Clear
+                        </Button>
+                    </div>
+                    <div className="ml-auto flex items-center gap-2">
+                        <DrawerRoot lazyMount size="md" open={isGenerateDialogOpen} unmountOnExit onOpenChange={(e) => setIsGenerateDialogOpen(e.open)} key="full-drawer" closeOnInteractOutside={false}>
+                            <DrawerBackdrop />
+                            <DrawerTrigger asChild>
+                                <Button disabled={isGenerating || !selectedResources.size} variant="outline">
+                                    <FaWandMagicSparkles />
+                                </Button>
+                            </DrawerTrigger>
 
+                            <DrawerContent>
+                                <DrawerHeader>
+                                    <DrawerTitle>Generate Content</DrawerTitle>
+                                </DrawerHeader>
+                                <DrawerBody>
 
-                    <DrawerRoot lazyMount size="full" open={isGenerateDialogOpen} unmountOnExit onOpenChange={(e) => setIsGenerateDialogOpen(e.open)} key="full-drawer" closeOnInteractOutside={false}>
-                        <DrawerBackdrop />
-                        <DrawerTrigger asChild>
-                            <Button disabled={isGenerating || !Object.keys(selectedResources).length} variant="outline">
-                                <FaWandMagicSparkles />
-                            </Button>
-                        </DrawerTrigger>
+                                    <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
+                                        <SelectLabel>Resource type</SelectLabel>
+                                        <SelectTrigger>
+                                            <SelectValueText placeholder="Select Content Type" />
+                                        </SelectTrigger>
+                                        <SelectContent zIndex={100000} >
+                                            {MACHINE_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
+                                                <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value} >
+                                                    {resource_type.label}
+                                                </SelectItem>
+                                            )
+                                            )}
+                                        </SelectContent>
+                                    </SelectRoot>
 
-                        <DrawerContent>
-                            <DrawerHeader>
-                                <DrawerTitle>Generate Content</DrawerTitle>
-                            </DrawerHeader>
-                            <DrawerBody>
+                                </DrawerBody>
+                                <DrawerFooter>
+                                    <Button variant="ghost" disabled={isGenerating} onClick={() => setIsGenerateDialogOpen(false)}>Cancel</Button>
+                                    <Button variant="surface" disabled={isGenerating || !selectedResourceType.length} onClick={generateResourceHandler}>Generate</Button>
+                                </DrawerFooter>
 
-                                <SelectRoot collection={MACHINE_GENERATED_TYPES_LIST_DATA} onValueChange={(e) => setSelectedResourceType(e.value)} value={selectedResourceType}>
-                                    <SelectLabel>Resource type</SelectLabel>
-                                    <SelectTrigger>
-                                        <SelectValueText placeholder="Select Content Type" />
-                                    </SelectTrigger>
-                                    <SelectContent zIndex={100000} >
-                                        {MACHINE_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
-                                            <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value} >
-                                                {resource_type.label}
-                                            </SelectItem>
-                                        )
-                                        )}
-                                    </SelectContent>
-                                </SelectRoot>
+                                <DrawerCloseTrigger />
+                            </DrawerContent>
 
-                            </DrawerBody>
-                            <DrawerFooter>
-                                <Button variant="ghost" disabled={isGenerating} onClick={() => setIsGenerateDialogOpen(false)}>Cancel</Button>
-                                <Button variant="surface" disabled={isGenerating || !selectedResourceType.length} onClick={generateResourceHandler}>Generate</Button>
-                            </DrawerFooter>
-
-                            <DrawerCloseTrigger />
-                        </DrawerContent>
-
-                    </DrawerRoot>
-                </Box>
-                <Box>
-
-                </Box>
-
-                <Link href={"/resource"}>
-                    <Button disabled={isGenerating} variant="outline">
-                        <BiPlus />
-                    </Button>
-                </Link>
-
-            </Flex >
+                        </DrawerRoot>
+                        <Button variant="subtle" size="sm" className="h-8"
+                            onClick={deleteResourcesHandler}>
+                            <Trash className="h-4 w-4 mr-2" />
+                            Delete
+                        </Button>
+                    </div>
+                </div>
+            )}
         </Box >
     )
 }

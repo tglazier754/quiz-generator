@@ -30,6 +30,11 @@ export type Resource = {
     last_modified?: string;//date
     type?: string;
     quiz_questions?: QuizQuestion[];
+    origin: string,
+    archived: boolean,
+    expected_duration: number,
+    grade_level: string,
+
 };
 
 

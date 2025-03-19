@@ -5,6 +5,7 @@ type UseSelectCards = {
     selectedResources: Map<string, Resource>;
     selectionHandler: (selectedResource: Resource | undefined, state: boolean) => void;
     setAllResources: (resourceMap: Map<string, Resource>) => void;
+    clearSelectedResources: () => void;
 }
 
 export const useSelectResources = (): UseSelectCards => {
@@ -28,10 +29,15 @@ export const useSelectResources = (): UseSelectCards => {
         }
     }
 
+    const clearSelectedResources = () => {
+        actions.reset ();
+    }
+
 
     return {
         selectedResources: map,
         selectionHandler,
-        setAllResources
+        setAllResources,
+        clearSelectedResources
     }
 }
