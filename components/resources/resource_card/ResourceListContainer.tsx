@@ -3,6 +3,10 @@ import { Resource } from "@/types/resourceTypes"
 import ResourceCard from "./ResourceCard";
 import { ResourcesContext } from "@/context/library/provider";
 import { useContext } from "react";
+import { HStack } from "@chakra-ui/react/stack";
+import { Button } from "@chakra-ui/react/button";
+import { Eye, Trash2Icon } from "lucide-react";
+import { ResourceCardSelectDeleteActions } from "./resourceCardSelectDeleteActions";
 
 type ResourceListContainerProps = {
     listData: Map<string, Resource>;
@@ -19,7 +23,9 @@ export const ResourceListContainer = (props: ResourceListContainerProps) => {
                     <ResourceCard
                         resource={value[1]}
                         isSelected={value[1].id && selectedResources && selectedResources.get(value[1].id) ? true : false}
-                        clickAction={selectResource} />
+                        clickAction={selectResource}>
+                        <ResourceCardSelectDeleteActions resourceId={value[0]} />
+                    </ResourceCard>
                 </div>);
         })
         }

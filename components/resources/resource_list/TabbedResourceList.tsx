@@ -1,5 +1,6 @@
 import ResourceListContainer from "@/components/resources/resource_card/ResourceListContainer";
 import { Resource } from "@/types/resourceTypes";
+import { Box } from "@chakra-ui/react/box";
 import { Tabs } from "@chakra-ui/react/tabs";
 
 type TabbedResourceListProps = {
@@ -8,25 +9,13 @@ type TabbedResourceListProps = {
 
 export const TabbedResourceList = (props: TabbedResourceListProps) => {
     const { tabData } = props;
-    /*//should be in context
-    const [selectedItems, setSelectedItems] = useState<string[]>([])
-    // Count of selected items in current tab
-    const selectedCount = selectedItems.filter((id) => currentItems.some((item) => item.id === id)).length
-
-    // Toggle item selection
-    const toggleSelection = (id: string) => {
-        setSelectedItems((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]))
-    }
-
-    // Clear all selections
-    const clearSelections = () => {
-        setSelectedItems([])
-    }*/
 
     return (
         <Tabs.Root
             defaultValue={tabData[0].title}
             className="w-full"
+            height="100%"
+            maxHeight="100%"
         >
             <div className="flex justify-center mb-8">
                 <Tabs.List className="grid w-full max-w-md grid-cols-2">
@@ -38,12 +27,15 @@ export const TabbedResourceList = (props: TabbedResourceListProps) => {
                 </Tabs.List>
             </div>
 
-            {tabData.map((tab) => {
-                return (<Tabs.Content key={tab.title} value={tab.title} className="space-y-4">
-                    <ResourceListContainer listData={tab.data} />
-                </Tabs.Content>)
-            })}
+            <Box overflowY="auto" maxHeight="100%">
 
+                {tabData.map((tab) => {
+                    return (
+                        <Tabs.Content key={tab.title} value={tab.title} className="space-y-4">
+                            <ResourceListContainer listData={tab.data} />
+                        </Tabs.Content>)
+                })}
+            </Box>
 
         </Tabs.Root>
     )

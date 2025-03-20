@@ -1,17 +1,21 @@
+import { RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
+import { HStack } from "@chakra-ui/react";
 import { Badge } from "@chakra-ui/react/badge";
 import { Button } from "@chakra-ui/react/button";
 import { Card } from "@chakra-ui/react/card";
-import { BookOpen, Eye, Check } from "lucide-react"
+import { BookOpen, Eye, Check, FileText, ImageIcon, Globe, MessageSquare } from "lucide-react"
+import { ReactNode } from "react";
 
 type ResourceCardProps = {
     resource: Resource;
     isSelected: boolean;
     clickAction: (resource: Resource, state: boolean) => void;
+    children: ReactNode
 }
 
 export const ResourceCard = (props: ResourceCardProps) => {
-    const { resource, isSelected, clickAction } = props;
+    const { resource, isSelected, clickAction, children } = props;
     return (
         <Card.Root
             key={resource.id}
@@ -29,24 +33,27 @@ export const ResourceCard = (props: ResourceCardProps) => {
 
             <Card.Header className="pb-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
-                    {resource.type === "quiz" && <div className="text-primary font-bold text-xl">Q</div>}
-                    {resource.type === "lesson" && <BookOpen className="h-6 w-6 text-primary" />}
+                    {resource.type === "QUIZ" && <div className="text-primary font-bold text-xl">Q</div>}
+                    {resource.type === "LESSON_PLAN" && <BookOpen className="h-6 w-6 text-primary" />}
+                    {resource.type === "PDF" && <FileText className="h-6 w-6 text-primary" />}
+                    {resource.type === "IMAGE_SCAN" && <ImageIcon className="h-6 w-6 text-primary" />}
+                    {resource.type === "WEBSITE_SCAN" && <Globe className="h-6 w-6 text-primary" />}
+                    {resource.type === "TEXT" && <MessageSquare className="h-6 w-6 text-primary" />}
                 </div>
                 <Card.Title>{resource.name}</Card.Title>
                 <Card.Description className="flex items-center gap-2">
                     <Badge variant="outline">
-                        {resource.type === "quiz" && "Quiz"}
-                        {resource.type === "lesson" && "Lesson Plan"}
+                        {resource.type ? RESOURCE_TYPES[resource.type] : ""}
                     </Badge>
-                    {resource.quiz_questions && (
+                    {resource.quiz_questions && resource.quiz_questions.length ? (
                         <span className="text-xs text-muted-foreground">{resource.quiz_questions.length} questions</span>
-                    )}
+                    ) : null}
                 </Card.Description>
             </Card.Header>
             <Card.Body className="pb-2 flex-grow">
                 <div className="flex flex-col h-full">
                     <div className="flex-grow">
-                        {resource.type === "quiz" && (
+                        {resource.type === "QUIZ" && (
                             <div className="aspect-video rounded-md bg-muted p-4">
                                 <div className="space-y-3">
                                     <div>
@@ -71,7 +78,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
                             </div>
                         )}
 
-                        {resource.type === "lesson" && (
+                        {resource.type === "LESSON_PLAN" && (
                             <div className="aspect-video rounded-md bg-muted p-4">
                                 <div className="space-y-3">
                                     <div>
@@ -92,22 +99,12 @@ export const ResourceCard = (props: ResourceCardProps) => {
                     </div>
 
                     <div className="mt-4 flex justify-between items-center">
-                        <p className="text-xs text-muted-foreground">Created: {resource.created_at}</p>
-                        <Badge variant="solid">{resource.type}</Badge>
+                        <p className="text-xs text-muted-foreground">Modified: {new Date(resource.created_at || "").toLocaleString('en-GB')}</p>
                     </div>
                 </div>
             </Card.Body>
-            <Card.Footer className="mt-auto pt-4">
-                <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={(e) => {
-                        e.stopPropagation() // Prevent card selection when clicking the button
-                    }}
-                >
-                    <Eye className="h-4 w-4 mr-2" />
-                    View {resource.type === "quiz" ? "Quiz" : "Lesson Plan"}
-                </Button>
+            <Card.Footer className="mt-auto pt-4 max-w-full">
+                {children}
             </Card.Footer>
         </Card.Root>);
 }

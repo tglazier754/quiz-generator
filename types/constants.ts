@@ -2,6 +2,8 @@
 
 //database
 
+import { IHash } from "./globalTypes";
+
 //table names
 export const TABLE_RESOURCES = "resources";
 export const TABLE_USERS = "users";
@@ -38,6 +40,15 @@ export const MACHINE_GENERATED_TYPES = [RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_LESSON
 export const ALL_RESOURCE_TYPES = USER_RESOURCE_TYPES.concat(MACHINE_GENERATED_TYPES);
 
 export const GRADE_LEVELS = ["Pre-school", "K-1", "2-3", "4-5", "6", "7-8", "9", "10", "11", "12", "College", "University"];
+
+export const RESOURCE_TYPES:IHash<string> = {
+    "TEXT":"Text",
+    "WEBSITE_SCAN":"Website",
+    "PDF":"PDF",
+    "QUIZ":"Quiz",
+    "LESSON_PLAN":"Lesson Plan",
+    "IMAGE_SCAN":"Image"
+}
 
 
 

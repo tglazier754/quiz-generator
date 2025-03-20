@@ -41,7 +41,7 @@ export default function RootLayout({
                 minWidth="400px"
                 width="100%"
                 className="flex-grow"
-                overflowY="auto"
+                overflowY="hidden"
                 alignSelf="center">
                 {children}
               </Box>
