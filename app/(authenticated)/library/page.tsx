@@ -15,6 +15,12 @@ const page = async () => {
     const machineGeneratedata = new Map<string, Resource>(Object.entries(JSON.parse(machineGeneratedResources)));
 
     //TODO: split out the tab group to fix the scroll layout
+    /*
+        the tab list scrolls properly, but it includes the height of the title. 
+        This is because the 100% height the tab group is using includes it.
+        Need to separate the tab list from the tab list using a context to ensure that it 
+        is properly accounted for.
+    */
 
     return (
         <ResourceContextProvider>

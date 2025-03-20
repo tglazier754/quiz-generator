@@ -1,8 +1,7 @@
 import { RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
-import { HStack } from "@chakra-ui/react";
+import Image from "next/image"
 import { Badge } from "@chakra-ui/react/badge";
-import { Button } from "@chakra-ui/react/button";
 import { Card } from "@chakra-ui/react/card";
 import { BookOpen, Eye, Check, FileText, ImageIcon, Globe, MessageSquare } from "lucide-react"
 import { ReactNode } from "react";
@@ -53,6 +52,57 @@ export const ResourceCard = (props: ResourceCardProps) => {
             <Card.Body className="pb-2 flex-grow">
                 <div className="flex flex-col h-full">
                     <div className="flex-grow">
+                        {resource.type === "PDF" && (
+                            <div className="aspect-video rounded-md bg-muted relative overflow-hidden">
+                                <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                                    <Image
+                                        src="/placeholder.svg?height=200&width=320&text=PDF+Preview"
+                                        alt="PDF preview"
+                                        width={320}
+                                        height={200}
+                                        className="object-contain"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {resource.type === "IMAGE_SCAN" && (
+                            <div className="aspect-video rounded-md bg-muted relative overflow-hidden">
+                                <Image
+                                    src="/placeholder.svg?height=200&width=320"
+                                    alt="Image preview"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        )}
+
+                        {resource.type === "WEBSITE_SCAN" && (
+                            <div className="aspect-video rounded-md bg-muted relative overflow-hidden border">
+                                <div className="absolute top-0 left-0 right-0 h-6 bg-muted-foreground/10 flex items-center px-2">
+                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/20 mr-1"></div>
+                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/20 mr-1"></div>
+                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/20"></div>
+                                </div>
+                                <div className="absolute top-6 inset-x-0 bottom-0 p-4">
+                                    <div className="w-full h-2 bg-muted-foreground/20 rounded mb-2 max-w-[80%]"></div>
+                                    <div className="w-full h-1 bg-muted-foreground/20 rounded mb-1 max-w-[60%]"></div>
+                                    <div className="w-full h-1 bg-muted-foreground/20 rounded max-w-[70%]"></div>
+                                </div>
+                            </div>
+                        )}
+
+                        {resource.type === "TEXT" && (
+                            <div className="aspect-video rounded-md bg-muted p-4 overflow-hidden">
+                                <p className="text-xs line-clamp-6">{resource.value}</p>
+                            </div>
+                        )}
+
+                        {resource.type === "IMAGE_SCAN" && resource.value && (
+                            <div className="mt-4">
+                                <p className="text-xs text-muted-foreground line-clamp-2">{resource.value}</p>
+                            </div>
+                        )}
                         {resource.type === "QUIZ" && (
                             <div className="aspect-video rounded-md bg-muted p-4">
                                 <div className="space-y-3">
