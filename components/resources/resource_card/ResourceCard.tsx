@@ -1,10 +1,10 @@
 import { RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
 import Image from "next/image"
-import { Badge } from "@chakra-ui/react/badge";
-import { Card } from "@chakra-ui/react/card";
 import { BookOpen, Eye, Check, FileText, ImageIcon, Globe, MessageSquare } from "lucide-react"
 import { ReactNode } from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 type ResourceCardProps = {
     resource: Resource;
@@ -16,7 +16,7 @@ type ResourceCardProps = {
 export const ResourceCard = (props: ResourceCardProps) => {
     const { resource, isSelected, clickAction, children } = props;
     return (
-        <Card.Root
+        <Card
             key={resource.id}
             className={`overflow-hidden relative cursor-pointer transition-all h-full flex flex-col ${isSelected ? "ring-2 ring-primary" : "hover:border-primary/50"
                 }`}
@@ -30,7 +30,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
                 {isSelected && <Check className="h-3 w-3" />}
             </div>
 
-            <Card.Header className="pb-4">
+            <CardHeader className="pb-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
                     {resource.type === "QUIZ" && <div className="text-primary font-bold text-xl">Q</div>}
                     {resource.type === "LESSON_PLAN" && <BookOpen className="h-6 w-6 text-primary" />}
@@ -39,17 +39,17 @@ export const ResourceCard = (props: ResourceCardProps) => {
                     {resource.type === "WEBSITE_SCAN" && <Globe className="h-6 w-6 text-primary" />}
                     {resource.type === "TEXT" && <MessageSquare className="h-6 w-6 text-primary" />}
                 </div>
-                <Card.Title>{resource.name}</Card.Title>
-                <Card.Description className="flex items-center gap-2">
+                <CardTitle>{resource.name}</CardTitle>
+                <CardDescription className="flex items-center gap-2">
                     <Badge variant="outline">
                         {resource.type ? RESOURCE_TYPES[resource.type] : ""}
                     </Badge>
                     {resource.quiz_questions && resource.quiz_questions.length ? (
                         <span className="text-xs text-muted-foreground">{resource.quiz_questions.length} questions</span>
                     ) : null}
-                </Card.Description>
-            </Card.Header>
-            <Card.Body className="pb-2 flex-grow">
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="pb-2 flex-grow">
                 <div className="flex flex-col h-full">
                     <div className="flex-grow">
                         {resource.type === "PDF" && (
@@ -152,11 +152,11 @@ export const ResourceCard = (props: ResourceCardProps) => {
                         <p className="text-xs text-muted-foreground">Modified: {new Date(resource.created_at || "").toLocaleString('en-GB')}</p>
                     </div>
                 </div>
-            </Card.Body>
-            <Card.Footer className="mt-auto pt-4 max-w-full">
+            </CardContent>
+            <CardFooter className="mt-auto pt-4 max-w-full">
                 {children}
-            </Card.Footer>
-        </Card.Root>);
+            </CardFooter>
+        </Card>);
 }
 
 export default ResourceCard;

@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { useResourceEdit } from "../image_processor/hooks/useResourceEdit";
 import { Button } from "../ui/button";
-import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import { Resource } from "@/types/resourceTypes";
 import { ContentCreationContext } from "@/context/create/provider";
 import LibraryResourceUploader from "../image_processor/LibraryResourceUploader";
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 
 type ResourceUploaderContainerProps = {
     showTray: boolean,
@@ -28,9 +28,8 @@ export const ResourceUploaderContainer = (props: ResourceUploaderContainerProps)
     }
 
 
-    return (<>
-        <DrawerRoot lazyMount size="lg" open={showTray} unmountOnExit onOpenChange={(e) => setShowTray(e.open)} key="new-drawer" closeOnInteractOutside={false}>
-            <DrawerBackdrop />
+    return (
+        <Drawer key="new-drawer">
             <DrawerTrigger asChild>
                 <Button variant="outline">Add New</Button>
             </DrawerTrigger>
@@ -39,23 +38,23 @@ export const ResourceUploaderContainer = (props: ResourceUploaderContainerProps)
                 <DrawerHeader>
                     <DrawerTitle>Existing Resources</DrawerTitle>
                 </DrawerHeader>
-                <DrawerBody>
 
-                    {/*TODO: Need a ResourceList that has a container
+                {/*TODO: Need a ResourceList that has a container
                                     that passes down a selection handler*/}
 
-                    <LibraryResourceUploader formName="resource-uploader" updateResourceValue={handleSubmit} />
+                <LibraryResourceUploader formName="resource-uploader" updateResourceValue={handleSubmit} />
 
-                </DrawerBody>
                 <DrawerFooter>
-                    <Button variant="ghost" onClick={cancelAction}>Cancel</Button>
-                    <Button variant="surface" type="submit" form="resource-uploader">Create</Button>
+                    <DrawerClose >
+                        <Button variant="ghost" onClick={cancelAction}>Cancel</Button>
+                    </DrawerClose>
+                    <Button variant="outline" type="submit" form="resource-uploader">Create</Button>
                 </DrawerFooter>
 
-                <DrawerCloseTrigger />
+
             </DrawerContent>
 
-        </DrawerRoot></>)
+        </Drawer>)
 }
 
 export default ResourceUploaderContainer;

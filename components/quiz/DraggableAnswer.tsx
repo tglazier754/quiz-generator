@@ -1,9 +1,9 @@
 import { Draggable } from 'react-beautiful-dnd'
 import { EditableTextField } from './EditableTextField'
 import { BiCheck, BiTrash } from 'react-icons/bi';
-import { IconButton } from '@chakra-ui/react';
 import { QuizQuestionOption } from '@/types/resourceTypes';
 import { RiDraggable } from 'react-icons/ri';
+import { Button } from '../ui/button';
 
 interface DraggableAnswerProps {
     answer: QuizQuestionOption
@@ -38,24 +38,24 @@ export function DraggableAnswer({
                     <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing">
                         <RiDraggable className="h-5 w-5 text-gray-400" />
                     </div>
-                    <IconButton
+                    <Button
                         variant="outline"
                         onClick={() => toggleCorrectAnswer(answer.id!)}
                         className={isCorrect ? 'bg-green-100' : ''}
                     >
                         <BiCheck className={`h-4 w-4 ${isCorrect ? 'opacity-100' : 'opacity-0'}`} />
-                    </IconButton>
+                    </Button>
                     <EditableTextField
                         initialText={answer.value}
                         onSave={(text) => updateAnswer(answer.id!, text)}
                         className="flex-grow"
                     />
-                    <IconButton
+                    <Button
                         variant="outline"
                         onClick={() => removeAnswer(answer.id!)}
                     >
                         <BiTrash className="h-4 w-4" />
-                    </IconButton>
+                    </Button>
                 </li>
             )}
         </Draggable>

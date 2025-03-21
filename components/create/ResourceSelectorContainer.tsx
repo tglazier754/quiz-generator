@@ -2,11 +2,11 @@
 
 import { useContext, useEffect, useState } from "react";
 import ResourceList from "../library/resourceList";
-import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import { ContentCreationContext } from "@/context/create/provider";
 import { Resource } from "@/types/resourceTypes";
 import { useSelectResources } from "@/hooks/useSelectResources";
-import { Button } from "@chakra-ui/react";
+import { Button } from "../ui/button";
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 
 type ResourceSelectorContainerProps = {
     showTray: boolean,
@@ -38,8 +38,7 @@ export const ResourceSelectorContainer = (props: ResourceSelectorContainerProps)
     }
 
     return (
-        <DrawerRoot lazyMount size="lg" open={showTray} unmountOnExit onOpenChange={(e) => setShowTray(e.open)} key="existing-drawer" closeOnInteractOutside={false}>
-            <DrawerBackdrop />
+        <Drawer key="existing-drawer">
             <DrawerTrigger asChild>
                 <Button variant="outline">Add Existing</Button>
             </DrawerTrigger>
@@ -48,20 +47,18 @@ export const ResourceSelectorContainer = (props: ResourceSelectorContainerProps)
                 <DrawerHeader>
                     <DrawerTitle>Existing Resources</DrawerTitle>
                 </DrawerHeader>
-                <DrawerBody>
 
-                    <ResourceList resources={resources} selectable selectedResources={selectedResources} selectionCallback={selectionHandler} />
+                <ResourceList resources={resources} selectable selectedResources={selectedResources} selectionCallback={selectionHandler} />
 
-                </DrawerBody>
                 <DrawerFooter>
-                    <Button variant="ghost" onClick={cancelAction}>Cancel</Button>
-                    <Button variant="surface" onClick={updateInputContentList}>Select</Button>
+                    <DrawerClose >
+                        <Button variant="ghost" onClick={cancelAction}>Cancel</Button>
+                    </DrawerClose>
+                    <Button variant="default" onClick={updateInputContentList}>Select</Button>
                 </DrawerFooter>
-
-                <DrawerCloseTrigger />
             </DrawerContent>
 
-        </DrawerRoot>
+        </Drawer>
     )
 }
 

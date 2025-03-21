@@ -1,5 +1,5 @@
-import { Input } from '@chakra-ui/react'
 import { useState, useEffect, useRef } from 'react'
+import { Input } from '../ui/input'
 
 interface EditableTextProps {
     initialText: string

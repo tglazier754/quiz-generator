@@ -1,7 +1,6 @@
 "use client";
 
 import { QuizQuestion } from "@/types/resourceTypes";
-import { Box, Card, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
 import { BsClock } from "react-icons/bs";
 import { IHash } from "@/types/globalTypes";
 import { EditableTextField } from "./EditableTextField";
@@ -11,6 +10,7 @@ import { DraggableAnswer } from "./DraggableAnswer";
 import { BiX } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { StrictModeDroppable } from "./StrictModeDroppable";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -49,31 +49,31 @@ export const QuizCard = (props: QuizCardProps) => {
     }
 
     return (
-        <Card.Root>
-            <Card.Header>
-                <IconButton variant="ghost" size="xs" position="absolute" top={2} right={2}><Box><BiX /></Box></IconButton>
-            </Card.Header>
-            <Card.Body>
-                <Stack direction="row" justifyContent="space-between" pb={4}>
-                    <Flex gap={4}>
-                        <Text>{question.order}</Text>
-                        <Text>{questionTypeLabels[question.type]}</Text>
-                    </Flex>
-                    <Text><BsClock className="inline" /> {question.expected_duration} min</Text>
-                </Stack>
-                <Box>
+        <Card>
+            <CardHeader>
+                <Button className="absolute top-2 right-2" variant="ghost" ><div><BiX /></div></Button>
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-row justify-between pb-8" >
+                    <div className="flex gap-2.5">
+                        <span>{question.order}</span>
+                        <span>{questionTypeLabels[question.type]}</span>
+                    </div>
+                    <span><BsClock className="inline" /> {question.expected_duration} min</span>
+                </div>
+                <div>
 
-                    <Stack gap={4}>
+                    <div className="flex flex-row gap-2.5">
                         <EditableTextField initialText={quizQuestion} onSave={(text) => updateQuestion(text)} />
                         {
                             question.type !== "multiple_choice" ? <EditableTextField initialText={answer} onSave={(text) => updateAnswer(text)} /> : null
                         }
 
-                    </Stack>
-                </Box>
+                    </div>
+                </div>
                 {
                     question.type === "multiple_choice" ?
-                        <Box>
+                        <div>
                             <DragDropContext onDragEnd={onDragEnd}>
                                 <StrictModeDroppable droppableId="answers">
                                     {(provided, snapshot) => (
@@ -92,14 +92,14 @@ export const QuizCard = (props: QuizCardProps) => {
                             </DragDropContext>
 
                             <Button size="sm" onClick={addOption}>Add Option</Button>
-                        </Box>
+                        </div>
                         : null
                 }
 
 
-            </Card.Body>
+            </CardContent>
 
-        </Card.Root >
+        </Card >
     )
 }
 

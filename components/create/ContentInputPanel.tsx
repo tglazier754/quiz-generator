@@ -1,12 +1,12 @@
 "use client";
 import { ContentCreationContext } from "@/context/create/provider";
-import { Box, Flex, Stack } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import ResourceList from "../library/resourceList";
 import { useSelectResources } from "@/hooks/useSelectResources";
 import { ResourceCardDeSelectAction } from "../library/resource_card/resourceCardDeSelectAction";
 import ResourceUploaderContainer from "./ResourceUploaderContainer";
 import ResourceSelectorContainer from "./ResourceSelectorContainer";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 
 export const ContentInputPanel = () => {
@@ -23,33 +23,30 @@ export const ContentInputPanel = () => {
     }
 
     return (
-        <>
-            <Flex
-                direction="column"
-                maxHeight="100%"
-                height="100%"
-                minHeight="0"
-                maxWidth="100%"
-                width="100%"
-                p="4"
-            >
+        <div className="w-full max-w-[800px] mx-auto">
+            <Card className="mb-8">
+                <CardHeader>
+                    <CardTitle>Resource Inputs</CardTitle>
+                    <CardDescription>Select the information you want to include in the generation</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
 
-                <Stack className="flex-grow-0 mb-4">
-                    <Box>
-                        <ResourceSelectorContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowExistingTray} showTray={showExistingTray} />
-                    </Box>
+                    <div className="flex-grow-0 mb-4">
+                        <div>
+                            <ResourceSelectorContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowExistingTray} showTray={showExistingTray} />
+                        </div>
 
-                    <Box>
-                        <ResourceUploaderContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowNewTray} showTray={showNewTray} />
-                    </Box>
-                </Stack>
+                        <div>
+                            <ResourceUploaderContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowNewTray} showTray={showNewTray} />
+                        </div>
+                    </div>
 
-                <Box className="flex-grow border-2 h-full max-h-full overflow-y-auto" p="4">
-                    <ResourceList compact resources={inputContent} cardActions={ResourceCardDeSelectAction} />
-                </Box>
-            </Flex>
-
-        </>
+                    <div className="flex-grow border-2 h-full max-h-full overflow-y-auto p-4">
+                        <ResourceList compact resources={inputContent} cardActions={ResourceCardDeSelectAction} />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
     )
 }
 

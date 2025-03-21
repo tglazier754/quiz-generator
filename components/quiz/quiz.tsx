@@ -1,6 +1,5 @@
 "use client";
 
-import { Flex } from "@chakra-ui/react";
 import QuizCard from "./quizCard";
 import { QuizQuestion } from "@/types/resourceTypes";
 import { useMemo } from "react";
@@ -20,16 +19,12 @@ export const Quiz = (props: QuizProps) => {
 
 
     return (
-        <Flex
-            direction="column"
-            gap={5}
-            p={4}
-            overflowY="scroll"
+        <div className="flex flex-col gap-2 p-2.5 overflow-y-scroll"
         >
             {sortedQuestions.map((question: QuizQuestion, index) =>
                 <QuizCard key={`quiz-card-${question.resource_id}-${index}`} question={question} />
             )}
-        </Flex>
+        </div>
     )
 }
 

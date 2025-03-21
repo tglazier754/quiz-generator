@@ -2,10 +2,7 @@
 
 import { RESOURCE_TYPE_IMAGE, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_TEXT, RESOURCE_TYPE_WEBSITE, USER_RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Button, createListCollection, HStack, Input, Square, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
-import { FileUploadRoot, FileUploadTrigger } from "../ui/file-button";
 import { HiUpload } from "react-icons/hi";
 import Quiz from "../quiz/quiz";
 import ResourceCardImage from "../library/resource_card/resourceCardImage";
@@ -13,8 +10,12 @@ import { useImageUpload } from "./hooks/useImageUpload";
 import { useActionStatus } from "./hooks/useActionStatus";
 import { convertImageToDataUrl } from "@/utils/images/client";
 import { useWebsiteUpload } from "./hooks/useWebsiteUpload";
-import { Field } from "../ui/field";
 import { Controller, FieldErrors, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
 
 type LibraryResourceUploaderProps = {
     activeResource?: Resource | null;
@@ -39,7 +40,6 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
     const { selectedImage, handleImageSelection } = useImageUpload();
     const { webUrl, changeWebUrl, processWebsite } = useWebsiteUpload(activeResource && activeResource.url as string || "");
 
-    const USER_GENERATED_TYPES_LIST_DATA = createListCollection({ items: USER_RESOURCE_TYPES.map((type) => { return { label: type.replace("_", " ").toLowerCase(), value: type } }) });
 
 
     useEffect(() => {
@@ -68,118 +68,86 @@ export const LibraryResourceUploader = (props: LibraryResourceUploaderProps) => 
 
     return (
         <form id={formName} onSubmit={handleSubmit(handleCreateOrUpdateResource, handleSubmitError)}>
-            <Stack
-                overflow="auto"
-                maxHeight="100%">
-                <Box className="description-data"
-                    pl={4}
-                    pr={4}>
-                    <HStack >
-                        <Box className="w-1/3">
-                            <Square>
+            <div
+                className="overflow-auto max-h-full">
+                <div className="description-data pl-8 pr-8">
+                    <div className="flex flex-col" >
+                        <div className="w-1/3">
+                            <span>image</span>
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex flex-col" >
+                                <div>
+                                    <Label>Name</Label>
+                                    <Input defaultValue={defaultName} {...register("name")} />
+                                </div>
+                                <div>
+                                    <Label>Description</Label>
+                                    <Input defaultValue={defaultDescription} {...register("description")} />
 
-                                <ResourceCardImage src={activeResource?.url} type={activeResource && activeResource.type || watchResourceTypeSelection} />
-                            </Square>
-                        </Box>
-                        <Box className="flex-1">
-                            <Stack>
-                                <Box>
-                                    <Field label="Name">
-                                        <Input defaultValue={defaultName} {...register("name")} />
-                                    </Field>
-                                </Box>
-                                <Box>
-                                    <Field label="Description">
-                                        <Input defaultValue={defaultDescription} {...register("description")} />
-                                    </Field>
-                                </Box>
-                            </Stack>
-                        </Box>
-                    </HStack>
-                </Box>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
-                <HStack alignItems="flex-end"
-                    pl={4}
-                    pr={4}>
-                    <Box className="w-1/3">
+                <div className="flex flex-col items-end  pl-8 pr-8" >
+                    <div className="w-1/3">
 
-                        <Controller
-                            name="type"
-                            control={control}
-                            defaultValue={defaultType}
-                            rules={{
-                                required: {
-                                    value: true,
-                                    message: "Select a Content Type",
-                                }
-                            }}
-                            render={({ field: { ...restField } }) => (
-                                <SelectRoot
-                                    variant="outline"
-                                    collection={USER_GENERATED_TYPES_LIST_DATA}
-                                    defaultValue={[defaultType]}
-                                    onValueChange={(value) => {
-                                        restField.onChange(value.value[0]);
-                                    }}
-                                    disabled={activeResource && activeResource.type ? true : false} >
+                        <Select disabled={activeResource && activeResource.type ? true : false} >
 
-                                    <SelectLabel>Resource type</SelectLabel>
-                                    <SelectTrigger>
-                                        <SelectValueText placeholder="Select Content Type" />
-                                    </SelectTrigger>
-                                    <SelectContent zIndex={100000}>
-                                        {USER_GENERATED_TYPES_LIST_DATA.items.map((resource_type) => (
-                                            <SelectItem key={`resource-generation-type-select-${resource_type.value}`} item={resource_type.value}>
-                                                {resource_type.label}
-                                            </SelectItem>
-                                        )
-                                        )}
-                                    </SelectContent>
-                                </SelectRoot>
-                            )}
-                        />
+                            <Label>Resource type</Label>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Content Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {USER_RESOURCE_TYPES.map((resource_type) => (
+                                    <SelectItem key={`resource-generation-type-select-${resource_type}`} value={resource_type}>
+                                        {resource_type}
+                                    </SelectItem>
+                                )
+                                )}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
+                    <div className="flex-1">
+                        {activeResource && activeResource.type === RESOURCE_TYPE_IMAGE || watchResourceTypeSelection === RESOURCE_TYPE_IMAGE ? <div >
 
+                            <Input type="file" onChange={handleImageSelection} />
 
-                    </Box>
-                    <Box className="flex-1">
-                        <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_IMAGE || watchResourceTypeSelection === RESOURCE_TYPE_IMAGE ? "" : "hidden"}>
-                            <FileUploadRoot accept={["image/png", "image/jpg", "image/bmp"]} onChange={handleImageSelection} >
-                                <FileUploadTrigger asChild>
-                                    <Button variant="outline" size="sm">
-                                        <HiUpload />Upload file
-                                    </Button>
-                                </FileUploadTrigger>
-                            </FileUploadRoot>
-                        </Box>
+                            <Button variant="outline" size="sm">
+                                <HiUpload />Upload file
+                            </Button>
+                        </div> : null}
 
-                        <Box visibility={activeResource && activeResource.type === RESOURCE_TYPE_WEBSITE || watchResourceTypeSelection === RESOURCE_TYPE_WEBSITE ? "" : "hidden"}>
-                            <Stack
-                                direction="row">
+                        {activeResource && activeResource.type === RESOURCE_TYPE_WEBSITE || watchResourceTypeSelection === RESOURCE_TYPE_WEBSITE ? <div>
+                            <div className="flex flex-row items-end  pl-8 pr-8" >
                                 <Input type="text" placeholder="URL" value={webUrl} onChange={changeWebUrl} />
                                 <Button size="sm" variant="outline" onClick={processWebsite}>Process</Button>
-                            </Stack>
-                        </Box>
-                    </Box>
-                </HStack>
+                            </div>
+                        </div> : null}
+                    </div>
+                </div>
 
                 {processingStatusValue === "pending" && <p>Processing...</p>}
-                {processingStatusValue === "error" && <Text>{processingErrorMessage}</Text>}
+                {processingStatusValue === "error" && <span>{processingErrorMessage}</span>}
 
                 {activeResource && activeResource.type === RESOURCE_TYPE_QUIZ || watchResourceTypeSelection === RESOURCE_TYPE_QUIZ ?
                     <Quiz questions={activeResource?.quiz_questions || []} /> :
-                    <Field label="Resource value" p={4}>
-                        <Textarea rows={12} defaultValue={defaultValue} {...register("value")} disabled={processingStatusValue === "pending"} /></Field>
+                    <>
+                        <Label>Resource value</Label>
+                        <Textarea rows={12} defaultValue={defaultValue} {...register("value")} disabled={processingStatusValue === "pending"} />
+                    </>
                 }
 
-                <Box>
-
+                <div>
                     {uploadStatusValue === "pending" && <p>Uploading...</p>}
-                    {uploadStatusValue === "error" && <Text>{uploadErrorMessage}</Text>}
-                    {uploadStatusValue === "success" && <Text>Uploaded Successfully</Text>}
-                </Box>
-            </Stack>
+                    {uploadStatusValue === "error" && <span>{uploadErrorMessage}</span>}
+                    {uploadStatusValue === "success" && <span>Uploaded Successfully</span>}
+                </div>
+            </div>
         </form>
 
     )

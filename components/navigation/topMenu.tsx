@@ -4,13 +4,9 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button"
-import {
-    DrawerBackdrop,
-    DrawerContent,
-    DrawerRoot,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
 import { BiMenu } from "react-icons/bi";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 
 const navItems = [
     { name: "Library", href: "/library" },
@@ -48,8 +44,7 @@ export async function TopMenu() {
                         <UserMenu />
                     </div>
                     <div className="md:hidden">
-                        <DrawerRoot placement="end">
-                            <DrawerBackdrop />
+                        <Drawer>
                             <DrawerTrigger asChild>
                                 <Button variant="ghost" className="px-2">
                                     <span className="sr-only">Open menu</span>
@@ -70,7 +65,7 @@ export async function TopMenu() {
                                     <UserMenu />
                                 </div>
                             </DrawerContent>
-                        </DrawerRoot>
+                        </Drawer>
                     </div>
                 </div>
             </div>

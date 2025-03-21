@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { Providers } from "../providers";
 import TopMenu from "@/components/navigation/topMenu";
-import { Toaster } from "@/components/ui/toaster";
-import { Box, Flex } from "@chakra-ui/react";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Quiz Generator",
@@ -18,40 +17,23 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body>
-        <Providers>
-          <header>
+        <header>
 
-          </header>
-          <main className="max-w-screen w-full h-full max-h-full absolute">
-            <Flex
-              justifyContent="center"
-              direction="column"
-              maxHeight="100%"
-              height="100%"
-              maxWidth="100%"
-              width="100%"
-              position="absolute">
+        </header>
+        <main className="max-w-screen w-full h-full max-h-full absolute">
+          <div className="justify-center flex-col max-w-full w-full max-h-full h-full absolute ">
 
-              <Box height="4rem" flex="0 auto">
-                <TopMenu />
-              </Box>
+            <div className="h-16 flex-0">
+              <TopMenu />
+            </div>
 
-              <Box
-                maxWidth="1100px"
-                minWidth="400px"
-                width="100%"
-                className="flex-grow"
-                overflowY="hidden"
-                alignSelf="center">
-                {children}
-              </Box>
+            {children}
 
-            </Flex>
+          </div>
 
-            <Toaster />
-          </main>
+          <Toaster />
+        </main>
 
-        </Providers>
       </body>
     </html>
   );

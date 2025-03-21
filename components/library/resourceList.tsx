@@ -1,7 +1,6 @@
 "use client";
 import { Resource } from "@/types/resourceTypes";
-import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import ResourceCard from "./resource_card/resourceCard";
+import ResourceCard from "../resources/resource_card/ResourceCard";
 
 type ResourceListProps = {
     resources: Map<string, Resource>;
@@ -16,43 +15,39 @@ type ResourceListProps = {
 export const ResourceList = (props: ResourceListProps) => {
     const { resources: resourceMap, selectedResources, selectionCallback, selectable, compact } = props;
 
-    const selectionHandler = (id: string, state: boolean) => {
-        if (selectable && selectionCallback) {
-            selectionCallback(resourceMap.get(id), state);
+    const selectionHandler = (resource: Resource, state: boolean) => {
+        if (resource.id && selectable && selectionCallback) {
+            selectionCallback(resourceMap.get(resource.id), state);
         }
     }
 
 
     return (
-        <Box className="max-w-full w-full h-full max-h-full">
+        <div className="max-w-full w-full h-full max-h-full">
             {!resourceMap.size ?
-                <Stack
-                    flexDir="column"
-                    mb="2"
-                    justifyContent="center"
-                    alignItems="center">
-                    <Text>No resources to display.</Text>
-                </Stack> : ""}
+                <div className="flex flex-col mb-4 justify-center items-center">
+                    <span>No resources to display.</span>
+                </div> : ""}
 
-            <SimpleGrid minChildWidth="12rem" gap="1rem" className="max-w-full w-full">
+            <div className="max-w-full w-full gap-4">
 
                 {resourceMap && resourceMap.size > 0 && Array.from(resourceMap?.entries().map((value: [string, Resource]) => {
                     if (value[1].id) {
                         return (
                             <div key={`resource-preview-${value[1].id}`} className="resource-preview">
                                 <ResourceCard
-                                    actionButtons={props.cardActions && <props.cardActions resourceId={value[1].id} />}
-                                    compact={compact || false}
                                     resource={value[1]}
-                                    selected={selectable && value[1].id && selectedResources && selectedResources.get(value[1].id) ? true : false}
-                                    onSelectHandler={selectionHandler} />
+                                    isSelected={selectable && value[1].id && selectedResources && selectedResources.get(value[1].id) ? true : false}
+                                    clickAction={selectionHandler}>
+                                    {props.cardActions && <props.cardActions resourceId={value[1].id} />}
+                                </ResourceCard>
 
                             </div>)
                     }
                 }
                 ))}
-            </SimpleGrid>
-        </Box>
+            </div>
+        </div>
     )
 }
 
