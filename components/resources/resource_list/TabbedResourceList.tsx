@@ -1,7 +1,6 @@
 import ResourceListContainer from "@/components/resources/resource_card/ResourceListContainer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Resource } from "@/types/resourceTypes";
-import { Box } from "@chakra-ui/react/box";
-import { Tabs } from "@chakra-ui/react/tabs";
 
 type TabbedResourceListProps = {
     tabData: { title: string, data: Map<string, Resource> }[];
@@ -11,33 +10,31 @@ export const TabbedResourceList = (props: TabbedResourceListProps) => {
     const { tabData } = props;
 
     return (
-        <Tabs.Root
+        <Tabs
             defaultValue={tabData[0].title}
-            className="w-full"
-            height="100%"
-            maxHeight="100%"
+            className="w-full h-full max-h-full"
         >
             <div className="flex justify-center mb-8">
-                <Tabs.List className="grid w-full max-w-md grid-cols-2">
+                <TabsList className="grid w-full max-w-md grid-cols-2">
                     {tabData.map((tab) => {
-                        return <Tabs.Trigger key={tab.title + "-trigger"} value={tab.title}>{tab.title}</Tabs.Trigger>
+                        return <TabsTrigger key={tab.title + "-trigger"} value={tab.title}>{tab.title}</TabsTrigger>
                     })
                     }
 
-                </Tabs.List>
+                </TabsList>
             </div>
 
-            <Box overflowY="auto" maxHeight="100%">
+            <div className="overflow-y-auto max-h-full">
 
                 {tabData.map((tab) => {
                     return (
-                        <Tabs.Content key={tab.title} value={tab.title} className="space-y-4">
+                        <TabsContent key={tab.title} value={tab.title} className="space-y-4">
                             <ResourceListContainer listData={tab.data} />
-                        </Tabs.Content>)
+                        </TabsContent>)
                 })}
-            </Box>
+            </div>
 
-        </Tabs.Root>
+        </Tabs>
     )
 
 }

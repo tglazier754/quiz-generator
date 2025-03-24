@@ -1,7 +1,6 @@
 
 import ResourceActionsPanel from "@/components/library/resourceActions";
 import { getResourcesByOrigin } from "@/utils/resources/server";
-import { Box, Flex, Heading } from "@chakra-ui/react"
 
 import ResourceContextProvider from "@/context/library/provider";
 import { Resource } from "@/types/resourceTypes";
@@ -24,23 +23,14 @@ const page = async () => {
 
     return (
         <ResourceContextProvider>
-            <Box
-                justifyContent="center"
-                direction="column"
-                maxHeight="100%"
-                minHeight="100%"
-                height="100%"
-                maxWidth="100%"
-                width="100%"
-                paddingTop="2rem"
-                position="relative">
+            <div className="justify-center flex flex-col max-h-full h-full min-h-full max-w-full w-full min-w-full pt-8 relative">
                 <ResourceActionsPanel />
-                <Heading fontSize="2xl" textAlign="center">Library</Heading>
+                <h1 className="text-3xl font-bold mb-8">Library</h1>
                 <TabbedResourceList
                     tabData={
                         [{ title: "Inputs", data: userGeneratedata },
                         { title: "Generated Resources", data: machineGeneratedata }]} />
-            </Box>
+            </div>
         </ResourceContextProvider >
     )
 }

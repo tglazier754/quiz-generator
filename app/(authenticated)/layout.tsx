@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { Providers } from "../providers";
 import TopMenu from "@/components/navigation/topMenu";
 import { Toaster } from "@/components/ui/sonner";
 

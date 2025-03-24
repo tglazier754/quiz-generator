@@ -22,7 +22,7 @@ export const ResourceCardSelectDeleteActions = (props: SelectDeleteActionsProps)
 
     return (
         <>
-            <Button colorPalette="red" variant="ghost" onClick={handleArchiveButton} >
+            <Button variant="ghost" onClick={handleArchiveButton} >
                 <TbTrash />
             </Button>
             <Link href={

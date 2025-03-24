@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { archiveSingleResource } from "@/utils/resources/client";
-import { HStack } from "@chakra-ui/react/stack";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 
@@ -21,7 +20,7 @@ export const ResourceCardSelectDeleteActions = (props: SelectDeleteActionsProps)
     }
 
     return (
-        <HStack className="max-w-full">
+        <div className="max-w-full flex flex-col">
             <Link href={
                 {
                     pathname: '/resource',
@@ -36,7 +35,7 @@ export const ResourceCardSelectDeleteActions = (props: SelectDeleteActionsProps)
                 </Button>
             </Link>
             <Button
-                variant="subtle"
+                variant="default"
                 onClick={(e) => {
                     e.stopPropagation();
                 }}
@@ -48,6 +47,6 @@ export const ResourceCardSelectDeleteActions = (props: SelectDeleteActionsProps)
 
 
 
-        </HStack>
+        </div>
     )
 }
