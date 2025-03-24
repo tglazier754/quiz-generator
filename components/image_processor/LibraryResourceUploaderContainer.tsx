@@ -3,7 +3,6 @@
 import { useResourceEdit } from "../image_processor/hooks/useResourceEdit";
 import { Button } from "../ui/button";
 import { Resource } from "@/types/resourceTypes";
-import { Box, Heading, Stack } from "@chakra-ui/react";
 import { useActionStatus } from "./hooks/useActionStatus";
 import { useRouter } from "next/navigation";
 import LibraryResourceUploader from "./LibraryResourceUploader";
@@ -30,22 +29,16 @@ export const LibraryResourceUploaderContainer = (props: LibraryResourceUploaderC
 
 
     return (
-        <Stack
-            width="100%"
-            maxWidth="900px"
-            minWidth="400px"
-            height="100%"
-            maxHeight="100%"
-            justifySelf="center">
-            <Box>
-                <Heading>Manage Resource</Heading>
+        <div
+            className="w-full max-w-[900px] min-w-[400px] h-full max-h-full justify-self-center">
+            <div>
+                <h1 className="text-2xl font-bold mb-8">Manage Resource</h1>
                 <LibraryResourceUploader formName="resource-uploader" key="resource-upload-page-uploader" activeResource={activeResource} updateResourceValue={handleSubmit} />
-            </Box>
-            <Box
-                p={4}>
+            </div>
+            <div className="p-8">
                 <Button type="submit" form="resource-uploader" disabled={uploadStatusValue === "pending"}>{`${activeResource && activeResource.id ? "Edit" : "Add"} Resource`}</Button>
-            </Box>
-        </Stack >
+            </div>
+        </div >
     )
 }
 
