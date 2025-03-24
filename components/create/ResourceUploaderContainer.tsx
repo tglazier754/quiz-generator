@@ -29,7 +29,7 @@ export const ResourceUploaderContainer = (props: ResourceUploaderContainerProps)
 
 
     return (
-        <Drawer key="new-drawer">
+        <Drawer key="new-drawer" direction="right">
             <DrawerTrigger asChild>
                 <Button variant="outline">Add New</Button>
             </DrawerTrigger>

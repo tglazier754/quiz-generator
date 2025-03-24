@@ -38,7 +38,7 @@ export const ResourceSelectorContainer = (props: ResourceSelectorContainerProps)
     }
 
     return (
-        <Drawer key="existing-drawer">
+        <Drawer key="existing-drawer" direction="right">
             <DrawerTrigger asChild>
                 <Button variant="outline">Add Existing</Button>
             </DrawerTrigger>
@@ -54,7 +54,7 @@ export const ResourceSelectorContainer = (props: ResourceSelectorContainerProps)
                     <DrawerClose >
                         <Button variant="ghost" onClick={cancelAction}>Cancel</Button>
                     </DrawerClose>
-                    <Button variant="default" onClick={updateInputContentList}>Select</Button>
+                    <Button variant="default" onClick={updateInputContentList}>Add</Button>
                 </DrawerFooter>
             </DrawerContent>
 

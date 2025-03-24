@@ -6,7 +6,7 @@ import { useSelectResources } from "@/hooks/useSelectResources";
 import { ResourceCardDeSelectAction } from "../library/resource_card/resourceCardDeSelectAction";
 import ResourceUploaderContainer from "./ResourceUploaderContainer";
 import ResourceSelectorContainer from "./ResourceSelectorContainer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 
 export const ContentInputPanel = () => {
@@ -31,20 +31,21 @@ export const ContentInputPanel = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
 
-                    <div className="flex-grow-0 mb-4">
-                        <div>
-                            <ResourceSelectorContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowExistingTray} showTray={showExistingTray} />
-                        </div>
 
-                        <div>
-                            <ResourceUploaderContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowNewTray} showTray={showNewTray} />
-                        </div>
-                    </div>
 
                     <div className="flex-grow border-2 h-full max-h-full overflow-y-auto p-4">
                         <ResourceList compact resources={inputContent} cardActions={ResourceCardDeSelectAction} />
                     </div>
+
                 </CardContent>
+
+                <CardFooter>
+                    <div className="flex flex-row gap-4">
+                        <ResourceSelectorContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowExistingTray} showTray={showExistingTray} />
+
+                        <ResourceUploaderContainer cancelAction={cancelSelectionUpdate} setShowTray={setShowNewTray} showTray={showNewTray} />
+                    </div>
+                </CardFooter>
             </Card>
         </div>
     )
