@@ -1,7 +1,7 @@
 import { RESOURCE_TYPES } from "@/types/constants";
 import { Resource } from "@/types/resourceTypes";
 import Image from "next/image"
-import { BookOpen, Eye, Check, FileText, ImageIcon, Globe, MessageSquare } from "lucide-react"
+import { BookOpen, Check, FileText, ImageIcon, Globe, MessageSquare } from "lucide-react"
 import { ReactNode } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,7 @@ type ResourceCardProps = {
 
 export const ResourceCard = (props: ResourceCardProps) => {
     const { resource, isSelected, clickAction, children } = props;
+    console.log(resource);
     return (
         <Card
             key={resource.id}
@@ -103,45 +104,39 @@ export const ResourceCard = (props: ResourceCardProps) => {
                                 <p className="text-xs text-muted-foreground line-clamp-2">{resource.value}</p>
                             </div>
                         )}
-                        {resource.type === "QUIZ" && (
+                        {resource.type === "QUIZ" && resource.quiz_questions && resource.quiz_questions.length > 0 ?
                             <div className="aspect-video rounded-md bg-muted p-4">
+
                                 <div className="space-y-3">
                                     <div>
                                         <p className="text-xs font-medium mb-1">Question 1:</p>
-                                        <p className="text-xs">What is the main benefit of our premium plan?</p>
+                                        <p className="text-xs">{resource.quiz_questions[0].question}</p>
                                     </div>
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full border border-muted-foreground/30"></div>
-                                            <p className="text-xs text-muted-foreground">Faster processing</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full border border-muted-foreground/30 bg-primary"></div>
-                                            <p className="text-xs text-muted-foreground">Unlimited storage</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full border border-muted-foreground/30"></div>
-                                            <p className="text-xs text-muted-foreground">24/7 support</p>
+                                            <p className="text-xs text-muted-foreground">{resource.quiz_questions[0].answer}</p>
                                         </div>
                                     </div>
+
+                                    <div>
+                                        <p className="text-xs font-medium">{resource.expected_duration ? resource.expected_duration + " minutes" : ""}  </p>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+
+                            </div> : null
+                        }
 
                         {resource.type === "LESSON_PLAN" && (
                             <div className="aspect-video rounded-md bg-muted p-4">
                                 <div className="space-y-3">
                                     <div>
-                                        <p className="text-xs font-medium">Learning Objectives:</p>
+                                        <p className="text-xs font-medium">Preview:</p>
                                         <ul className="text-xs space-y-1 mt-1 list-disc list-inside text-muted-foreground">
-                                            <li>Understand company policies and procedures</li>
-                                            <li>Learn to use internal tools and systems</li>
-                                            <li>Complete required compliance training</li>
-                                            <li>Meet key team members and departments</li>
+                                            <p>{(resource.value.substring(0, 200))}...</p>
                                         </ul>
                                     </div>
                                     <div>
-                                        <p className="text-xs font-medium">Duration: 2 weeks</p>
+                                        <p className="text-xs font-medium">{resource.expected_duration}</p>
                                     </div>
                                 </div>
                             </div>

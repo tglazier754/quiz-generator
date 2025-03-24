@@ -102,8 +102,10 @@ export const ResourceActionsPanel = () => {
                                 </Select>
                             </DrawerContent>
                             <DrawerFooter>
-                                <Button variant="ghost" disabled={isGenerating} onClick={() => setIsGenerateDialogOpen(false)}>Cancel</Button>
-                                <Button variant="secondary" disabled={isGenerating || !selectedResourceType.length} onClick={generateResourceHandler}>Generate</Button>
+                                <div className="flex flex-row">
+                                    <Button variant="ghost" disabled={isGenerating} onClick={() => setIsGenerateDialogOpen(false)}>Cancel</Button>
+                                    <Button variant="secondary" disabled={isGenerating || !selectedResourceType.length} onClick={generateResourceHandler}>Generate</Button>
+                                </div>
                             </DrawerFooter>
 
                         </Drawer>

@@ -16,18 +16,18 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body>
-        <header>
+        <main className="max-w-dvw w-full min-w-0  max-h-dvh h-full">
+          <div className="flex flex-col  w-full max-w-full max-h-full h-full fixed ">
 
-        </header>
-        <main className="max-w-screen w-full h-full max-h-full absolute">
-          <div className="justify-center flex-col max-w-full w-full max-h-full h-full absolute ">
-
-            <div className="h-16 flex-0">
+            <div className="h-16 min-h-16 max-h-16 flex-0">
               <TopMenu />
             </div>
 
-            {children}
-
+            <div className="max-w-full min-w-full w-full min-h-0 flex-1">
+              <div className="max-w-[1100px] min-w-[400px] h-full max-h-full flex-auto mx-auto flex relative">
+                {children}
+              </div>
+            </div>
           </div>
 
           <Toaster />

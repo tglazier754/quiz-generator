@@ -23,13 +23,15 @@ const page = async () => {
 
     return (
         <ResourceContextProvider>
-            <div className="justify-center flex flex-col max-h-full h-full min-h-full max-w-full w-full min-w-full pt-8 relative">
-                <ResourceActionsPanel />
-                <h1 className="text-3xl font-bold mb-8">Library</h1>
+            <div className=" pt-8 max-h-full h-full min-h-full absolute top-0 bottom-0">
+
+
                 <TabbedResourceList
                     tabData={
                         [{ title: "Inputs", data: userGeneratedata },
                         { title: "Generated Resources", data: machineGeneratedata }]} />
+
+                <ResourceActionsPanel />
             </div>
         </ResourceContextProvider >
     )

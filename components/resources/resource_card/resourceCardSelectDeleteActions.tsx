@@ -20,7 +20,7 @@ export const ResourceCardSelectDeleteActions = (props: SelectDeleteActionsProps)
     }
 
     return (
-        <div className="max-w-full flex flex-col">
+        <div className="max-w-full flex flex-row gap-4 justify-center">
             <Link href={
                 {
                     pathname: '/resource',
