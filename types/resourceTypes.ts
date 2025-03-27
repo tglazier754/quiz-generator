@@ -21,6 +21,7 @@ export type QuizQuestionOption = {
 }
 
 export type Resource = {
+    [name: string]: string | number | boolean | undefined | QuizQuestion[] | File | null;
     id?: string;
     url?: File | string | null;
     value: string;

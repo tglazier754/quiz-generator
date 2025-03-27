@@ -1,4 +1,5 @@
 import { RESOURCE_TYPE_LESSON_PLAN, RESOURCE_TYPE_QUIZ, RESOURCE_TYPE_SUMMARY, URL_PARAM_RESOURCE_ID } from "@/types/constants";
+import { Resource } from "@/types/resourceTypes";
 
 export type ResourceType = "QUIZ" | "LESSON_PLAN";
 
@@ -37,6 +38,16 @@ export const generateResource = async (params: ResourceGenerationParams, inputId
     if (content_type === RESOURCE_TYPE_SUMMARY) {
 
     }
+}
+
+export const updateResource = async (resource: Partial<Resource>) => {
+    const formData = new FormData();
+    console.log (resource);
+    formData.append("data", JSON.stringify(resource));
+    const initialFetch = await fetch("/api/resources", {
+        method: "PUT", body: formData
+    });
+    return await initialFetch.json();
 }
 
 

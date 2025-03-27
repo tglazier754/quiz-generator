@@ -1,6 +1,6 @@
 import ResourceEditorContextProvider from "@/context/resource_editor/provider";
 import { getSpecificResources } from "@/utils/resources/server";
-import LibraryResourceUploaderContainer from "@/components/image_processor/LibraryResourceUploaderContainer";
+import ResourcePreview from "@/components/resource/resourcePreview";
 
 
 export default async function Page({
@@ -31,7 +31,11 @@ export default async function Page({
     return (
 
         <ResourceEditorContextProvider>
-            <LibraryResourceUploaderContainer activeResource={activeResource} />
+
+            {/*<LibraryResourceUploaderContainer activeResource={activeResource} /> */}
+            <div className=" pt-8 max-h-full h-full min-h-full w-full absolute top-0 bottom-0">
+                {activeResource ? <ResourcePreview resource={activeResource} /> : null}
+            </div>
 
         </ResourceEditorContextProvider>
     )

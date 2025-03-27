@@ -23,9 +23,7 @@ export const ResourceSelectorContainer = (props: ResourceSelectorContainerProps)
     useEffect(() => {
         fetch("/api/resources").then((value) => {
             value.json().then((jsonValue) => {
-                console.log(jsonValue);
                 const jsonValueMap: Map<string, Resource> = new Map(Object.entries(jsonValue));
-                console.log(jsonValueMap);
                 setResources(jsonValueMap);
             })
         });

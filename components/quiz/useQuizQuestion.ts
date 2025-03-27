@@ -5,7 +5,7 @@ import { useQuizQuestionOptionUpdate } from './useQuizQuestionOptionUpdate';
 
 
 export function useQuizQuestion(initialQuestion: QuizQuestion) {
-  const [question, setQuestion] = useState(initialQuestion.question)
+  const [question, setQuestion] = useState(initialQuestion.question);
   const [answer, setAnswer] = useState(initialQuestion.answer);
 
   const sortedOptions =  initialQuestion.quiz_question_options && initialQuestion.quiz_question_options.sort((a, b) => { return a.order - b.order });

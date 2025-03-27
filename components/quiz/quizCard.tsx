@@ -7,10 +7,10 @@ import { EditableTextField } from "./EditableTextField";
 import { useQuizQuestion } from "./useQuizQuestion";
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import { DraggableAnswer } from "./DraggableAnswer";
-import { BiX } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { StrictModeDroppable } from "./StrictModeDroppable";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Trash } from "lucide-react";
 
 type QuizCardProps = {
     question: QuizQuestion;
@@ -51,19 +51,27 @@ export const QuizCard = (props: QuizCardProps) => {
     return (
         <Card>
             <CardHeader>
-                <Button className="absolute top-2 right-2" variant="ghost" ><div><BiX /></div></Button>
+                <div className="flex justify-between items-start">
+
+
+                    <div className="flex flex-col justify-between pb-4" >
+                        <div className="flex gap-2.5">
+                            <CardTitle className="text-base font-medium mt-2">{questionTypeLabels[question.type]}</CardTitle>
+                        </div>
+                        <span><BsClock className="inline" /> {question.expected_duration} min</span>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="ghost" size="icon">
+                            <Trash className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-row justify-between pb-8" >
-                    <div className="flex gap-2.5">
-                        <span>{question.order}</span>
-                        <span>{questionTypeLabels[question.type]}</span>
-                    </div>
-                    <span><BsClock className="inline" /> {question.expected_duration} min</span>
-                </div>
+
                 <div>
 
-                    <div className="flex flex-row gap-2.5">
+                    <div className="flex flex-col gap-2.5">
                         <EditableTextField initialText={quizQuestion} onSave={(text) => updateQuestion(text)} />
                         {
                             question.type !== "multiple_choice" ? <EditableTextField initialText={answer} onSave={(text) => updateAnswer(text)} /> : null
