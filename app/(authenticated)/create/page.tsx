@@ -9,8 +9,9 @@ const page = async () => {
         <ContentCreationContextProvider>
             <ResourceEditorContextProvider>
 
-                <div className="flex-auto max-w-[1100px] min-w-[400px] w-full overflow-y-hidden mx-auto">
-                    <div className="flex flex-col max-h-full h-full min-h-0 max-w-full w-full p-8 mx-auto" >
+                <div className="flex-auto max-w-[1100px] min-w-[400px] w-full absolute top-0 bottom-0">
+                    <div className="flex flex-col max-h-full h-full min-h-0 max-w-full w-full p-8 mx-auto overflow-y-scroll no-scrollbar" >
+
 
                         <ParameterForm />
 

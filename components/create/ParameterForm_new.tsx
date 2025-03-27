@@ -1,12 +1,11 @@
 "use client";
-import { GRADE_LEVELS, MACHINE_GENERATED_TYPES } from "@/types/constants";
-import { Controller, FieldErrors, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import { useContext, useEffect, useState } from "react";
+import { GRADE_LEVELS } from "@/types/constants";
+import { SubmitHandler } from "react-hook-form";
+import { useContext, useState } from "react";
 import { ContentCreationContext } from "@/context/create/provider";
 import { useRouter } from "next/navigation";
 import useResourceCreation from "@/hooks/useResourceCreation";
 import { ResourceGenerationParams } from "@/utils/resources/client";
-import { ErrorMessage } from "@hookform/error-message";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { toast } from "sonner"
