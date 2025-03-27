@@ -15,7 +15,7 @@ type ResourceSelectorContainerProps = {
 }
 
 export const ResourceSelectorContainer = (props: ResourceSelectorContainerProps) => {
-    const { showTray, setShowTray, cancelAction } = props;
+    const { setShowTray, cancelAction } = props;
     const { setAllInputContent } = useContext(ContentCreationContext);
     const [resources, setResources] = useState<Map<string, Resource>>(new Map());
     const { selectedResources, selectionHandler } = useSelectResources();
