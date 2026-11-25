@@ -1,15 +1,17 @@
 "use client"
 import { Resource } from "@/types/resourceTypes";
-import { useEffect, useMemo, useState } from "react"
-import { Edit, Plus, Trash } from "lucide-react"
+import { useMemo, useState } from "react"
+import { Edit, Plus, Save, Trash, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import QuizCard from "../quiz/quizCard";
-import { useResourceValues } from "./useResourceValues";
-import { EditableTextField } from "../quiz/EditableTextField";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Textarea } from "../ui/textarea";
 
 type ResourcePreviewProps = {
     resource: Resource;
@@ -18,22 +20,40 @@ export const ResourcePreview = (props: ResourcePreviewProps) => {
     const { resource } = props;
     const { quiz_questions } = resource;
     const [activeTab, setActiveTab] = useState("overview");
+    const [isEditing, setIsEditing] = useState(false);
 
-    const { localStore, updateField } = useResourceValues(resource);
-    const { name, description, expected_duration, grade_level } = localStore;
+    const [name, setName] = useState(resource.name);
+    const [description, setDescription] = useState(resource.description);
+    const [gradeLevel, setGradeLevel] = useState(resource.grade_level);
+    const [expectedDuration, setExpectedDuration] = useState(resource.expected_duration);
 
 
     const sortedQuestions = useMemo(() => {
         return quiz_questions?.sort((a, b) => { return a.order - b.order }) || [];
     }, [quiz_questions]);
 
-    useEffect(() => {
-        console.log(localStore);
-    }, [localStore]);
+    const handleCancel = () => {
+        // Reset form values to current resource values
+        if (resource) {
+            setName(resource.name)
+            setDescription(resource.description || "")
+            setGradeLevel(resource.grade_level)
+            setExpectedDuration(resource.expected_duration)
+        }
+
+        setIsEditing(false)
+    }
+
+    const handleSave = () => {
+
+    }
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab}
             className="w-full min-w-full h-full max-h-full flex relative">
+
+
+
             <div className="flex-0 w-full">
                 <div className="flex justify-between items-start mb-8 mt-8 w-full">
 
@@ -50,6 +70,9 @@ export const ResourcePreview = (props: ResourcePreviewProps) => {
                 </div>
             </div>
 
+
+
+
             <div className="w-full max-h-full h-full min-h-0 flex-1 relative">
                 <div className="flex justify-center mb-8">
                     <TabsList className="grid w-full max-w-md grid-cols-2">
@@ -61,36 +84,127 @@ export const ResourcePreview = (props: ResourcePreviewProps) => {
                 <TabsContent value="overview" className="max-h-full w-full  min-w-0 h-full p-8 min-h-0 overflow-y-auto  no-scrollbar">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Resource Overview</CardTitle>
+                            <div className="flex flex-row justify-between w-full">
+                                {isEditing ?
+                                    <div className="flex flex-col">
+                                        <CardTitle>Resource Information</CardTitle>
+                                        <CardDescription>Edit the basic information for this resource</CardDescription>
+                                    </div>
+                                    : <CardTitle>Resource Overview</CardTitle>}
+
+
+                            </div>
                         </CardHeader>
-                        <CardContent className="space-y-6">
+
+                        {isEditing ? (
+
+                            <CardContent className="space-y-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">Resource Title</Label>
+                                    <Input id="title" value={name} onChange={(e) => setName(e.target.value)} required />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="description">Description</Label>
+                                    <Textarea
+                                        id="description"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        rows={3}
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="grade-level">Grade Level</Label>
+                                        <Select value={gradeLevel} onValueChange={setGradeLevel} required>
+                                            <SelectTrigger id="grade-level">
+                                                <SelectValue placeholder="Select grade level" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="k-2">K-2 (Elementary)</SelectItem>
+                                                <SelectItem value="3-5">3-5 (Elementary)</SelectItem>
+                                                <SelectItem value="6-8">6-8 (Middle School)</SelectItem>
+                                                <SelectItem value="9-12">9-12 (High School)</SelectItem>
+                                                <SelectItem value="college">College</SelectItem>
+                                                <SelectItem value="professional">Professional</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="duration">Duration (minutes)</Label>
+                                        <Input
+                                            id="duration"
+                                            type="number"
+                                            min={5}
+                                            max={240}
+                                            value={expectedDuration}
+                                            onChange={(e) => setExpectedDuration(Number.parseInt(e.target.value) || 30)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {resource.type === "quiz" && (
+                                    <div className="space-y-4 pt-4 border-t">
+                                        <h3 className="text-lg font-medium">Question Type Breakdown</h3>
+
+
+
+                                    </div>
+                                )}
+                            </CardContent>
+                        ) : (
+                            <CardContent className="space-y-6">
+                                <div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Name</h3>
+                                    <p>{name}</p>
+                                </div><div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Description</h3>
+                                    <p>{description}</p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                                    {gradeLevel ?
+                                        <div>
+                                            <h3 className="text-sm font-medium text-muted-foreground mb-1">Grade Level</h3>
+                                            <p className="capitalize">{gradeLevel && gradeLevel.replace("-", " to ")}</p>
+
+                                        </div>
+                                        : null}
+                                    {expectedDuration ?
+                                        <div>
+                                            <h3 className="text-sm font-medium text-muted-foreground mb-1">Duration</h3>
+                                            <p>{expectedDuration && `${expectedDuration} minutes`}</p>
+                                        </div>
+                                        : null}
+                                </div>
+
+
+                            </CardContent>
+                        )}
+                        <CardFooter>
                             <div>
-                                <h3 className="text-sm font-medium text-muted-foreground mb-1">Name</h3>
-                                <EditableTextField initialText={name} onSave={(text) => updateField("name", text)} />
-                            </div><div>
-                                <h3 className="text-sm font-medium text-muted-foreground mb-1">Description</h3>
-                                <EditableTextField initialText={description} onSave={(text) => updateField("description", text)} />
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                                {grade_level ?
-                                    <div>
-                                        <h3 className="text-sm font-medium text-muted-foreground mb-1">Grade Level</h3>
-                                        <p className="capitalize">{grade_level && grade_level.replace("-", " to ")}</p>
-
+                                {!isEditing ? (
+                                    <Button onClick={() => setIsEditing(true)}>
+                                        <Edit className="h-4 w-4 mr-2" />
+                                        Edit
+                                    </Button>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <Button variant="outline" onClick={handleCancel}>
+                                            <X className="h-4 w-4 mr-2" />
+                                            Cancel
+                                        </Button>
+                                        <Button onClick={handleSave}>
+                                            <Save className="h-4 w-4 mr-2" />
+                                            Save Changes
+                                        </Button>
                                     </div>
-                                    : null}
-                                {expected_duration ?
-                                    <div>
-                                        <h3 className="text-sm font-medium text-muted-foreground mb-1">Duration</h3>
-                                        <p>{expected_duration && `${expected_duration} minutes`}</p>
-                                    </div>
-                                    : null}
+                                )}
                             </div>
-
-
-                        </CardContent>
+                        </CardFooter>
                     </Card>
                 </TabsContent>
 
